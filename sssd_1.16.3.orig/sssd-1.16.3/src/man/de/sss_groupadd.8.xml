@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD-Handbuchseiten</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_groupadd</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_groupadd</refname>
+        <refpurpose>erstellt eine neue Gruppe</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_groupadd</command> <arg choice='opt'>
+<replaceable>Optionen</replaceable> </arg> <arg
+choice='plain'><replaceable>GRUPPE</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>BESCHREIBUNG</title>
+        <para>
+            <command>sss_groupadd</command> erstellt eine neue Gruppe. Diese Gruppen
+sind kompatibel mit POSIX-Gruppen mit der zusätzlichen Funktionalität, dass
+sie andere Gruppen als Mitglieder enthalten können.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPTIONEN</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-g</option>,<option>--gid</option> <replaceable>GID</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        setzt die GID der Gruppe auf den Wert von
+<replaceable>GID</replaceable>. Wurde der Wert nicht angegeben, wird er
+automatisch ausgewählt.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/local.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

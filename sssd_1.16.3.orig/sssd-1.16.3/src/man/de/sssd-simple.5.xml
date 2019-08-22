@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD-Handbuchseiten</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-simple</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Dateiformate und Konventionen</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-simple</refname>
+        <refpurpose>die Konfigurationsdatei für den »einfachen« Zugriffssteuerungsanbieter von
+SSSD</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>BESCHREIBUNG</title>
+        <para>
+            Diese Handbuchseite beschreibt die Konfiguration des einfachen
+Zugriffssteuerungsanbieters für <citerefentry>
+<refentrytitle>sssd</refentrytitle> <manvolnum>8</manvolnum>
+</citerefentry>. Eine ausführliche Syntax-Referenz finden Sie im Abschnitt
+»DATEIFORMAT« der Handbuchseite <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+        </para>
+        <para>
+            Der einfache Zugriffsanbieter gewährt oder verweigert den Zugriff auf Basis
+einer Zugriffs- oder Verbotsliste von Benutzer- oder Gruppennamen. Es gelten
+die folgenden Regeln:
+            <itemizedlist>
+                <listitem>
+                    <para>Falls alle Listen leer sind, wird Zugriff gewährt.</para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Falls irgendeine Liste bereitgestellt wird, ist die Reihenfolge der
+Auswertung »erlauben,verbieten«. Das heißt, dass eine passende verbietende
+Regeln jede passende erlaubende Regel ersetzt.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Falls eine oder beide »Erlaubnislisten« bereitgestellt werden, ist der
+Zugriff allen Benutzern verboten, sofern sie nicht auf der Liste erscheinen.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Falls nur »Verbotslisten« bereitgestellt werden, wird der Zugriff allen
+Benutzern gewährt, sofern sie nicht auf der Liste stehen.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </para>
+    </refsect1>
+
+    <refsect1 id='configuration-options'>
+        <title>KONFIGURATIONSOPTIONEN</title>
+        <para>Einzelheiten über die Konfiguration einer SSSD-Domain finden Sie im
+Abschnitt »DOMAIN-ABSCHNITTE« der Handbuchseite <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>. <variablelist>
+                <varlistentry>
+                    <term>simple_allow_users (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            Durch Kommata getrennte Liste von Benutzern, die sich anmelden dürfen.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>simple_deny_users (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            Durch Kommata getrennte Liste von Benutzern, denen der Zugriff explizit
+verwehrt wird.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>simple_allow_groups (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            Durch Kommata getrennte Liste von Gruppen, die sich anmelden dürfen. Dies
+gilt nur für Gruppen innerhalb dieser SSSD-Domain. Lokale Gruppen werden
+nicht ausgewertet.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>simple_deny_groups (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            Durch Kommata getrennte Liste von Gruppen, denen der Zugriff explizit
+verwehrt wird. Dies gilt nur für Gruppen innerhalb dieser
+SSSD-Domain. Lokale Gruppen werden nicht ausgewertet.
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+        <para>
+            Keine Werte für eine der Listen anzugeben ist so, als ob sie ganz
+übersprungen würde. Hüten Sie sich davor, solange Parameter für den
+einfachen Anbieter mittels automatischer Skripte erzeugt werden.
+        </para>
+        <para>
+            Bitte beachten Sie, das es ein Konfigurationsfehler ist, wenn sowohl
+»simple_allow_users« als auch »simple_deny_users« definiert sind.
+        </para>
+    </refsect1>
+
+    <refsect1 id='example'>
+        <title>BEISPIEL</title>
+        <para>
+            Das folgende Beispiel geht davon aus, dass SSSD korrekt konfiguriert ist und
+example.com eine der im Abschnitt <replaceable>[sssd]</replaceable>
+erwähnten Domains ist. Die Beispiele zeigen nur die anbieterspezifischen
+Optionen des einfachen Anbieters.
+        </para>
+        <para>
+<programlisting>
+[domain/example.com]
+access_provider = simple
+simple_allow_users = user1, user2
+</programlisting>
+        </para>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>ANMERKUNGEN</title>
+        <para>
+          Die vollständige Hierarchie der Gruppenmitgliedschaft wird aufgelöst, bevor
+die Zugriffsprüfung ausgeführt wird. Daher können selbst verschachtelte
+Gruppen Teil der Zugriffslisten werden. Bitte beachten Sie, dass die Option
+<quote>ldap_group_nesting_level</quote> die Ergebnisse beeinflussen kann und
+daher auf einen ausreichenden Wert gesetzt werden sollte. Siehe
+(<citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>).
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

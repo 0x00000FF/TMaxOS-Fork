@@ -1,0 +1,33 @@
+<listitem>
+    <para>
+        ein optionaler Basis-DN, Gültigkeitsbereich für die Suche und LDAP-Filter,
+um die LDAP-Suchen für diesen Attributtyp einzuschränken.
+    </para>
+    <para>
+        Syntax: <programlisting>
+search_base[?Gültigkeitsbereich?[Filter][?Suchbasis?Gültigkeitsbereich?[Filter]]*]
+</programlisting>
+    </para>
+    <para>
+        Der Bereich kann entweder »base«, »onlevel« oder »subtree« sein. Die
+Bereiche funktionieren wie im Abschnitt 4.5.1.2 auf
+http://tools.ietf.org/html/rfc4511 angegeben.
+    </para>
+    <para>
+        Der Filter muss ein gültiger LDAP-Suchfilter, wie durch
+http://www.ietf.org/rfc/rfc2254.txt spezifiziert, sein.
+    </para>
+    <para>
+        Beispiele für diese Syntax finden Sie im Beispielabschnitt von
+»ldap_search_base«.
+    </para>
+    <para>
+        Voreinstellung: der Wert von <emphasis>ldap_search_base</emphasis>
+    </para>
+    <para>
+        Bitte beachten Sie, dass die Angabe von Gültigkeitsbereich oder Filter nicht
+beim Suchen auf einem Active-Directory-Server unterstützt wird, der
+möglicherweise eine große Anzahl an Ergebnissen zurückliefern und in der
+Antwort die Erweiterung »Range Retrieval« auslösen könnte.
+    </para>
+</listitem>

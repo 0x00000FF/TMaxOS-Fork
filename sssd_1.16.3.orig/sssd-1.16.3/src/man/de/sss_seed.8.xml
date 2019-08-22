@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD-Handbuchseiten</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_seed</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_seed</refname>
+        <refpurpose>füllt den SSSD-Zwischenspeicher mit einem Benutzer</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_seed</command> <arg choice='opt'>
+<replaceable>Optionen</replaceable> </arg> <arg choice='plain'>-D
+<replaceable>DOMAIN</replaceable></arg> <arg choice='plain'>-n
+<replaceable>BENUTZER</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>BESCHREIBUNG</title>
+        <para>
+            <command>sss_seed</command> füllt den SSSD-Zwischenspeicher mit einem
+Benutzereintrag und einem temporären Passwort. Falls bereits ein
+Benutzereintrag im SSSD-Zwischenspeicher vorhanden ist, wird der Eintrag mit
+dem temporären Passwort aktualisiert.
+        </para>
+        <para>
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPTIONEN</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-D</option>,<option>--domain</option>
+<replaceable>DOMAIN</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        stellt den Namen der Doamin bereit, in der der Benutzer Mitglied ist. Die
+Domain wird auch zur Abfrage von Benutzerinformationen verwendet. Sie muss
+in der »sssd.conf« konfiguriert sein. Die Option
+<replaceable>DOMAIN</replaceable> muss bereitgestellt werden. Von der Domain
+geholte Informationen setzen das, was in den Optionen bereitgestellt wurde,
+außer Kraft.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-n</option>,<option>--username</option>
+<replaceable>BENUTZER</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        der Benutzername des Eintrags, der im Zwischenspeicher erstellt oder
+verändert werden soll. Die Option <replaceable>BENUTZER</replaceable> muss
+bereitgestellt werden.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-u</option>,<option>--uid</option> <replaceable>UID</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        setzt die UID des Benutzers auf <replaceable>UID</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-g</option>,<option>--gid</option> <replaceable>GID</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        setzt die GID des Benutzers auf <replaceable>GID</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-c</option>,<option>--gecos</option>
+<replaceable>KOMMENTAR</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        irgendeine Zeichenkette, die den Benutzer beschreibt. Dieses Feld wird oft
+für den vollständigen Namen des Benutzers verwendet.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-h</option>,<option>--home</option>
+<replaceable>HOME_VERZ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        setzt das Home-Verzeichnis des Benutzers auf
+<replaceable>HOME_VERZ</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--shell</option>
+<replaceable>SHELL</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        setzt die Anmelde-Shell des Benutzers auf <replaceable>SHELL</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-i</option>,<option>--interactive</option>
+                </term>
+                <listitem>
+                    <para>
+                        interaktiver Modus zur Eingabe von Benutzerinformationen. Diese Option wird
+nur nach Informationen fragen, die nicht von den Optionen bereitgestellt
+oder in der Domain geholt werden.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-p</option>,<option>--password-file</option>
+<replaceable>PASSWORTDATEI</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        gibt die Datei an, aus der das Passwort des Benutzers gelesen wird (ist es
+nicht angegeben, wird nach dem Passwort gefragt).
+                    </para>
+                </listitem>
+            </varlistentry>
+           <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>ANMERKUNGEN</title>
+        <para>
+            Die Länge des Passworts (oder die Größe der mit der Option -p oder
+--password-file angegebenen Datei) muss kleiner oder gleich PASS_MAX Byte
+sein (64 Byte auf Systemen ohne global definiertem Wert für PASS_MAX).
+        </para>
+        <para>
+        </para>
+    </refsect1>
+
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

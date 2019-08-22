@@ -1,0 +1,108 @@
+<refsect1 id='failover'>
+    <title>CONMUTACIÓN POR ERROR</title>
+    <para>
+        La función conmutación en error permite a los finales conmutar
+automáticamente a un servidor diferente si el servidor actual falla.
+    </para>
+    <refsect2 id='failover_syntax'>
+        <title>Sintaxis de conmutación por error</title>
+        <para>
+            La lista de servidores se da como una lista separada por comas; se permite
+cualquier número de espacios a los lados de la coma. Los servidores son
+listados en orden de preferencia. La lista puede contener cualquier número
+de servidores.
+        </para>
+        <para>
+            For each failover-enabled config option, two variants exist:
+<emphasis>primary</emphasis> and <emphasis>backup</emphasis>.  The idea is
+that servers in the primary list are preferred and backup servers are only
+searched if no primary servers can be reached. If a backup server is
+selected, a timeout of 31 seconds is set. After this timeout SSSD will
+periodically try to reconnect to one of the primary servers. If it succeeds,
+it will replace the current active (backup) server.
+        </para>
+    </refsect2>
+    <refsect2 id='failover_mechanism'>
+        <title>El mecanismo de conmutación por errorEl mecanismo de failover distingue
+entre una máquina y un servicio. El punto final intenta primero resolver el
+nombre de host de una máquina dada; si el intento de resolución falla, la
+máquina es considerada fuera de línea. No se harán más intentos de conexión
+con esta máquina para ningún otro servicio. Si el intento de resolución
+tiene éxito, el punto final intenta conectar a un servicio en esa
+máquina. Si el intento de conexión al servicio falla, entonces sólo se
+considera fuera de línea este servicio concreto y el punto final conmutará
+automáticamente sobre el siguientes servicio. La máquina se considera que
+sigue en línea y se puede intentar el acceso a otros servicios.</title>
+        <para>
+            El mecanismo de conmutación por error distingue entre una máquina y un
+servicio. El punto final intenta primero resolver el nombre de host de una
+máquina dada; si el intento de resolución falla, la máquina es considerada
+fuera de línea. No se harán más intentos de conexión con esta máquina para
+ningún otro servicio. Si el intento de resolución tiene éxito, el punto
+final intenta conectar a un servicio en esa máquina. Si el intento de
+conexión al servicio falla, entonces sólo se considera fuera de línea este
+servicio concreto y el punto final conmutará automáticamente sobre el
+siguientes servicio. La máquina se considera que sigue en línea y se puede
+intentar el acceso a otros servicios.
+        </para>
+        <para>
+            Los intentos de conexión adicionales son hechos a máquinas o servicios
+marcaros como fuera de línea después de un período de tiempo especificado;
+esto está codificado a fuego actualmente en 30 segundos.
+        </para>
+        <para>
+            Si no hay más máquinas para intentarlo, el punto final al completo conmutará
+al modo fuera de línea y después intentará reconectar cada 30 segundo.
+        </para>
+    </refsect2>
+    <refsect2 id='failover_tuning'>
+        <title>Failover time outs and tuning</title>
+        <para>
+            Resolving a server to connect to can be as simple as running a single DNS
+query or can involve several steps, such as finding the correct site or
+trying out multiple host names in case some of the configured servers are
+not reachable. The more complex scenarios can take some time and SSSD needs
+to balance between providing enough time to finish the resolution process
+but on the other hand, not trying for too long before falling back to
+offline mode. If the SSSD debug logs show that the server resolution is
+timing out before a live server is contacted, you can consider changing the
+time outs.
+        </para>
+        <para>
+            This section lists the available tunables. Please refer to their description
+in the <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>, manual page.  <variablelist>
+                <varlistentry>
+                    <term>
+                        dns_resolver_op_timeout
+                    </term>
+                    <listitem>
+                        <para>
+                            How long would SSSD talk to a single DNS server.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>
+                        dns_resolver_timeout
+                    </term>
+                    <listitem>
+                        <para>
+                            How long would SSSD try to resolve a failover service. This service
+resolution internally might include several steps, such as resolving DNS SRV
+queries or locating the site.
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+        <para>
+            For LDAP-based providers, the resolve operation is performed as part of an
+LDAP connection operation. Therefore, also the
+<quote>ldap_opt_timeout></quote> timeout should be set to a larger value
+than <quote>dns_resolver_timeout</quote> which in turn should be set to a
+larger value than <quote>dns_resolver_op_timeout</quote>.
+        </para>
+    </refsect2>
+</refsect1>

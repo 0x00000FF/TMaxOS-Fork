@@ -1,0 +1,44 @@
+<refsect1 id='service_discovery'>
+    <title>SERVICIO DE DESCUBRIMIENTO</title>
+    <para>
+        La función servicio descubridor permite a los puntos finales encontrar
+automáticamente los servidores apropiados a conectar para usar una pregunta
+especial al DNS. Esta función no está soportada por los servidores de
+respaldo.
+    </para>
+    <refsect2 id='configuration'>
+        <title>Configuración</title>
+        <para>
+            Si no se especifican servidores, el punto final usar automáticamente el
+servicio descubridor para intentar encontrar un servidor. Opcionalmente, el
+usuario puede elegir utilizar tanto las direcciones de servidor fijadas como
+el servicio descubridor para insertar una palabra clave especial,
+<quote>_srv_</quote>, en la lista de servidores. El orden de preferencia se
+mantiene. Esta función es útil sí, por ejemplo, el usuario prefiere usar el
+servicio descubridor siempre que sea posible, el volver a un servidor
+específico cuando no se pueden descubrir servidores usando DNS.
+        </para>
+    </refsect2>
+    <refsect2 id='domain_name'>
+        <title>El nombre de dominio</title>
+        <para>
+            Por favor vea el parámetro <quote>dns_discovery_domain</quote> en la página
+de manual <citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> para más detalles.
+        </para>
+    </refsect2>
+    <refsect2 id='search_protocol'>
+        <title>El protocolo</title>
+        <para>
+            Las consultas normalmente especifican _tcp como protocolo. Las excepciones
+se documentan en la descripción de la opción respectiva.
+        </para>
+    </refsect2>
+    <refsect2 id='reference'>
+        <title>Vea también</title>
+        <para>
+            Para más información sobre el mecanismo del servicio descubridor, vea el RFC
+2782.
+        </para>
+    </refsect2>
+</refsect1>

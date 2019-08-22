@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD-Handbuchseiten</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_ssh_knownhostsproxy</refentrytitle>
+        <manvolnum>1</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_ssh_knownhostsproxy</refname>
+        <refpurpose>holt OpenSSH-Rechnerschlüssel</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_ssh_knownhostsproxy</command> <arg choice='opt'>
+<replaceable>Optionen</replaceable> </arg> <arg
+choice='plain'><replaceable>RECHNER</replaceable></arg> <arg
+choice='opt'><replaceable>PROXY_BEFEHL</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>BESCHREIBUNG</title>
+        <para>
+            <command>sss_ssh_knownhostsproxy</command> acquires SSH host public keys for
+host <replaceable>HOST</replaceable>, stores them in a custom OpenSSH
+known_hosts file (see the <quote>SSH_KNOWN_HOSTS FILE FORMAT</quote> section
+of <citerefentry><refentrytitle>sshd</refentrytitle>
+<manvolnum>8</manvolnum></citerefentry> for more information)
+<filename>/var/lib/sss/pubconf/known_hosts</filename> and establishes the
+connection to the host.
+        </para>
+        <para>
+            Falls ein <replaceable>PROXY_BEFEHL</replaceable> angegeben wurde, wird er
+zum Erstellen der Verbindung mit dem Rechner benutzt, anstatt ein Socket zu
+öffnen.
+        </para>
+        <para>
+            <citerefentry><refentrytitle>ssh</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry> kann durch Verwendung der folgenden
+Richtlinien für die Konfiguration von
+<citerefentry><refentrytitle>ssh</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry> so eingerichtet werden, dass es
+<command>sss_ssh_knownhostsproxy</command> zur Authentifizierung des
+Rechnerschlüssels benutzt: <programlisting>
+ProxyCommand /usr/bin/sss_ssh_knownhostsproxy -p %p %h
+GlobalKnownHostsFile /var/lib/sss/pubconf/known_hosts
+</programlisting>
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPTIONEN</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-p</option>,<option>--port</option> <replaceable>PORT</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        benutzt Port <replaceable>PORT</replaceable> zur Verbindung mit dem
+Rechner. Standardmäßig wird Port 22 verwendet.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-d</option>,<option>--domain</option>
+<replaceable>DOMAIN</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        sucht in der SSSD-Domain nach <replaceable>DOMAIN</replaceable> öffentlichen
+Schlüsseln für den Rechner.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-k</option>,<option>--pubkeys</option>
+                </term>
+                <listitem>
+                    <para>
+                        Print the host ssh public keys for host <replaceable>HOST</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <refsect1 id='exit_status'>
+        <title>EXIT-STATUS</title>
+        <para>
+            Im Erfolgsfall ist der Rückgabewert 0, andernfalls wird 1 zurückgegeben.
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD マニュアル ページ</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_obfuscate</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_obfuscate</refname>
+        <refpurpose>平文パスワードをわかりにくくする</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_obfuscate</command> <arg choice='opt'>
+<replaceable>options</replaceable> </arg> <arg
+choice='plain'><replaceable>[PASSWORD]</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>概要</title>
+        <para>
+            <command>sss_obfuscate</command> は、与えられたパスワードを人間が読みにくい形式に変換して、SSSD
+設定ファイルの適切なドメインセクションに置きます。
+        </para>
+        <para>
+            平文のパスワードは、標準入力から読み込まれます、または対話的に入力されます。解読しにくくされたパスワードが指定された SSSD ドメインの
+<quote>ldap_default_authtok</quote> パラメータに置かれます。また
+<quote>ldap_default_authtok_type</quote> パラメーターが
+<quote>obfuscated_password</quote> に設定されます。これらのパラメーターの詳細は <citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> を参照してください。
+        </para>
+        <para>
+            パスワードをわかりにくくすることは、攻撃者がパスワードをリバースエンジニアリングできるので
+<emphasis>実際にセキュリティの便益</emphasis> は提供されません。クライアントサイド証明書や GSSAPI
+のようなより良い認証機構を使用することを <emphasis>強く</emphasis> 推奨します。
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>オプション</title>
+        <variablelist remap='IP'>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help_py.xml" />
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--stdin</option>
+                </term>
+                <listitem>
+                    <para>
+                        解読しにくくするパスワードが標準入力から読み込まれます。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-d</option>,<option>--domain</option>
+<replaceable>DOMAIN</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        パスワードに使用する SSSD ドメインです。名前の初期値は <quote>default</quote> です。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-f</option>,<option>--file</option> <replaceable>FILE</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        位置パラメーターにより指定された設定ファイルを読み込みます。
+                    </para>
+                    <para>
+                        初期値: <filename>/etc/sssd/sssd.conf</filename>
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

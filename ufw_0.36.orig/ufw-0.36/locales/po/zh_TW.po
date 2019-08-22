@@ -1,0 +1,957 @@
+# Simplified Chinese translation for ufw
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the ufw package.
+# Rex Tsai <chihchun@kalug.linux.org.tw>, 2011.
+# Xhacker Liu <liu.dongyuan@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ufw\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-02-20 14:16-0600\n"
+"PO-Revision-Date: 2012-12-12 10:04+0000\n"
+"Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
+"Language-Team: Chinese (traditional) <chinese-l10n@googlegroups.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2015-01-26 20:08+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
+"Language: zh_TW\n"
+
+#: src/ufw:56
+msgid ": Need at least python 2.6)\n"
+msgstr ": 需要至少 python 2.6)\n"
+
+#: src/ufw:109 src/frontend.py:596 src/frontend.py:898
+msgid "Aborted"
+msgstr "中止"
+
+#: src/applications.py:36
+msgid "Profiles directory does not exist"
+msgstr "設定目錄不存在"
+
+#: src/applications.py:68
+#, python-format
+msgid "Skipping '%s': couldn't stat"
+msgstr "跳過‘%s’：無法查詢檔案狀態 (stat)"
+
+#: src/applications.py:73
+#, python-format
+msgid "Skipping '%s': too big"
+msgstr "跳過 '%s'：太大"
+
+#: src/applications.py:78
+#, python-format
+msgid "Skipping '%s': too many files read already"
+msgstr "跳過‘%s’：已經開啟太多檔案"
+
+#: src/applications.py:92
+#, python-format
+msgid "Skipping '%s': couldn't process"
+msgstr "跳過 '%s'：無法執行"
+
+#: src/applications.py:99
+#, python-format
+msgid "Skipping '%s': name too long"
+msgstr "跳過 '%s'：名稱太長"
+
+#: src/applications.py:104
+#, python-format
+msgid "Skipping '%s': invalid name"
+msgstr "跳過 '%s'：無效名稱"
+
+#: src/applications.py:110
+#, python-format
+msgid "Skipping '%s': also in /etc/services"
+msgstr "跳過 '%s'：在 /etc/services 中也存在"
+
+#: src/applications.py:119
+#, python-format
+msgid "Skipping '%s': field too long"
+msgstr "跳過 '%s'：域太長"
+
+#: src/applications.py:124
+#, python-format
+msgid "Skipping '%(value)s': value too long for '%(field)s'"
+msgstr "跳過 “%(value)s”： 對于 “%(field)s”來說，值過長"
+
+#: src/applications.py:134
+#, python-format
+msgid "Duplicate profile '%s', using last found"
+msgstr "重復的設定 “%s”，使用上次發現的設定"
+
+#: src/applications.py:171
+#, python-format
+msgid "Profile '%(fn)s' missing required field '%(f)s'"
+msgstr "設定 '%(fn)s' 缺少必需的欄位 %(f)s'"
+
+#: src/applications.py:176
+#, python-format
+msgid "Profile '%(fn)s' has empty required field '%(f)s'"
+msgstr "設定 '%(fn)s' 的必需欄位 '%(f)s' 為空"
+
+#: src/applications.py:182
+#, python-format
+msgid "No ports found in profile '%s'"
+msgstr "在設定 “%s” 中未發現埠號"
+
+#: src/applications.py:195
+#, python-format
+msgid "Invalid ports in profile '%s'"
+msgstr "設定 '%s' 中含有無效的埠號"
+
+#: src/backend_iptables.py:77
+msgid "New profiles:"
+msgstr "新建設定檔案:"
+
+#: src/backend_iptables.py:93 src/backend.py:351
+#, python-format
+msgid "Unsupported policy '%s'"
+msgstr "不支援 '%s' 策略"
+
+#: src/backend_iptables.py:98
+#, python-format
+msgid "Unsupported policy for direction '%s'"
+msgstr "不支援 '%s' 方向的策略"
+
+#: src/backend_iptables.py:158
+#, python-format
+msgid "Default %(direction)s policy changed to '%(policy)s'\n"
+msgstr "預設的 %(direction)s 策略更改為 '%(policy)s'\n"
+
+#: src/backend_iptables.py:160
+msgid "(be sure to update your rules accordingly)"
+msgstr "（請相應更新您的防火牆規則）"
+
+#: src/backend_iptables.py:167
+msgid "Checking raw iptables\n"
+msgstr "檢查原始的 iptables\n"
+
+#: src/backend_iptables.py:168
+msgid "Checking raw ip6tables\n"
+msgstr "檢查原始的 ip6tables\n"
+
+#: src/backend_iptables.py:261
+msgid "Checking iptables\n"
+msgstr "檢查 iptables\n"
+
+#: src/backend_iptables.py:263
+msgid "Checking ip6tables\n"
+msgstr "檢查 ip6tables\n"
+
+#: src/backend_iptables.py:266 src/backend_iptables.py:541
+msgid "problem running"
+msgstr "運行時出現問題"
+
+#: src/backend_iptables.py:272
+msgid "Status: inactive"
+msgstr "狀態：不活動"
+
+#: src/backend_iptables.py:432
+msgid "To"
+msgstr "至"
+
+#: src/backend_iptables.py:433
+msgid "From"
+msgstr "來自"
+
+#: src/backend_iptables.py:434
+msgid "Action"
+msgstr "動作"
+
+#: src/backend_iptables.py:450 src/backend_iptables.py:454
+msgid "\n"
+msgstr "\n"
+
+#: src/backend_iptables.py:462
+#, python-format
+msgid "Default: %(in)s (incoming), %(out)s (outgoing), %(routed)s (routed)"
+msgstr ""
+
+#: src/backend_iptables.py:470
+#, python-format
+msgid ""
+"Status: active\n"
+"%(log)s\n"
+"%(pol)s\n"
+"%(app)s%(status)s"
+msgstr ""
+"狀態: 啓用\n"
+"%(log)s\n"
+"%(pol)s\n"
+"%(app)s%(status)s"
+
+#: src/backend_iptables.py:474
+#, python-format
+msgid "Status: active%s"
+msgstr "狀態： 啓用%s"
+
+#: src/backend_iptables.py:479 src/backend_iptables.py:489
+msgid "running ufw-init"
+msgstr "運行 ufw-init"
+
+#: src/backend_iptables.py:483 src/backend_iptables.py:493
+#, python-format
+msgid ""
+"problem running ufw-init\n"
+"%s"
+msgstr ""
+"執行 ufw-init 時發生問題\n"
+"%s"
+
+#: src/backend_iptables.py:502
+msgid "Could not set LOGLEVEL"
+msgstr "無法設置 LOGLEVEL"
+
+#: src/backend_iptables.py:508
+msgid "Could not load logging rules"
+msgstr "無法載入日誌規則"
+
+#: src/backend_iptables.py:663 src/backend.py:273
+#, python-format
+msgid "Couldn't open '%s' for reading"
+msgstr "無法開啟 '%s' 進行讀操作"
+
+#: src/backend_iptables.py:674
+#, python-format
+msgid "Skipping malformed tuple (bad length): %s"
+msgstr "跳過錯誤的多員組（長度錯誤）： %s"
+
+#: src/backend_iptables.py:685
+#, python-format
+msgid "Skipping malformed tuple (iface): %s"
+msgstr ""
+
+#: src/backend_iptables.py:731
+#, python-format
+msgid "Skipping malformed tuple: %s"
+msgstr "跳過錯誤的元組： %s"
+
+#: src/backend_iptables.py:753 src/backend.py:304
+#, python-format
+msgid "'%s' is not writable"
+msgstr "%s 無法寫入"
+
+#: src/backend_iptables.py:925
+msgid "Adding IPv6 rule failed: IPv6 not enabled"
+msgstr "添加 IPv6 規則失敗：未啟用 IPv6"
+
+#: src/backend_iptables.py:929
+#, python-format
+msgid "Skipping unsupported IPv6 '%s' rule"
+msgstr "跳過不支援的 IPv6 '%s' 規則"
+
+#: src/backend_iptables.py:933
+#, python-format
+msgid "Skipping unsupported IPv4 '%s' rule"
+msgstr "跳過不支援的 IPv4 '%s' 規則"
+
+#: src/backend_iptables.py:936
+msgid "Must specify 'tcp' or 'udp' with multiple ports"
+msgstr "必須在復合的埠號中指定 'tcp' 或者 'udp'"
+
+#: src/backend_iptables.py:948
+msgid "Skipping IPv6 application rule. Need at least iptables 1.4"
+msgstr "跳過 IPv6 套用規則。需要 iptables 1.4 版或以上"
+
+#: src/backend_iptables.py:953
+#, python-format
+msgid "Invalid position '%d'"
+msgstr "無效的位置 '%d'"
+
+#: src/backend_iptables.py:957
+msgid "Cannot specify insert and delete"
+msgstr "無法指定插入和刪除"
+
+#: src/backend_iptables.py:960
+#, python-format
+msgid "Cannot insert rule at position '%d'"
+msgstr "無法在'%d'處插入規則"
+
+#: src/backend_iptables.py:1018
+msgid "Skipping inserting existing rule"
+msgstr "跳過插入已存在的規則"
+
+#: src/backend_iptables.py:1029 src/frontend.py:403
+msgid "Could not delete non-existent rule"
+msgstr "無法刪除不存在的規則"
+
+#: src/backend_iptables.py:1034
+msgid "Skipping adding existing rule"
+msgstr "跳過添加已經存在的規則"
+
+#: src/backend_iptables.py:1050
+msgid "Couldn't update rules file"
+msgstr "無法更新防火牆規則檔案"
+
+#: src/backend_iptables.py:1055
+msgid "Rules updated"
+msgstr "已更新防火牆規則"
+
+#: src/backend_iptables.py:1057
+msgid "Rules updated (v6)"
+msgstr "已更新規則（v6）"
+
+#: src/backend_iptables.py:1065
+msgid "Rule inserted"
+msgstr "已插入規則"
+
+#: src/backend_iptables.py:1067
+msgid "Rule updated"
+msgstr "已更新規則"
+
+#: src/backend_iptables.py:1077
+msgid " (skipped reloading firewall)"
+msgstr " (跳過重新載入的防火牆)"
+
+#: src/backend_iptables.py:1080
+msgid "Rule deleted"
+msgstr "已刪除規則"
+
+#: src/backend_iptables.py:1083
+msgid "Rule added"
+msgstr "已添加規則"
+
+#: src/backend_iptables.py:1100 src/backend_iptables.py:1191
+msgid "Could not update running firewall"
+msgstr "無法更新正在運行的防火牆"
+
+#: src/backend_iptables.py:1155
+#, python-format
+msgid "Could not perform '%s'"
+msgstr "無法執行 '%s'"
+
+#: src/backend_iptables.py:1182
+msgid "Couldn't update rules file for logging"
+msgstr "無法爲日誌記錄更新防火牆規則"
+
+#: src/backend_iptables.py:1240 src/backend.py:591
+#, python-format
+msgid "Invalid log level '%s'"
+msgstr "無效的日誌級別 '%s'"
+
+#: src/backend_iptables.py:1337
+#, python-format
+msgid "Could not find '%s'. Aborting"
+msgstr "無法找到 '%s'。取消中"
+
+#: src/backend_iptables.py:1349
+#, python-format
+msgid "'%s' already exists. Aborting"
+msgstr "'%s' 已存在，取消中"
+
+#: src/backend_iptables.py:1355
+#, python-format
+msgid "Backing up '%(old)s' to '%(new)s'\n"
+msgstr "備份 '%(old)s' 到 '%(new)s\n"
+
+#: src/backend_iptables.py:1371 src/backend.py:229
+#, python-format
+msgid "Couldn't stat '%s'"
+msgstr "無法在 '%s' 上運行 stat 指令"
+
+#: src/backend_iptables.py:1376
+#, python-format
+msgid "WARN: '%s' is world writable"
+msgstr "WARN: %s 是全域可寫屬性"
+
+#: src/backend_iptables.py:1378
+#, python-format
+msgid "WARN: '%s' is world readable"
+msgstr "WARN: %s 是全局可讀屬性"
+
+#: src/backend.py:69
+msgid "Couldn't determine iptables version"
+msgstr "無法判斷 iptables 的版本"
+
+#: src/backend.py:143
+msgid "problem running sysctl"
+msgstr ""
+
+#: src/backend.py:182
+msgid "Checks disabled"
+msgstr "檢查被禁用"
+
+#: src/backend.py:188
+msgid "ERROR: this script should not be SUID"
+msgstr "錯誤： 這個腳本無法被 SUID"
+
+#: src/backend.py:191
+msgid "ERROR: this script should not be SGID"
+msgstr "錯誤： 這個腳本無法被 SGID"
+
+#: src/backend.py:196
+msgid "You need to be root to run this script"
+msgstr "只有 root 使用者才能運行此腳本"
+
+#: src/backend.py:206
+#, python-format
+msgid "'%s' does not exist"
+msgstr "“%s”不存在"
+
+#: src/backend.py:235
+#, python-format
+msgid "uid is %(uid)s but '%(path)s' is owned by %(st_uid)s"
+msgstr "uid 是 %(uid)s 但是 '%(path)s' 屬於 %(st_uid)s"
+
+#: src/backend.py:242
+#, python-format
+msgid "%s is world writable!"
+msgstr "%s 是全局可寫屬性！"
+
+#: src/backend.py:246
+#, python-format
+msgid "%s is group writable!"
+msgstr "%s 是全組可寫屬性！"
+
+#: src/backend.py:262
+#, python-format
+msgid "'%(f)s' file '%(name)s' does not exist"
+msgstr "'%(f)s' 檔案 '%(name)s' 不存在"
+
+#: src/backend.py:287
+#, python-format
+msgid "Missing policy for '%s'"
+msgstr "針對  '%s' 的策略不存在"
+
+#: src/backend.py:291
+#, python-format
+msgid "Invalid policy '%(policy)s' for '%(chain)s'"
+msgstr "'%(chain)s' 的策略 '%(policy)s' 無效"
+
+#: src/backend.py:298
+msgid "Invalid option"
+msgstr "無效選項"
+
+#: src/backend.py:354
+#, python-format
+msgid "Default application policy changed to '%s'"
+msgstr "'%s' 的預設套用程序策略已改變"
+
+#: src/backend.py:421
+msgid "No rules found for application profile"
+msgstr "沒有發現程序設定的規則"
+
+#: src/backend.py:477
+#, python-format
+msgid "Rules updated for profile '%s'"
+msgstr "設定 '%s' 的規則已經更新"
+
+#: src/backend.py:483
+msgid "Couldn't update application rules"
+msgstr "無法更新套用程序規則"
+
+#: src/backend.py:505
+#, python-format
+msgid "Found multiple matches for '%s'. Please use exact profile name"
+msgstr "'%s' 找到了多個相配。清使用更精確的設定名稱。"
+
+#: src/backend.py:508
+#, python-format
+msgid "Could not find a profile matching '%s'"
+msgstr "無法為 '%s' 找到相相配的設定"
+
+#: src/backend.py:575
+msgid "Logging: "
+msgstr "日誌: "
+
+#: src/backend.py:579
+msgid "unknown"
+msgstr "未知"
+
+#: src/backend.py:606
+msgid "Logging disabled"
+msgstr "日誌被禁用"
+
+#: src/backend.py:608
+msgid "Logging enabled"
+msgstr "日誌被啟用"
+
+#: src/common.py:191
+#, python-format
+msgid "Bad port '%s'"
+msgstr "錯誤的埠號 '%s'"
+
+#: src/common.py:252
+#, python-format
+msgid "Unsupported protocol '%s'"
+msgstr "不支援 '%s' 協定"
+
+#: src/common.py:280
+msgid "Bad source address"
+msgstr "錯誤的源地址"
+
+#: src/common.py:290
+msgid "Bad destination address"
+msgstr "錯誤的目標地址"
+
+#: src/common.py:298
+msgid "Bad interface type"
+msgstr "錯誤的接口類型"
+
+#: src/common.py:302
+msgid "Bad interface name: reserved character: '!'"
+msgstr ""
+
+#: src/common.py:306
+msgid "Bad interface name"
+msgstr "錯誤的接口名稱"
+
+#: src/common.py:310
+msgid "Bad interface name: can't use interface aliases"
+msgstr "錯誤的接口名稱：無法使用接口別名"
+
+#: src/common.py:321
+#, python-format
+msgid "Insert position '%s' is not a valid position"
+msgstr "插入位置‘%s'不是一個有效的位置"
+
+#: src/common.py:331
+#, python-format
+msgid "Invalid log type '%s'"
+msgstr "無效的日誌類型'%s'"
+
+#: src/common.py:339
+#, python-format
+msgid "Unsupported direction '%s'"
+msgstr "不支援 '%s' 方向"
+
+#: src/common.py:350
+msgid "Could not normalize source address"
+msgstr ""
+
+#: src/common.py:361
+msgid "Could not normalize destination address"
+msgstr "無法標準化目標地址"
+
+#: src/common.py:425
+msgid "Found exact match"
+msgstr "找到完全相配項"
+
+#: src/common.py:429
+#, python-format
+msgid "Found non-action/non-logtype match (%(xa)s/%(ya)s %(xl)s/%(yl)s)"
+msgstr "Found non-action/non-logtype match (%(xa)s/%(ya)s %(xl)s/%(yl)s)"
+
+#: src/frontend.py:90
+#, python-format
+msgid ""
+"\n"
+"Usage: %(progname)s %(command)s\n"
+"\n"
+"%(commands)s:\n"
+" %(enable)-31s enables the firewall\n"
+" %(disable)-31s disables the firewall\n"
+" %(default)-31s set default policy\n"
+" %(logging)-31s set logging to %(level)s\n"
+" %(allow)-31s add allow %(rule)s\n"
+" %(deny)-31s add deny %(rule)s\n"
+" %(reject)-31s add reject %(rule)s\n"
+" %(limit)-31s add limit %(rule)s\n"
+" %(delete)-31s delete %(urule)s\n"
+" %(insert)-31s insert %(urule)s at %(number)s\n"
+" %(reload)-31s reload firewall\n"
+" %(reset)-31s reset firewall\n"
+" %(status)-31s show firewall status\n"
+" %(statusnum)-31s show firewall status as numbered list of %(rules)s\n"
+" %(statusverbose)-31s show verbose firewall status\n"
+" %(show)-31s show firewall report\n"
+" %(version)-31s display version information\n"
+"\n"
+"%(appcommands)s:\n"
+" %(applist)-31s list application profiles\n"
+" %(appinfo)-31s show information on %(profile)s\n"
+" %(appupdate)-31s update %(profile)s\n"
+" %(appdefault)-31s set default application policy\n"
+msgstr ""
+
+#: src/frontend.py:164
+msgid "n"
+msgstr "n"
+
+#: src/frontend.py:165
+msgid "y"
+msgstr "y"
+
+#: src/frontend.py:166
+msgid "yes"
+msgstr "是"
+
+#: src/frontend.py:211
+msgid "Firewall is active and enabled on system startup"
+msgstr "在系統啟動時啟用防火牆"
+
+#: src/frontend.py:218
+msgid "Firewall stopped and disabled on system startup"
+msgstr "在系統啟動時停用防火牆"
+
+#: src/frontend.py:270
+msgid "Could not get listening status"
+msgstr "無法取得聽取狀態"
+
+#: src/frontend.py:339
+msgid "Added user rules (see 'ufw status' for running firewall):"
+msgstr "已添加使用者規則 (要執行防火牆請見 'ufw status'):"
+
+#: src/frontend.py:342
+msgid ""
+"\n"
+"(None)"
+msgstr ""
+"\n"
+"(無)"
+
+#: src/frontend.py:398 src/frontend.py:496 src/frontend.py:506
+#, python-format
+msgid "Invalid IP version '%s'"
+msgstr "錯誤的 IP 協定版本 '%s'"
+
+#: src/frontend.py:429
+msgid "Invalid position '"
+msgstr "無效位置 '"
+
+#: src/frontend.py:503
+msgid "IPv6 support not enabled"
+msgstr "未啟用 IPv6 支援"
+
+#: src/frontend.py:514
+msgid "Rule changed after normalization"
+msgstr "標準化後規則被改變"
+
+#: src/frontend.py:538
+#, python-format
+msgid "Could not back out rule '%s'"
+msgstr "無法備份規則 '%s'"
+
+#: src/frontend.py:542
+msgid ""
+"\n"
+"Error applying application rules."
+msgstr ""
+"\n"
+"套用規則時出錯。"
+
+#: src/frontend.py:544
+msgid " Some rules could not be unapplied."
+msgstr " 一些規則無法被撤銷。"
+
+#: src/frontend.py:546
+msgid " Attempted rules successfully unapplied."
+msgstr " 成功撤銷了對嘗試規則的套用。"
+
+#: src/frontend.py:557
+#, python-format
+msgid "Could not find rule '%s'"
+msgstr "無法找到規則 '%s'"
+
+#: src/frontend.py:562 src/frontend.py:567
+#, python-format
+msgid "Could not find rule '%d'"
+msgstr "無法找到規則 '%d'"
+
+#: src/frontend.py:583
+#, python-format
+msgid ""
+"Deleting:\n"
+" %(rule)s\n"
+"Proceed with operation (%(yes)s|%(no)s)? "
+msgstr ""
+"刪除中:\n"
+" %(rule)s\n"
+" 繼續執行(%(yes)s|%(no)s)？ "
+
+#: src/frontend.py:614
+msgid "Unsupported default policy"
+msgstr "預設策略不受支援"
+
+#: src/frontend.py:643 src/frontend.py:788
+msgid "Firewall reloaded"
+msgstr "已經重新載入防火牆"
+
+#: src/frontend.py:645
+msgid "Firewall not enabled (skipping reload)"
+msgstr "未啟用防火牆(跳過重新載入)"
+
+#: src/frontend.py:662 src/frontend.py:676 src/frontend.py:713
+msgid "Invalid profile name"
+msgstr "無效的設定檔案名"
+
+#: src/frontend.py:681 src/frontend.py:863
+#, python-format
+msgid "Unsupported action '%s'"
+msgstr "不支援 '%s' 動作"
+
+#: src/frontend.py:700
+msgid "Available applications:"
+msgstr "可用套用程序："
+
+#: src/frontend.py:721
+#, python-format
+msgid "Could not find profile '%s'"
+msgstr "無法找到設定檔案 '%s'"
+
+#: src/frontend.py:726
+msgid "Invalid profile"
+msgstr "無效設定檔案"
+
+#: src/frontend.py:729
+#, python-format
+msgid "Profile: %s\n"
+msgstr "設定: %s\n"
+
+#: src/frontend.py:730
+#, python-format
+msgid "Title: %s\n"
+msgstr "標題：%s\n"
+
+#: src/frontend.py:733
+#, python-format
+msgid ""
+"Description: %s\n"
+"\n"
+msgstr ""
+"描述： %s\n"
+"\n"
+
+#: src/frontend.py:739
+msgid "Ports:"
+msgstr "埠號："
+
+#: src/frontend.py:741
+msgid "Port:"
+msgstr "埠號:"
+
+#: src/frontend.py:790
+msgid "Skipped reloading firewall"
+msgstr "跳過重新載入防火牆"
+
+#: src/frontend.py:800
+msgid "Cannot specify 'all' with '--add-new'"
+msgstr "無法指定 'all' 使用 '--add-new'"
+
+#: src/frontend.py:815
+#, python-format
+msgid "Unknown policy '%s'"
+msgstr "未知的策略 '%s'"
+
+#: src/frontend.py:872
+#, python-format
+msgid ""
+"Command may disrupt existing ssh connections. Proceed with operation "
+"(%(yes)s|%(no)s)? "
+msgstr "指令可能會中斷現有的 ssh 連接。繼續執行(%(yes)s|%(no)s)？ "
+
+#: src/frontend.py:885
+#, python-format
+msgid ""
+"Resetting all rules to installed defaults. Proceed with operation "
+"(%(yes)s|%(no)s)? "
+msgstr "重設所有規則為預設值。繼續執行(%(yes)s|%(no)s)？ "
+
+#: src/frontend.py:889
+#, python-format
+msgid ""
+"Resetting all rules to installed defaults. This may disrupt existing ssh "
+"connections. Proceed with operation (%(yes)s|%(no)s)? "
+msgstr "重設所有規則為預設，這可能影響現有 ssh 連線。繼續執行(%(yes)s|%(no)s)？ "
+
+#: src/parser.py:108
+#, python-format
+msgid "Cannot insert rule at position '%s'"
+msgstr "無法在'%s'處插入規則"
+
+#: src/parser.py:142
+msgid "Invalid interface clause"
+msgstr "錯誤的介面語法"
+
+#: src/parser.py:168
+msgid "Option 'log' not allowed here"
+msgstr "此處不允許使用 'log' 選項"
+
+#: src/parser.py:172
+msgid "Option 'log-all' not allowed here"
+msgstr "此處不允許使用 'log-all' 選項"
+
+#: src/parser.py:205 src/parser.py:219
+msgid "Bad port"
+msgstr "錯誤的埠號"
+
+#: src/parser.py:210 src/parser.py:342
+msgid "Port ranges must be numeric"
+msgstr "埠號範圍必須為數字"
+
+#: src/parser.py:224 src/parser.py:441
+#, python-format
+msgid "Invalid port with protocol '%s'"
+msgstr "'%s' 中使用無效的埠號"
+
+#: src/parser.py:228
+msgid "Wrong number of arguments"
+msgstr "參數數目錯誤"
+
+#: src/parser.py:232
+msgid "Need 'to' or 'from' clause"
+msgstr "需要 'to' 或者 'from' 從句"
+
+#: src/parser.py:247
+msgid "Improper rule syntax"
+msgstr "防火牆規則的語法不正確"
+
+#: src/parser.py:254
+#, python-format
+msgid "Invalid token '%s'"
+msgstr "無效的標記 '%s'"
+
+#: src/parser.py:266
+msgid "Invalid 'proto' clause"
+msgstr "無效的 'proto' 從句"
+
+#: src/parser.py:281
+#, python-format
+msgid "Invalid '%s' clause"
+msgstr "錯誤 '%s' 語法"
+
+#: src/parser.py:303
+msgid "Invalid 'from' clause"
+msgstr "無效的 'from' 從句"
+
+#: src/parser.py:325
+msgid "Invalid 'to' clause"
+msgstr "無效的 'to' 從句"
+
+#: src/parser.py:330
+#, python-format
+msgid "Need 'from' or 'to' with '%s'"
+msgstr "%s 需要 'from' 或 'to'"
+
+#: src/parser.py:357
+msgid "Invalid 'port' clause"
+msgstr "無效的 'port' 從句"
+
+#: src/parser.py:366
+msgid "Mixed IP versions for 'from' and 'to'"
+msgstr "'from' 和 'to' 的 IP 版本不同"
+
+#: src/parser.py:383 src/parser.py:393 src/parser.py:402
+msgid "Could not find protocol"
+msgstr "無法找到協定"
+
+#: src/parser.py:409
+msgid "Protocol mismatch (from/to)"
+msgstr "from 和 to 的協定不相配"
+
+#: src/parser.py:416
+#, python-format
+msgid "Protocol mismatch with specified protocol %s"
+msgstr "協定與指定的協定 %s 不相配"
+
+#: src/parser.py:423
+#, python-format
+msgid "Improper rule syntax ('%s' specified with app rule)"
+msgstr "規則語法不正確 ('%s' 是由程序規則指定的)"
+
+#: src/parser.py:430
+#, python-format
+msgid "Invalid IPv6 address with protocol '%s'"
+msgstr "無效的 IPv6 位址 '%s'"
+
+#: src/parser.py:563
+msgid "Invalid interface clause for route rule"
+msgstr ""
+
+#: src/parser.py:849
+#, python-format
+msgid "Command '%s' already exists"
+msgstr "命令 '%s' 已經存在"
+
+#: src/util.py:434
+msgid "Couldn't find pid (is /proc mounted?)"
+msgstr "無法找到 pid (/proc 是否已經掛載？)"
+
+#: src/util.py:438
+#, python-format
+msgid "Couldn't find parent pid for '%s'"
+msgstr "無法找到 '%s' 的母行程"
+
+#: src/util.py:448
+#, python-format
+msgid "Couldn't find '%s'"
+msgstr "無法找到 '%s'"
+
+#: src/util.py:454
+#, python-format
+msgid "Could not find executable for '%s'"
+msgstr "無法找到針對 '%s' 的可執行檔"
+
+#: src/util.py:1006
+#, python-format
+msgid "Could not get statistics for '%s'"
+msgstr "無法取得 '%s' 數據"
+
+#~ msgid ": Need at least python 2.5)\n"
+#~ msgstr ": 需要至少 python 2.5)\n"
+
+#, python-format
+#~ msgid "Default: %(in)s (incoming), %(out)s (outgoing)"
+#~ msgstr "Default: %(in)s (入), %(out)s (出)"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "Usage: %(progname)s %(command)s\n"
+#~ "\n"
+#~ "%(commands)s:\n"
+#~ " %(enable)-31s enables the firewall\n"
+#~ " %(disable)-31s disables the firewall\n"
+#~ " %(default)-31s set default policy\n"
+#~ " %(logging)-31s set logging to %(level)s\n"
+#~ " %(allow)-31s add allow %(rule)s\n"
+#~ " %(deny)-31s add deny %(rule)s\n"
+#~ " %(reject)-31s add reject %(rule)s\n"
+#~ " %(limit)-31s add limit %(rule)s\n"
+#~ " %(delete)-31s delete %(urule)s\n"
+#~ " %(insert)-31s insert %(urule)s at %(number)s\n"
+#~ " %(reset)-31s reset firewall\n"
+#~ " %(status)-31s show firewall status\n"
+#~ " %(statusnum)-31s show firewall status as numbered list of %(rules)s\n"
+#~ " %(statusverbose)-31s show verbose firewall status\n"
+#~ " %(show)-31s show firewall report\n"
+#~ " %(version)-31s display version information\n"
+#~ "\n"
+#~ "%(appcommands)s:\n"
+#~ " %(applist)-31s list application profiles\n"
+#~ " %(appinfo)-31s show information on %(profile)s\n"
+#~ " %(appupdate)-31s update %(profile)s\n"
+#~ " %(appdefault)-31s set default application policy\n"
+#~ msgstr ""
+#~ "\n"
+#~ "用法: %(progname)s %(command)s\n"
+#~ "\n"
+#~ "%(commands)s:\n"
+#~ " %(enable)-31s 啟用防火牆\n"
+#~ " %(disable)-31s 停用防火牆\n"
+#~ " %(default)-31s 測定預設策略\n"
+#~ " %(logging)-31s 設定紀錄到 %(level)s\n"
+#~ " %(allow)-31s 新增允許 %(rule)s\n"
+#~ " %(deny)-31s 新增拒絕(deny) %(rule)s\n"
+#~ " %(reject)-31s 新增抵制(reject) %(rule)s\n"
+#~ " %(limit)-31s 新增限制 %(rule)s\n"
+#~ " %(delete)-31s 刪除 %(urule)s\n"
+#~ " %(insert)-31s 插入 %(urule)s 到 %(number)s\n"
+#~ " %(reset)-31s 重設防火牆\n"
+#~ " %(status)-31s 顯示防火牆狀態\n"
+#~ " %(statusnum)-31s 以條列 %(rules)s 顯示防火牆狀態\n"
+#~ " %(statusverbose)-31s 顯示防火牆狀態明細\n"
+#~ " %(show)-31s 顯示防火牆報告\n"
+#~ " %(version)-31s 顯示版本資訊\n"
+#~ "\n"
+#~ "%(appcommands)s:\n"
+#~ " %(applist)-31s 顯示應用程式設定\n"
+#~ " %(appinfo)-31s 顯示 %(profile)s 資訊\n"
+#~ " %(appupdate)-31s 更新 %(profile)s\n"
+#~ " %(appdefault)-31s 設定預設應用程式策略\n"
+
+#, python-format
+#~ msgid "Invalid command '%s'"
+#~ msgstr "無效指令 '%s'"

@@ -1,0 +1,79 @@
+Source: java-common
+Section: java
+Priority: optional
+Maintainer: Debian Java Maintainers <pkg-java-maintainers@lists.alioth.debian.org>
+Uploaders: Matthias Klose <doko@debian.org>
+Build-Depends: debhelper (>= 11)
+Standards-Version: 4.3.0
+Vcs-Git: https://salsa.debian.org/java-team/java-common.git
+Vcs-Browser: https://salsa.debian.org/java-team/java-common
+Homepage: https://wiki.debian.org/Java/
+
+Package: java-common
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Suggests: default-jre
+Description: Base package for Java runtimes
+ This package provides common tools for the Java runtimes, such as
+ the update-java-alternatives mechanism used to switch between
+ different versions of Java.
+
+Package: default-jre
+Architecture: any
+Depends: default-jre-headless (= ${binary:Version}), ${jre},
+ ${misc:Depends}
+Provides: ${jre:provides}
+Description: Standard Java or Java compatible Runtime
+ This dependency package points to the Java runtime, or Java compatible
+ runtime recommended for this architecture, which is
+ ${jre} for ${jre:arch}.
+XB-Cnf-Extra-Commands: java,jexec
+
+Package: default-jre-headless
+Architecture: any
+Depends: ${jhl}, java-common, ${misc:Depends}
+Suggests: default-jre
+Provides: ${jhl:provides}
+Replaces: openjdk-6-jre-headless (<< 6b23~pre8-2~)
+Description: Standard Java or Java compatible Runtime (headless)
+ This dependency package points to the Java runtime, or Java compatible
+ runtime recommended for this architecture, which is
+ ${jhl} for ${jre:arch}.
+ .
+ The package is used as dependency for packages not needing a
+ graphical display during runtime.
+
+Package: default-jdk
+Architecture: any
+Depends: default-jre (= ${binary:Version}), default-jdk-headless (= ${binary:Version}), ${jdk},
+ ${misc:Depends}
+Provides: ${jdk:provides}
+Description: Standard Java or Java compatible Development Kit
+ This dependency package points to the Java runtime, or Java compatible
+ development kit recommended for this architecture, which is
+ ${jdk} for ${jre:arch}.
+XB-Cnf-Extra-Commands: javac,javadoc,jar
+
+Package: default-jdk-headless
+Architecture: any
+Depends: default-jre-headless (= ${binary:Version}), ${jdkhl},
+ ${misc:Depends}
+Provides: ${jdkhl:provides}
+Description: Standard Java or Java compatible Development Kit (headless)
+ This dependency package points to the Java runtime, or Java compatible
+ development kit recommended for this architecture, which is
+ ${jdkhl} for ${jre:arch}.
+ .
+ The package is used as dependency for packages not needing a
+ graphical display during runtime.
+
+Package: default-jdk-doc
+Architecture: any
+Section: doc
+Depends: ${doc}, ${misc:Depends}
+Suggests: default-jdk
+Description: Standard Java or Java compatible Development Kit (documentation)
+ This dependency package points to the documentation for the Java development
+ kit, or Java compatible development kit recommended for Debian, which is
+ ${doc} for ${jre:arch}.

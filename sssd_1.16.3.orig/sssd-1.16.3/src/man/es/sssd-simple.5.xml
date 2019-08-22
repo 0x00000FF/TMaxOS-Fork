@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Páginas de manual de SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-simple</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Formatos de archivo y convenciones</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-simple</refname>
+        <refpurpose>el fichero de configuración para en proveedor de control de acceso 'simple'
+de SSSD</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPCION</title>
+        <para>
+            Esta página de manual describe la configuración del proveedor de control de
+acceso simple para <citerefentry> <refentrytitle>sssd</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry>.  Para una referencia detallada de
+sintaxis, vea la sección <quote>FILE FORMAT</quote> de la página de manual
+<citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+        </para>
+        <para>
+            El proveedor de acceso simple otorga o deniega el acceso en base a una lista
+de acceso o denegación de usuarios o grupo de nombres. Se aplican las
+siguientes reglas:
+            <itemizedlist>
+                <listitem>
+                    <para>Si todas las listas están vacías, se concede acceso</para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Si se ha suministrado alguna lista, el orden de evaluación es
+permitir,denegar. Esto significa que cualquier regla de denegación será
+saltada por cualquier regla de permiso coincidente.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Si una o ambas listas de "permiso" se suministran, todos los usuarios serán
+denegados a no ser que aparezcan en la lista.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Si sólo se suministran listas de "denegación", todos los usuarios obtendran
+acceso a no ser que aparezcan en la lista.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </para>
+    </refsect1>
+
+    <refsect1 id='configuration-options'>
+        <title>OPCIONES DE CONFIGURACIÓN</title>
+        <para>Vea la sección  <quote>DOMAIN SECTIONS</quote> de la página de manual
+<citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> para detalles sobre la
+configuración de un dominio SSSD. <variablelist>
+                <varlistentry>
+                    <term>simple_allow_users (cadena)</term>
+                    <listitem>
+                        <para>
+                            Lista separada por comas de usuarios a los está permitido el acceso.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>simple_deny_users (cadena)</term>
+                    <listitem>
+                        <para>
+                            Lista separada por comas de usuarios a los que explicítamente se les deniega
+el acceso.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>simple_allow_groups (cadena)</term>
+                    <listitem>
+                        <para>
+                            Lista separada por comas de grupos que tienen permitido el acceso. Esto se
+aplica sólo a los grupos dentro del dominio SSSD. Los grupos locales no
+serán evaluados.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>simple_deny_groups (cadena)</term>
+                    <listitem>
+                        <para>
+                            Lista separada por comas de grupos a los que explicítamente se les deniega
+el acceso. Esto se aplica sólo a los grupos dentro del dominio SSSD. Los
+grupos locales no serán evaluados.
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+        <para>
+            No especificando valores para ninguna de las listas es equivalente a
+saltarle totalmente. Tenga cuidado de esto mientras genera parámetros para
+el simple proveedor usando secuencias de comandos automatizadas.
+        </para>
+        <para>
+            Por favor advierta que es un error de configuración si tanto,
+simple_allow_users como simple_deny_user, están definidos.
+        </para>
+    </refsect1>
+
+    <refsect1 id='example'>
+        <title>EJEMPLO</title>
+        <para>
+            El siguiente ejemplo asume que SSSD está correctamente configurado y
+example.com es uno de los dominios en la sección
+<replaceable>[sssd]</replaceable>. Este ejemplo muestra sólo las opciones
+específicas del proveedor de acceso simple.
+        </para>
+        <para>
+<programlisting>
+[domain/example.com]
+access_provider = simple
+simple_allow_users = user1, user2
+</programlisting>
+        </para>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>NOTAS</title>
+        <para>
+          The complete group membership hierarchy is resolved before the access check,
+thus even nested groups can be included in the access lists.  Please be
+aware that the <quote>ldap_group_nesting_level</quote> option may impact the
+results and should be set to a sufficient value.  (<citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>) option.
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

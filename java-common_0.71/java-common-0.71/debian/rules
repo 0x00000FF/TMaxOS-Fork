@@ -1,0 +1,53 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/default.mk
+include debian/java_defaults.mk
+
+release = $(shell dpkg-parsechangelog | grep -E ^Version: | sed "s/Version: 0.//")
+
+dversion	= 2:1.$(java_default_version)-$(release)
+
+jre_provides	= java-runtime, java2-runtime, $(shell seq --format java%.f-runtime --separator ', ' 5 $(java_default_version))
+jhl_provides	= java-runtime-headless, java2-runtime-headless, $(shell seq --format java%.f-runtime-headless --separator ', ' 5 $(java_default_version))
+jdk_provides	= java-sdk, java2-sdk, $(shell seq --format java%.f-sdk --separator ', ' 5 $(java_default_version))
+jdkhl_provides	= java-sdk-headless, java2-sdk-headless, $(shell seq --format java%.f-sdk-headless --separator ', ' 5 $(java_default_version))
+
+
+%:
+	dh $@
+
+override_dh_link:
+	dh_link
+
+	# Link /usr/lib/jvm/default-java to the default JRE
+	dh_link -pdefault-jre-headless usr/lib/jvm/java-1.$(java_default_version).0-openjdk-$(DEB_HOST_ARCH) usr/lib/jvm/default-java
+
+	# Link to the JDK documentation
+	dh_link -pdefault-jdk-doc /usr/share/doc/openjdk-$(java_default_version)-doc/api usr/share/doc/default-jre-headless/api
+	dh_link -pdefault-jdk-doc /usr/share/doc/openjdk-$(java_default_version)-doc/api usr/share/doc/default-jdk-doc/api
+
+override_dh_installdocs:
+	dh_installdocs -i
+
+	# Install the changelog and copyright once in default-jre-headless and use links for the other packages
+	dh_installdocs -pdefault-jre-headless
+	dh_link -pdefault-jre          /usr/share/doc/default-jre-headless /usr/share/doc/default-jre
+	dh_link -pdefault-jdk-headless /usr/share/doc/default-jre-headless /usr/share/doc/default-jdk-headless
+	dh_link -pdefault-jdk          /usr/share/doc/default-jre          /usr/share/doc/default-jdk
+
+	dh_installdocs -pdefault-jdk-doc
+
+override_dh_gencontrol:
+	dh_gencontrol -i
+	dh_gencontrol -a -- \
+		-v$(dversion) \
+		'-Vjre=openjdk-$(java_default_version)-jre' \
+		'-Vjhl=openjdk-$(java_default_version)-jre-headless' \
+		'-Vjdk=openjdk-$(java_default_version)-jdk' \
+		'-Vjdkhl=openjdk-$(java_default_version)-jdk-headless' \
+		'-Vdoc=openjdk-$(java_default_version)-doc' \
+		'-Vjre:arch=$(DEB_HOST_ARCH)' \
+		'-Vjre:provides=$(jre_provides)' \
+		'-Vjhl:provides=$(jhl_provides)' \
+		'-Vjdkhl:provides=$(jdkhl_provides)' \
+		'-Vjdk:provides=$(jdk_provides)'

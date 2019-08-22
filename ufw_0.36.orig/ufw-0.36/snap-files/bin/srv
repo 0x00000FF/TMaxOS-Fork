@@ -1,0 +1,93 @@
+#!/bin/sh
+set -e
+
+if [ -z "$SNAP" ] || [ -z "$SNAP_DATA" ] || [ -z "$SNAP_REVISION" ]; then
+    echo "One of SNAP, SNAP_DATA or SNAP_REVISION not set"
+    exit 1
+fi
+
+files_to_merge="default/ufw ufw/before.rules ufw/before6.rules ufw/after.rules ufw/after6.rules ufw/sysctl.conf"
+profiles_to_merge="ufw/applications.d/ufw-bittorent ufw/applications.d/ufw-chat ufw/applications.d/ufw-directoryserver ufw/applications.d/ufw-dnsserver ufw/applications.d/ufw-fileserver ufw/applications.d/ufw-loginserver ufw/applications.d/ufw-mailserver ufw/applications.d/ufw-printserver ufw/applications.d/ufw-proxyserver ufw/applications.d/ufw-webserver"
+upgrade_path="$SNAP_DATA/.upgraded_${SNAP_REVISION}"
+prev_etc="$SNAP_DATA/.etc.last"
+
+copy_if_same() {
+    bn="$1"
+    prev_shipped="$prev_etc/$bn"
+    inuse="$SNAP_DATA/etc/$bn"
+    new_shipped="$SNAP/etc/$bn"
+
+    if [ ! -e "$prev_etc/$bn" ]; then
+        # If we don't yet have a previous file, just report if there is a diff
+        # between what we ship now and what is in use
+        if ! diff "$new_shipped"  "$inuse" > /dev/null ; then
+            echo "'$inuse' not updated for snap revision $SNAP_REVISION (changes cannot be merged). For details, see: $ diff -Nau '$new_shipped' '$inuse'"
+        fi
+        return
+    fi
+
+    # if the old shipped rules are the same as the rules in use (ie, the admin
+    # didn't change them), then if the new rules are different, copy them over
+    if diff "$prev_shipped" "$inuse" >/dev/null ; then
+        if ! diff "$new_shipped" "$prev_shipped" > /dev/null ; then
+            cp -f --preserve=mode "$new_shipped" "$inuse"
+            echo "'$inuse' updated to contain version from snap revision $SNAP_REVISION"
+        #else
+        #    echo "'$bn' is unchanged"
+        fi
+    else
+        echo "'$inuse' not updated for snap revision $SNAP_REVISION (changes cannot be merged). For details, see: $ diff -Nau '$new_shipped' '$inuse'"
+    fi
+}
+
+# First run, none of this exists, so just copy over wholesale
+if [ ! -e "$SNAP_DATA/lib" ]; then
+    cp -fr --preserve=mode "$SNAP/lib" "$SNAP_DATA"
+fi
+if [ ! -e "$SNAP_DATA/etc" ]; then
+    cp -fr --preserve=mode "$SNAP/etc" "$SNAP_DATA"
+    chmod 640 "$SNAP_DATA"/etc/ufw/*.rules
+    chmod 640 "$SNAP_DATA"/etc/ufw/*.init
+fi
+
+# migrate the old preserved location to the new
+if [ -e "$SNAP_DATA/.rules.orig" ]; then
+    mkdir -p "$prev_etc/ufw"
+    cp -f --preserve=mode "$SNAP_DATA/.rules.orig"/*.rules "$prev_etc/ufw"
+    rm -rf "$SNAP_DATA/.rules.orig"
+fi
+
+# On upgrades, detect if the rules file matches the shipped file, and if
+# so, apply any changes to the rules file (ie, emulate ucf)
+upgraded=
+if [ ! -e "$upgrade_path" ]; then
+    for fn in $files_to_merge $profiles_to_merge ; do
+        copy_if_same "$fn"
+    done
+
+    # remove old for housekeeping
+    rm -f "$SNAP_DATA/.upgraded*"
+
+    # add new
+    touch "$upgrade_path"
+    upgraded="yes"
+fi
+
+# Next, make sure these files are available for upgrade comparisons
+if [ -e "$prev_etc" ]; then
+    rm -rf "$prev_etc"
+fi
+mkdir "$prev_etc"
+cp -rf --preserve=mode "$SNAP/etc/"* "$prev_etc"
+
+if [ -z "$SNAP_SKIP_INIT" ]; then
+    # This is used only with 'oneshot'. We don't want to perform reloads on
+    # upgrade since that might break existing connections. We don't want to
+    # perform stop/start on upgrade since we don't want to tear down the
+    # firewall or since it might also break existing connections.
+    if [ "$upgraded" = "yes" ]; then
+        echo "skipping start/reload on upgrade"
+    else
+        "$SNAP"/lib/ufw/ufw-init --rootdir "$SNAP" --datadir "$SNAP_DATA" start
+    fi
+fi

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pages de manuel de SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_userdel</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_userdel</refname>
+        <refpurpose>Supprimer un compte utilisateur</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_userdel</command> <arg choice='opt'>
+<replaceable>options</replaceable> </arg> <arg
+choice='plain'><replaceable>LOGIN</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPTION</title>
+        <para>
+            <command>sss_userdel</command> supprime du système un utilisateur identifié
+par son identifiant de connexion <replaceable>LOGIN</replaceable>.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPTIONS</title>
+        <variablelist remap='IP'>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+            <varlistentry>
+                <term>
+                    <option>-r</option>,<option>--remove</option>
+                </term>
+                <listitem>
+                    <para>
+                        Les fichiers dans le répertoire ainsi que le répertoire lui-même de
+l'utilisateur et sa messagerie seront supprimés. Outrepasse la
+configuration.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-R</option>,<option>--no-remove</option>
+                </term>
+                <listitem>
+                    <para>
+                        Les fichiers dans le répertoire ainsi que le répertoire lui-même de
+l'utilisateur et sa messagerie ne seront PAS supprimés. Outrepasse la
+configuration.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-f</option>,<option>--force</option>
+                </term>
+                <listitem>
+                    <para>
+                        Cette option oblige <command>sss_userdel</command> à supprimer le répertoire
+home de l'utilisateur et sa messagerie, même si ils ne sont pas détenus par
+l'utilisateur spécifié.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-k</option>,<option>--kick</option>
+                </term>
+                <listitem>
+                    <para>
+                        Avant de réellement supprimer l'utilisateur, mettre fin à tous ses
+processus.
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/local.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

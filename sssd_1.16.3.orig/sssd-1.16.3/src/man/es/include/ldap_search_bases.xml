@@ -1,0 +1,33 @@
+<listitem>
+    <para>
+        Una base DN opcional, alcance de la búsqueda y filtro LDAP para búsquedas
+LDAP de este tipo de atributo.
+    </para>
+    <para>
+        sintaxis: <programlisting>
+search_base[?scope?[filter][?search_base?scope?[filter]]*]
+
+</programlisting>
+    </para>
+    <para>
+        The scope can be one of "base", "onelevel" or "subtree". The scope functions
+as specified in section 4.5.1.2 of http://tools.ietf.org/html/rfc4511
+    </para>
+    <para>
+        El filtro debe ser un filtro de búsqueda LDAP válido como se especifica en
+http://www.ietf.org/rfc/rfc2254.txt
+    </para>
+    <para>
+        Para ejemplos de esta sintaxis, por favor vea la sección de ejemplos de
+<quote>ldap_search_base</quote>
+    </para>
+    <para>
+        Predeterminado: el valor de <emphasis>ldap_search_base</emphasis>
+    </para>
+    <para>
+        Por favor advierta que especificar el alcance o el filtro no está soportado
+para búsquedas contra un Active Directory Server que puede ceder un gran
+número de resultados y disparar la extensión Range Retrieval en la
+respuesta.
+    </para>
+</listitem>

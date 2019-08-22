@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_userdel</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_userdel</refname>
+        <refpurpose>вилучення облікового запису користувача</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_userdel</command> <arg choice='opt'>
+<replaceable>параметри</replaceable> </arg> <arg
+choice='plain'><replaceable>НАЗВА_ОБЛІКОВОГО_ЗАПИСУ</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            <command>sss_userdel</command> вилучає обліковий запис користувача
+<replaceable>ІМ’Я_КОРИСТУВАЧА</replaceable> з системи.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>ПАРАМЕТРИ</title>
+        <variablelist remap='IP'>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+            <varlistentry>
+                <term>
+                    <option>-r</option>,<option>--remove</option>
+                </term>
+                <listitem>
+                    <para>
+                        Файли у домашньому каталозі користувача буде вилучено разом з самим домашнім
+каталогом та поштовим буфером користувача. Може бути перевизначено у
+налаштуваннях.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-R</option>,<option>--no-remove</option>
+                </term>
+                <listitem>
+                    <para>
+                        Файли у домашньому каталозі користувача НЕ буде вилучено разом з самим
+домашнім каталогом та поштовим буфером користувача. Може бути перевизначено
+у налаштуваннях.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-f</option>,<option>--force</option>
+                </term>
+                <listitem>
+                    <para>
+                        За допомогою цього параметра можна примусити <command>sss_userdel</command>
+вилучати домашній каталог користувача та буфер пошти, навіть якщо їхнім
+власником не є вказаний користувач.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-k</option>,<option>--kick</option>
+                </term>
+                <listitem>
+                    <para>
+                        До вилучення запису користувача завершити роботу всіх процесів, власником
+яких є цей користувач.
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/local.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

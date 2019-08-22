@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pàgines del manual de l'SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-ifp</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Formats i convencions dels fitxers</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-ifp</refname>
+        <refpurpose>contestador de l'InfoPipe de l'SSSD</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPCIÓ</title>
+        <para>
+            En aquesta pàgina del manual es descriu la configuració del contestador de
+l'InfoPipe per a <citerefentry> <refentrytitle>sssd</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry>. Per a una referència detallada de
+la sintaxi, consulteu la secció <quote>FORMAT DEL FITXER</quote> de la
+pàgina del manual <citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+        </para>
+        <para>
+            El contestador de l'InfoPipe proporciona una interfície D-Bus publica que es
+pot accedir a través del bus del sistema. La interfície permet que l'usuari
+consulti informació sobre els usuaris i els grups remots a través del bus
+del sistema.
+        </para>
+    </refsect1>
+
+    <refsect1 id='configuration-options'>
+        <title>OPCIONS DE CONFIGURACIÓ</title>
+            <para>
+                Es poden utilitzar aquestes opcions per configurar el contestador de
+l'InfoPipe.
+            </para>
+            <variablelist>
+                <varlistentry>
+                    <term>allowed_uids (cadena)</term>
+                    <listitem>
+                        <para>
+                            Especifica una llista separada per comes dels valors dels UID o dels noms
+d'usuaris que estan assignats per accedir al contestador de l'InfoPipe. Els
+noms d'usuaris es resolen als UID en la preparació.
+                        </para>
+                        <para>
+                            Per defecte: 0 (únicament a l'usuari root se li permet l'accés al
+contestador de l'InfoPipe)
+                        </para>
+                        <para>
+                            Tingueu en compte que encara que s'utilitzi l'UID 0 com a valor per defecte
+se sobreescriurà amb aquesta opció. Si encara voleu permetre que l'usuari
+root accedeixi al contestador de l'InfoPipe, el que seria el cas típic,
+també cal afegir 0 a la llista dels UID permesos.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>user_attributes (cadena)</term>
+                    <listitem>
+                        <para>
+                            Especifica una llista separada per comes dels atributs de la llista negra o
+blanca.
+                        </para>
+                        <para>
+                            Per defecte, el contestador de l'InfoPipe únicament permet que se
+sol·licitin el conjunt per defecte dels atributs POSIX. Aquest conjunt és el
+mateix que es retorna amb <citerefentry>
+<refentrytitle>getpwnam</refentrytitle> <manvolnum>3</manvolnum>
+</citerefentry> i inclou: <variablelist>
+                                <varlistentry>
+                                    <term>name</term>
+                                    <listitem><para>nom d'inici de sessió de l'usuari</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>uidNumber</term>
+                                    <listitem><para>id. de l'usuari</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>gidNumber</term>
+                                    <listitem><para>id. del grup primari</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>gecos</term>
+                                    <listitem><para>informació de l'usuari, normalment el nom complet </para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>homeDirectory</term>
+                                    <listitem><para>directori inicial</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>loginShell</term>
+                                    <listitem><para>shell de l'usuari</para></listitem>
+                                </varlistentry>
+                            </variablelist>
+                        </para>
+                        <para>
+                            Es poden afegir altres atributs a aquest conjunt amb
+<quote>+nom_atribut</quote> o suprimir explícitament un atribut amb
+<quote>-nom_atribut</quote>. Per exemple, per permetre
+<quote>telephoneNumber</quote> però denegar <quote>loginShell</quote>,
+podríeu utilitzar la següent configuració: <programlisting>
+user_attributes = +telephoneNumber, -loginShell
+                        </programlisting>
+                        </para>
+                        <para>
+                            Per defecte: sense establir. Únicament es permet el conjunt per defecte dels
+atributs POSIX.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>wildcard_limit (integer)</term>
+                    <listitem>
+                        <para>
+                            Specifies an upper limit on the number of entries that are downloaded during
+a wildcard lookup that overrides caller-supplied limit.
+                        </para>
+                        <para>
+                            Default: 0 (let the caller set an upper limit)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+            </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

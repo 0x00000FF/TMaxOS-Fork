@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pàgines del manual de l'SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_cache</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_cache</refname>
+        <refpurpose>fa neteja de la memòria cau</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_cache</command> <arg choice='opt'>
+<replaceable>opcions</replaceable> </arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPCIÓ</title>
+        <para>
+            <command>sss_cache</command> invalidates records in SSSD cache.  Invalidated
+records are forced to be reloaded from server as soon as related SSSD
+backend is online. Options that invalidate a single object only accept a
+single provided argument.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPCIONS</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-E</option>,<option>--everything</option>
+                </term>
+                <listitem>
+                    <para>
+                        Invalidate all cached entries.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-u</option>,<option>--user</option>
+<replaceable>usuari</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Invalida un usuari específic.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-U</option>,<option>--users</option>
+                </term>
+                <listitem>
+                    <para>
+                        Invalida tots els registres dels usuaris. Aquesta opció anul·la la
+invalidació d'un usuari específic, si també es va especificar.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-g</option>,<option>--group</option> <replaceable>grup</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Invalida un grup específic.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-G</option>,<option>--groups</option>
+                </term>
+                <listitem>
+                    <para>
+                        Invalida tots els registres dels grups. Aquesta opció anul·la la invalidació
+d'un grup específic, si també es va especificar.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-n</option>,<option>--netgroup</option>
+<replaceable>grup-de-xarxa</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        invalida un grup de xarxa específic.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-N</option>,<option>--netgroups</option>
+                </term>
+                <listitem>
+                    <para>
+                        Invalida tots els registres dels grups de xarxa. Aquesta opció anul·la la
+invalidació d'un grup de xarxa específic, si també es va especificar.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--service</option>
+<replaceable>servei</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        invalida un servei específic.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-S</option>,<option>--services</option>
+                </term>
+                <listitem>
+                    <para>
+                        Invalida tots els registres dels serveis. Aquesta opció anul·la la
+invalidació d'un servei específic, si també es va especificar.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry condition="with_autofs">
+                <term>
+                    <option>-a</option>,<option>--autofs-map</option>
+<replaceable>assignació-autofs</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Invalida una assignació autofs específica.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry condition="with_autofs">
+                <term>
+                    <option>-A</option>,<option>--autofs-maps</option>
+                </term>
+                <listitem>
+                    <para>
+                        Invalida tots els registres de les assignacions autofs. Aquesta opció
+anul·la la invalidació d'una assignació autofs específica, si també es va
+especificar.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry condition="with_ssh">
+                <term>
+                    <option>-h</option>,<option>--ssh-host</option>
+<replaceable>nom-amfitrió</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Invalida les claus públiques SSH d'un amfitrió especific.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry condition="with_ssh">
+                <term>
+                    <option>-H</option>,<option>--ssh-hosts</option>
+                </term>
+                <listitem>
+                    <para>
+                        Invalida tots els registres de les claus públiques SSH de tots els
+amfitrions. Aquesta opció anul·la la invalidació d'una clau pública SSH d'un
+amfitrió específic, si també es va especificar.
+                    </para>
+                </listitem>
+            </varlistentry>
+           <varlistentry condition="with_sudo">
+                <term>
+                    <option>-r</option>,<option>--sudo-rule</option>
+<replaceable>rule</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Invalidate particular sudo rule.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry condition="with_sudo">
+                <term>
+                    <option>-R</option>,<option>--sudo-rules</option>
+                </term>
+                <listitem>
+                    <para>
+                        Invalidate all cached sudo rules. This option overrides invalidation of
+specific sudo rule if it was also set.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-d</option>,<option>--domain</option>
+<replaceable>domini</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Restringeix el procés d'invalidació a tan sols un domini concret.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

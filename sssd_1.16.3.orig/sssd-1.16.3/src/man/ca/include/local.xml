@@ -1,0 +1,17 @@
+<refsect1 id='local'>
+    <title>EL DOMINI LOCAL</title>
+    <para>
+        Per a un funcionament correcte, s'ha de crear un domini amb
+<quote>id_provider=local</quote> i l'SSSD ha d'estar en execució.
+    </para>
+    <para>
+        L'administrador pot ser que vulgui utilitzar els usuaris locals de l'SSSD en
+lloc dels usuaris tradicionals d'UNIX en els casos en què es requereixi la
+imbricació dels grups (vegeu <citerefentry>
+<refentrytitle>sss_groupadd</refentrytitle> <manvolnum>8</manvolnum>
+</citerefentry>). Els usuaris locals també són útils per provar i desplegar
+l'SSSD sense haver de desplegar tot un servidor remot. Les eines
+<command>sss_user*</command> i <command>sss_group*</command> utilitzen
+l'emmagatzematge LDB local per emmagatzemar els usuaris i els grups.
+    </para>
+</refsect1>

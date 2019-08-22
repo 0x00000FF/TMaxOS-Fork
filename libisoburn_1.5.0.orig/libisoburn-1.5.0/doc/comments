@@ -1,0 +1,85 @@
+/**
+   @author Mario Danic, Vreixo Formoso, Thomas Schmitt
+
+   @mainpage Libisoburn Documentation Index
+
+   @section intro Introduction
+
+Libburnia is an open-source project for reading, mastering and writing
+optical discs. This page is about its capability to read, manipulate, and
+write ISO 9660 filesystems with Rock Ridge extensions. Media can be optical
+media or filesystem objects.
+
+Our scope is currently Linux 2.4 and 2.6, FreeBSD, OpenSolaris, or NetBSD.
+
+libisoburn is an add-on to libburn and libisofs which coordinates both and
+also allows to grow ISO-9660 filesystem images on multi-session media as well
+as on overwriteable media via the same API.
+All media peculiarities are handled automatically.
+
+xorriso is an application of all three libraries which creates, loads,
+manipulates and writes ISO 9660 filesystem images with Rock Ridge extensions.
+Manipulation is not only adding or overwriting of files but also deletion,
+renaming, and attribute changing. An incremental backup feature is provided.
+The xorriso features are accessible via built-in command interpreters and
+via a C language API.
+
+
+SONAME:
+libisoburn.so.1 (since 0.1.0, February 2008).
+
+
+   @section using Using the libraries
+
+Our build system is based on autotools.
+User experience tells us that you will need at least autotools version 1.7.
+
+To build libisoburn go into its toplevel directory and execute:
+
+-  ./bootstrap  (needed if you downloaded from SVN)
+
+-  ./configure
+
+-  make
+
+To make the library and the xorriso application accessible for running and
+software development:
+
+-  make install
+
+
+For direct use as command line tool use the xorriso binary which among many
+other features provides a mkisofs emulation via command "-as mkisofs".
+See man page xorriso/xorriso.1 or GNU info document xorriso/xorriso.info.
+
+
+If you want to link an own application with libisoburn, you have
+two alternative APIs for choice:
+
+-  libisoburn, together with libburn and libisofs.
+
+-  xorriso, a complete representation of xorriso command line options.
+   It encapsulates the three lower level libraries.
+   Calls of both API families shall not be mixed.
+
+For a description of the lbisoburn API read libisoburn/libisoburn.h
+See file README for download and installation of a release tarball.
+You will also have to install and understand the two libraries of the 
+Libburnia project which provide fundamental services:
+libburn is the library by which preformatted data get onto optical media.
+See libburn/libburn.h for its API description.
+libisofs is the library to handle ISO 9660 filesystems with Rock Ridge 
+extensions. Its API is described in libisofs/libisofs.h .
+
+For xorriso features see its man page xorriso/xorriso.1 or
+its GNU info document xorriso/xorriso.info.
+For the corresponding C language API see libisoburn/xorriso.h (or
+xorriso/xorriso.h in the build directory).
+The implementation this API is part of libisoburn.
+The xorriso command line tool gets installed as dynamically linked
+binary together with libisoburn.
+
+There is also a statically linked release named GNU xorriso.
+See xorriso/README_gnu_xorriso for its download and installation.
+
+*/

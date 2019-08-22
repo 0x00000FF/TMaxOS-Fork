@@ -1,0 +1,28 @@
+#!/bin/sh
+set -e
+
+if [ -z "$SNAP" ]; then
+    echo "SNAP not set"
+    exit 1
+fi
+
+if ! iptables --version >/dev/null 2>&1 ; then
+    echo "Could not use iptables. Please run:"
+    echo "'sudo snap connect ufw:firewall-control ubuntu-core:firewall-control'"
+    exit 1
+fi
+
+PPATH=
+if [ -z "$PYTHONPATH" ]; then
+    PPATH=$SNAP/usr/lib/python3/dist-packages
+else
+    PPATH=$SNAP/usr/lib/python3/dist-packages:$PYTHONPATH
+fi
+
+PYCACHE=$SNAP_DATA/usr/lib/python3/dist-packages/ufw/__pycache__
+if [ ! -d "$PYCACHE" ] ; then
+    mkdir -p "$PYCACHE" 2>/dev/null || true
+fi
+
+#echo $PPATH
+PYTHONPATH="$PPATH" "$SNAP"/usr/sbin/ufw --rootdir="$SNAP" --datadir="$SNAP_DATA" "$@"

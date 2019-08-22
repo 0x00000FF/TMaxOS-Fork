@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pages de manuel de SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_obfuscate</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_obfuscate</refname>
+        <refpurpose>obscurcir un mot de passe en clair</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_obfuscate</command> <arg choice='opt'>
+<replaceable>options</replaceable> </arg> <arg
+choice='plain'><replaceable>[PASSWORD]</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPTION</title>
+        <para>
+            <command>sss_obfuscate</command> convertit un mot de passe donné en un
+format illisible par un humain et le place dans la section de domaine
+appropriée du fichier de configuration SSSD.
+        </para>
+        <para>
+            Le mot de passe en clair est lu dans l'entrée standard ou entré
+interactivement. Les mots de passes chiffrés sont mis dans
+<quote>ldap_default_authtok</quote> pour un domaine SSSD donné et le
+paramètre <quote>ldap_default_authtok_type</quote> est défini à
+<quote>obfuscated_password</quote>. Cf. <citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> pour plus de détails sur ces paramètres.
+        </para>
+        <para>
+            Veuillez noter que les mots de passe chiffrés ne fournissent <emphasis>aucun
+réel bénéfice de sécurité</emphasis> étant donné qu'il est possible de
+retrouver le mot de passe par ingénierie-inverse. Utiliser un meilleur
+mécanisme d'authentification tel que les certificats côté client ou GSSAPI
+est <emphasis>très</emphasis> conseillé.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPTIONS</title>
+        <variablelist remap='IP'>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help_py.xml" />
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--stdin</option>
+                </term>
+                <listitem>
+                    <para>
+                        Le mot de passe chiffré sera lu sur l'entrée standard.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-d</option>,<option>--domain</option>
+<replaceable>DOMAINE</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Le domaine SSSD auquel est lié le mot de passe. Le nom par défaut est
+<quote>default</quote>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-f</option>,<option>--file</option>
+<replaceable>FICHIER</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Lit le fichier de configuration spécifié par le paramètre.
+                    </para>
+                    <para>
+                        Par défaut : <filename>/etc/sssd/sssd.conf</filename>
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

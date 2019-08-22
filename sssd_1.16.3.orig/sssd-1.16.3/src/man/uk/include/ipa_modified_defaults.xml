@@ -1,0 +1,124 @@
+<refsect1 id='modified-default-options'>
+    <title>ЗМІНЕНІ ТИПОВІ ПАРАМЕТРИ</title>
+    <para>
+        Деякі типові значення параметрів не збігаються із типовими значеннями
+параметрів засобу надання даних. Із назвами відповідних параметрів та
+специфічні для засобу надання даних IPA значення цих параметрів можна
+ознайомитися за допомогою наведеного нижче списку:
+    </para>
+    <refsect2 id='krb5_modifications'>
+        <title>Модуль надання даних KRB5</title>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    krb5_validate = true
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    krb5_use_fast = try
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    krb5_canonicalize = true
+                </para>
+            </listitem>
+        </itemizedlist>
+    </refsect2>
+    <refsect2 id='ldap_general_modifications'>
+        <title>Модуль надання даних LDAP — Загальне</title>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    ldap_schema = ipa_v1
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ldap_force_upper_case_realm = true
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ldap_sasl_mech = GSSAPI
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ldap_sasl_minssf = 56
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ldap_account_expire_policy = ipa
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ldap_use_tokengroups = true
+                </para>
+            </listitem>
+        </itemizedlist>
+    </refsect2>
+    <refsect2 id='ldap_user_modifications'>
+        <title>Модуль надання даних LDAP — Параметри користувачів</title>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    ldap_user_member_of = memberOf
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ldap_user_uuid = ipaUniqueID
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ldap_user_ssh_public_key = ipaSshPubKey
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ldap_user_auth_type = ipaUserAuthType
+                </para>
+            </listitem>
+        </itemizedlist>
+    </refsect2>
+    <refsect2 id='ldap_group_modifications'>
+        <title>Модуль надання даних LDAP — Параметри груп</title>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    ldap_group_object_class = ipaUserGroup
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ldap_group_object_class_alt = posixGroup
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ldap_group_member = member
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ldap_group_uuid = ipaUniqueID
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ldap_group_objectsid = ipaNTSecurityIdentifier
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    ldap_group_external_member = ipaExternalMember
+                </para>
+            </listitem>
+        </itemizedlist>
+    </refsect2>
+</refsect1>

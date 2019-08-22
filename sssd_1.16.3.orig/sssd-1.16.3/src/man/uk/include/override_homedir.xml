@@ -1,0 +1,64 @@
+<varlistentry>
+<term>override_homedir (рядок)</term>
+<listitem>
+    <para>
+        Перевизначити домашній каталог користувача. Ви можете вказати абсолютне
+значення або шаблон. У шаблоні можна використовувати такі замінники:
+<variablelist>
+            <varlistentry>
+                <term>%u</term>
+                <listitem><para>ім'я користувача</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%U</term>
+                <listitem><para>номер UID</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%d</term>
+                <listitem><para>назва домену</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%f</term>
+                <listitem><para>ім’я користувача повністю (користувач@домен)</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%l</term>
+                <listitem><para>Перша літера назви облікового запису.</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%P</term>
+                <listitem><para>UPN - User Principal Name (ім’я@ОБЛАСТЬ)</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%o</term>
+                <listitem><para>
+                    Початкова домашня тека, отримана від служби профілів.
+                    </para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%H</term>
+                <listitem><para>
+                    Значення параметра налаштовування <emphasis>homedir_substring</emphasis>.
+                    </para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%%</term>
+                <listitem><para>символ відсотків («%»)</para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </para>
+    <para>
+        Значення цього параметра можна встановлювати для кожного з доменів окремо.
+    </para>
+    <para>
+        приклад: <programlisting>
+override_homedir = /home/%u
+        </programlisting>
+    </para>
+    <para>
+        Типове значення: не встановлено (SSSD використовуватиме значення, отримане
+від LDAP)
+    </para>
+</listitem>
+</varlistentry>

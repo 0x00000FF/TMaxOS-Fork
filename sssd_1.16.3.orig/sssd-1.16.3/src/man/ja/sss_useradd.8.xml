@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD マニュアル ページ</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_useradd</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_useradd</refname>
+        <refpurpose>新しいユーザーを作成する</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_useradd</command> <arg choice='opt'>
+<replaceable>options</replaceable> </arg> <arg
+choice='plain'><replaceable>LOGIN</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>概要</title>
+        <para>
+            <command>sss_useradd</command>
+は、コマンドラインにおいて指定された値とシステムの初期値を使用して、新しいユーザーを作成します。
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>オプション</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-u</option>,<option>--uid</option> <replaceable>UID</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        ユーザーの UID を <replaceable>UID</replaceable> の値を設定します。与えられないと、自動的に選択されます。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-c</option>,<option>--gecos</option>
+<replaceable>COMMENT</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        ユーザーを説明している任意のテキスト文字列です。しばしばユーザーの完全名の項目として使用されます。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-h</option>,<option>--home</option>
+<replaceable>HOME_DIR</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        ユーザーアカウントのホームディレクトリーです。初期値は <filename>/home</filename> に
+<replaceable>LOGIN</replaceable> の名前を追加して、ホームディレクトリーとして使用します。
+<replaceable>LOGIN</replaceable> の前につけるベースは sssd.conf において
+<quote>user_defaults/baseDirectory</quote> 設定で変更できます。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--shell</option>
+<replaceable>SHELL</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        ユーザーのログインシェルです。初期値は現在 <filename>/bin/bash</filename> です。初期値は sssd.conf において
+<quote>user_defaults/defaultShell</quote> で変更できます。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-G</option>,<option>--groups</option>
+<replaceable>GROUPS</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        このユーザーがメンバーである既存のユーザーの一覧です。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-m</option>,<option>--create-home</option>
+                </term>
+                <listitem>
+                    <para>
+                        ユーザーのホームディレクトリーが存在しなければ、それを作成します。（-k
+オプションまたは設定ファイルで定義できる）スケルトンディレクトリーにあるファイルとディレクトリーがホームディレクトリーにコピーされます。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-M</option>,<option>--no-create-home</option>
+                </term>
+                <listitem>
+                    <para>
+                        ユーザーのホームディレクトリーを作成しません。設定を上書きします。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-k</option>,<option>--skel</option>
+<replaceable>SKELDIR</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        スケルトンディレクトリーです。ホームディレクトリーが <command>sss_useradd</command>
+により作成されるとき、ユーザーのホームディレクトリーにコピーされるファイルとディレクトリーを含みます。
+                    </para>
+                    <para>
+                        特殊ファイル (ブロックデバイス、キャラクターデバイス、名前付きパイプおよび UNIX ソケット) はコピーされません。
+                    </para>
+                    <para>
+                        <option>-m</option> (または <option>--create-home</option>)
+オプションが指定されたとき、またはホームディレクトリーの作成が設定において TRUE に設定されている場合のみ、このオプションが有効です。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-Z</option>,<option>--selinux-user</option>
+<replaceable>SELINUX_USER</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        ユーザーがログインする際の SELinux ユーザーです。未指定の場合、システムの初期値を使います。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/local.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

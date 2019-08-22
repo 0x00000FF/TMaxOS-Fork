@@ -1,0 +1,930 @@
+# Turkish translation for ufw
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the ufw package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ufw\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-02-20 14:16-0600\n"
+"PO-Revision-Date: 2014-12-29 10:32+0000\n"
+"Last-Translator: Necdet Yucel <Unknown>\n"
+"Language-Team: Turkish <tr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2015-01-26 20:08+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
+"Language: tr\n"
+"X-POOTLE-MTIME: 1419799925.000000\n"
+
+#: src/ufw:56
+msgid ": Need at least python 2.6)\n"
+msgstr ":En az python 2.6 gerekli)\n"
+
+#: src/ufw:109 src/frontend.py:596 src/frontend.py:898
+msgid "Aborted"
+msgstr "İptal edildi"
+
+#: src/applications.py:36
+msgid "Profiles directory does not exist"
+msgstr "Profiller dizini yok"
+
+#: src/applications.py:68
+#, python-format
+msgid "Skipping '%s': couldn't stat"
+msgstr "'%s' atlanıyor: başlatılamadı"
+
+#: src/applications.py:73
+#, python-format
+msgid "Skipping '%s': too big"
+msgstr "'%s' atlanıyor: çok büyük"
+
+#: src/applications.py:78
+#, python-format
+msgid "Skipping '%s': too many files read already"
+msgstr "'%s' atlanıyor: çok fazla dosya açık"
+
+#: src/applications.py:92
+#, python-format
+msgid "Skipping '%s': couldn't process"
+msgstr "'%s' atlanıyor: işlenemedi"
+
+#: src/applications.py:99
+#, python-format
+msgid "Skipping '%s': name too long"
+msgstr "'%s' atlanıyor: adı çok uzun"
+
+#: src/applications.py:104
+#, python-format
+msgid "Skipping '%s': invalid name"
+msgstr "'%s' atlanıyor: geçersiz ad"
+
+#: src/applications.py:110
+#, python-format
+msgid "Skipping '%s': also in /etc/services"
+msgstr "'%s' atlanıyor: zaten /etc/services dosyasında"
+
+#: src/applications.py:119
+#, python-format
+msgid "Skipping '%s': field too long"
+msgstr "'%s' atlanıyor: alan çok uzun"
+
+#: src/applications.py:124
+#, python-format
+msgid "Skipping '%(value)s': value too long for '%(field)s'"
+msgstr "'%(value)s' atlanıyor: değer '%(field)s' için çok uzun"
+
+#: src/applications.py:134
+#, python-format
+msgid "Duplicate profile '%s', using last found"
+msgstr "Son bulunanı kullanarak '%s' profilini çoğalt"
+
+#: src/applications.py:171
+#, python-format
+msgid "Profile '%(fn)s' missing required field '%(f)s'"
+msgstr "'%(fn)s' profilinde gerekli '%(f)s' alanı eksik"
+
+#: src/applications.py:176
+#, python-format
+msgid "Profile '%(fn)s' has empty required field '%(f)s'"
+msgstr "'%(fn)s' profilinde gerekli '%(f)s' alanı boş"
+
+#: src/applications.py:182
+#, python-format
+msgid "No ports found in profile '%s'"
+msgstr "'%s' profilinde hiç port bulunmuyor"
+
+#: src/applications.py:195
+#, python-format
+msgid "Invalid ports in profile '%s'"
+msgstr "'%s' profilinde geçersiz portlar"
+
+#: src/backend_iptables.py:77
+msgid "New profiles:"
+msgstr "Yeni profiller:"
+
+#: src/backend_iptables.py:93 src/backend.py:351
+#, python-format
+msgid "Unsupported policy '%s'"
+msgstr "Desteklenmeyen politika '%s'"
+
+#: src/backend_iptables.py:98
+#, python-format
+msgid "Unsupported policy for direction '%s'"
+msgstr "'%s' yönü için desteklenmeyen politika"
+
+#: src/backend_iptables.py:158
+#, python-format
+msgid "Default %(direction)s policy changed to '%(policy)s'\n"
+msgstr ""
+"Varsayılan %(direction)s politikası '%(policy)s' olarak değiştirildi\n"
+
+#: src/backend_iptables.py:160
+msgid "(be sure to update your rules accordingly)"
+msgstr "(kurallarınızı uygun şekilde güncellediğinizden emin olun)"
+
+#: src/backend_iptables.py:167
+msgid "Checking raw iptables\n"
+msgstr "Ham iptables kontrol ediliyor\n"
+
+#: src/backend_iptables.py:168
+msgid "Checking raw ip6tables\n"
+msgstr "Ham ip6tables kontrol ediliyor\n"
+
+#: src/backend_iptables.py:261
+msgid "Checking iptables\n"
+msgstr "Iptables kontrol ediliyor\n"
+
+#: src/backend_iptables.py:263
+msgid "Checking ip6tables\n"
+msgstr "Ip6tables kontrol ediliyor\n"
+
+#: src/backend_iptables.py:266 src/backend_iptables.py:541
+msgid "problem running"
+msgstr "çalıştırma sorunu"
+
+#: src/backend_iptables.py:272
+msgid "Status: inactive"
+msgstr "Durum: etkin değil"
+
+#: src/backend_iptables.py:432
+msgid "To"
+msgstr "Alıcı"
+
+#: src/backend_iptables.py:433
+msgid "From"
+msgstr "Gönderen"
+
+#: src/backend_iptables.py:434
+msgid "Action"
+msgstr "Eylem"
+
+#: src/backend_iptables.py:450 src/backend_iptables.py:454
+msgid "\n"
+msgstr "\n"
+
+#: src/backend_iptables.py:462
+#, python-format
+msgid "Default: %(in)s (incoming), %(out)s (outgoing), %(routed)s (routed)"
+msgstr ""
+"Öntanımlı: %(in)s (gelen), %(out)s (giden), %(routed)s (yönlendirilmiş)"
+
+#: src/backend_iptables.py:470
+#, python-format
+msgid ""
+"Status: active\n"
+"%(log)s\n"
+"%(pol)s\n"
+"%(app)s%(status)s"
+msgstr ""
+"Durum: etkin\n"
+"%(log)s\n"
+"%(pol)s\n"
+"%(app)s%(status)s"
+
+#: src/backend_iptables.py:474
+#, python-format
+msgid "Status: active%s"
+msgstr "Durum: etkin%s"
+
+#: src/backend_iptables.py:479 src/backend_iptables.py:489
+msgid "running ufw-init"
+msgstr "ufw-init çalıştırılıyor"
+
+#: src/backend_iptables.py:483 src/backend_iptables.py:493
+#, python-format
+msgid ""
+"problem running ufw-init\n"
+"%s"
+msgstr ""
+"ufw-init çalıştırılırken sorun\n"
+"%s"
+
+#: src/backend_iptables.py:502
+msgid "Could not set LOGLEVEL"
+msgstr "LOGLEVEL ayarlanamadı"
+
+#: src/backend_iptables.py:508
+msgid "Could not load logging rules"
+msgstr "Günlükleme kuralları yüklenemedi"
+
+#: src/backend_iptables.py:663 src/backend.py:273
+#, python-format
+msgid "Couldn't open '%s' for reading"
+msgstr "'%s' dosyası okumak için açılamadı"
+
+#: src/backend_iptables.py:674
+#, python-format
+msgid "Skipping malformed tuple (bad length): %s"
+msgstr "Kusurlu tanımlama düzeni (hatalı uzunluklu) atlanıyor: %s"
+
+#: src/backend_iptables.py:685
+#, python-format
+msgid "Skipping malformed tuple (iface): %s"
+msgstr "Kusurlu tanımlama düzeni (iface) atlanıyor: %s"
+
+#: src/backend_iptables.py:731
+#, python-format
+msgid "Skipping malformed tuple: %s"
+msgstr "Kusurlu tanımlama düzeni atlanıyor: %s"
+
+#: src/backend_iptables.py:753 src/backend.py:304
+#, python-format
+msgid "'%s' is not writable"
+msgstr "'%s' yazılabilir değil"
+
+#: src/backend_iptables.py:925
+msgid "Adding IPv6 rule failed: IPv6 not enabled"
+msgstr "IPv6 kuralı eklenemedi: IPv6 etkin değil"
+
+#: src/backend_iptables.py:929
+#, python-format
+msgid "Skipping unsupported IPv6 '%s' rule"
+msgstr "Desteklenmeyen IPv6 '%s' kuralı atlanıyor"
+
+#: src/backend_iptables.py:933
+#, python-format
+msgid "Skipping unsupported IPv4 '%s' rule"
+msgstr "Desteklenmeyen IPv4 '%s' kuralı atlanıyor"
+
+#: src/backend_iptables.py:936
+msgid "Must specify 'tcp' or 'udp' with multiple ports"
+msgstr "Çoklu portla birlikte 'tcp' veya 'udp' belirtilmelidir"
+
+#: src/backend_iptables.py:948
+msgid "Skipping IPv6 application rule. Need at least iptables 1.4"
+msgstr "IPv6 uygulama kuralı atlanıyor. En az iptables 1.4 sürümü gereklidir"
+
+#: src/backend_iptables.py:953
+#, python-format
+msgid "Invalid position '%d'"
+msgstr "Geçersiz konum '%d'"
+
+#: src/backend_iptables.py:957
+msgid "Cannot specify insert and delete"
+msgstr "Ekleme ve silme belirtilemez"
+
+#: src/backend_iptables.py:960
+#, python-format
+msgid "Cannot insert rule at position '%d'"
+msgstr "'%d' konumuna kural eklenemez"
+
+#: src/backend_iptables.py:1018
+msgid "Skipping inserting existing rule"
+msgstr "Mevcut kuralın eklenmesi atlanıyor"
+
+#: src/backend_iptables.py:1029 src/frontend.py:403
+msgid "Could not delete non-existent rule"
+msgstr "Olmayan kural silinemez"
+
+#: src/backend_iptables.py:1034
+msgid "Skipping adding existing rule"
+msgstr "Mevcut kuralın eklenmesi atlanıyor"
+
+#: src/backend_iptables.py:1050
+msgid "Couldn't update rules file"
+msgstr "Kurallar dosyası güncellenemedi"
+
+#: src/backend_iptables.py:1055
+msgid "Rules updated"
+msgstr "Kurallar güncellendi"
+
+#: src/backend_iptables.py:1057
+msgid "Rules updated (v6)"
+msgstr "Kurallar güncellendi (v6)"
+
+#: src/backend_iptables.py:1065
+msgid "Rule inserted"
+msgstr "Kural eklendi"
+
+#: src/backend_iptables.py:1067
+msgid "Rule updated"
+msgstr "Kural güncellendi"
+
+#: src/backend_iptables.py:1077
+msgid " (skipped reloading firewall)"
+msgstr " (güvenlik duvarının yeniden yüklenmesi atlandı)"
+
+#: src/backend_iptables.py:1080
+msgid "Rule deleted"
+msgstr "Kural silindi"
+
+#: src/backend_iptables.py:1083
+msgid "Rule added"
+msgstr "Kural eklendi"
+
+#: src/backend_iptables.py:1100 src/backend_iptables.py:1191
+msgid "Could not update running firewall"
+msgstr "Çalışan bir güvenlik duvarı güncellenemez"
+
+#: src/backend_iptables.py:1155
+#, python-format
+msgid "Could not perform '%s'"
+msgstr "'%s' gerçekleştiremedi"
+
+#: src/backend_iptables.py:1182
+msgid "Couldn't update rules file for logging"
+msgstr "Kayıt için kurallar dosyası güncellenemedi"
+
+#: src/backend_iptables.py:1240 src/backend.py:591
+#, python-format
+msgid "Invalid log level '%s'"
+msgstr "Geçersiz kayıt seviyesi '%s'"
+
+#: src/backend_iptables.py:1337
+#, python-format
+msgid "Could not find '%s'. Aborting"
+msgstr "'%s' bulunamadı. İptal ediliyor"
+
+#: src/backend_iptables.py:1349
+#, python-format
+msgid "'%s' already exists. Aborting"
+msgstr "'%s' zaten mevcut. İptal ediliyor"
+
+#: src/backend_iptables.py:1355
+#, python-format
+msgid "Backing up '%(old)s' to '%(new)s'\n"
+msgstr "'%(old)s', '%(new)s' olarak yedekleniyor\n"
+
+#: src/backend_iptables.py:1371 src/backend.py:229
+#, python-format
+msgid "Couldn't stat '%s'"
+msgstr "'%s' başlatılamadı"
+
+#: src/backend_iptables.py:1376
+#, python-format
+msgid "WARN: '%s' is world writable"
+msgstr "UYARI: '%s' herkes için yazılabilir"
+
+#: src/backend_iptables.py:1378
+#, python-format
+msgid "WARN: '%s' is world readable"
+msgstr "UYARI: '%s' herkes için okunabilir"
+
+#: src/backend.py:69
+msgid "Couldn't determine iptables version"
+msgstr "iptables sürümü belirlenemedi"
+
+#: src/backend.py:143
+msgid "problem running sysctl"
+msgstr "sysctl çalıştırılırken sorun oluştu"
+
+#: src/backend.py:182
+msgid "Checks disabled"
+msgstr "Kontroller kapalı"
+
+#: src/backend.py:188
+msgid "ERROR: this script should not be SUID"
+msgstr "HATA: bu betik SUID hakkıyla çalıştırılmamalıdır"
+
+#: src/backend.py:191
+msgid "ERROR: this script should not be SGID"
+msgstr "HATA: bu betik SGID hakkıyla çalıştırılmamalıdır"
+
+#: src/backend.py:196
+msgid "You need to be root to run this script"
+msgstr "Bu betiği çalıştırmak için root olmanız gerekir"
+
+#: src/backend.py:206
+#, python-format
+msgid "'%s' does not exist"
+msgstr "'%s' yok"
+
+#: src/backend.py:235
+#, python-format
+msgid "uid is %(uid)s but '%(path)s' is owned by %(st_uid)s"
+msgstr "uid %(uid)s ama '%(path)s' yolunun sahibi %(st_uid)s"
+
+#: src/backend.py:242
+#, python-format
+msgid "%s is world writable!"
+msgstr "%s herkes için yazılabilir!"
+
+#: src/backend.py:246
+#, python-format
+msgid "%s is group writable!"
+msgstr "%s grup için yazılabilir!"
+
+#: src/backend.py:262
+#, python-format
+msgid "'%(f)s' file '%(name)s' does not exist"
+msgstr "'%(f)s' dosyası '%(name)s' yok"
+
+#: src/backend.py:287
+#, python-format
+msgid "Missing policy for '%s'"
+msgstr "'%s' için eksik politika"
+
+#: src/backend.py:291
+#, python-format
+msgid "Invalid policy '%(policy)s' for '%(chain)s'"
+msgstr "Geçersiz politika '%(policy)s' '%(chain)s' zinciri için"
+
+#: src/backend.py:298
+msgid "Invalid option"
+msgstr "Geçersiz seçenek"
+
+#: src/backend.py:354
+#, python-format
+msgid "Default application policy changed to '%s'"
+msgstr "Varsayılan uygulama politikası '%s' olarak değiştirildi"
+
+#: src/backend.py:421
+msgid "No rules found for application profile"
+msgstr "Uygulama profili için hiç kural bulunamadı"
+
+#: src/backend.py:477
+#, python-format
+msgid "Rules updated for profile '%s'"
+msgstr "'%s' profili için kurallar güncellendi"
+
+#: src/backend.py:483
+msgid "Couldn't update application rules"
+msgstr "Uygulama kuralları güncellenemedi"
+
+#: src/backend.py:505
+#, python-format
+msgid "Found multiple matches for '%s'. Please use exact profile name"
+msgstr "'%s' için birden fazla eşleşme var. Lütfen tam profil adını kullanın"
+
+#: src/backend.py:508
+#, python-format
+msgid "Could not find a profile matching '%s'"
+msgstr "'%s' ile eşleşen bir profil bulunamadı"
+
+#: src/backend.py:575
+msgid "Logging: "
+msgstr "Günlük tutuluyor: "
+
+#: src/backend.py:579
+msgid "unknown"
+msgstr "bilinmeyen"
+
+#: src/backend.py:606
+msgid "Logging disabled"
+msgstr "Günlükleme kapalı"
+
+#: src/backend.py:608
+msgid "Logging enabled"
+msgstr "Günlükleme açık"
+
+#: src/common.py:191
+#, python-format
+msgid "Bad port '%s'"
+msgstr "Hatalı port '%s'"
+
+#: src/common.py:252
+#, python-format
+msgid "Unsupported protocol '%s'"
+msgstr "Desteklenmeyen protokol '%s'"
+
+#: src/common.py:280
+msgid "Bad source address"
+msgstr "Hatalı kaynak adresi"
+
+#: src/common.py:290
+msgid "Bad destination address"
+msgstr "Hatalı hedef adresi"
+
+#: src/common.py:298
+msgid "Bad interface type"
+msgstr "Hatalı arayüz türü"
+
+#: src/common.py:302
+msgid "Bad interface name: reserved character: '!'"
+msgstr "Hatalı arayüz adı: ayrılmış karaker: '!'"
+
+#: src/common.py:306
+msgid "Bad interface name"
+msgstr "Hatalı arayüz adı"
+
+#: src/common.py:310
+msgid "Bad interface name: can't use interface aliases"
+msgstr "Hatalı arayüz adı: arayüz takma adı kullanılamaz"
+
+#: src/common.py:321
+#, python-format
+msgid "Insert position '%s' is not a valid position"
+msgstr "'%s' konumu geçerli bir konum değil"
+
+#: src/common.py:331
+#, python-format
+msgid "Invalid log type '%s'"
+msgstr "Geçersiz günlükleme türü '%s'"
+
+#: src/common.py:339
+#, python-format
+msgid "Unsupported direction '%s'"
+msgstr "Desteklenmeyen yön %s'"
+
+#: src/common.py:350
+msgid "Could not normalize source address"
+msgstr "Kaynak adresi normalleştirilemedi"
+
+#: src/common.py:361
+msgid "Could not normalize destination address"
+msgstr "Hedef adresi normalleştirilemedi"
+
+#: src/common.py:425
+msgid "Found exact match"
+msgstr "Birebir eşleştirme bulundu"
+
+#: src/common.py:429
+#, python-format
+msgid "Found non-action/non-logtype match (%(xa)s/%(ya)s %(xl)s/%(yl)s)"
+msgstr ""
+"Eylem-olmayan/günlükleme türü olmayan eşleşme türü bulundu (%(xa)s/%(ya)s "
+"%(xl)s/%(yl)s)"
+
+#: src/frontend.py:90
+#, python-format
+msgid ""
+"\n"
+"Usage: %(progname)s %(command)s\n"
+"\n"
+"%(commands)s:\n"
+" %(enable)-31s enables the firewall\n"
+" %(disable)-31s disables the firewall\n"
+" %(default)-31s set default policy\n"
+" %(logging)-31s set logging to %(level)s\n"
+" %(allow)-31s add allow %(rule)s\n"
+" %(deny)-31s add deny %(rule)s\n"
+" %(reject)-31s add reject %(rule)s\n"
+" %(limit)-31s add limit %(rule)s\n"
+" %(delete)-31s delete %(urule)s\n"
+" %(insert)-31s insert %(urule)s at %(number)s\n"
+" %(reload)-31s reload firewall\n"
+" %(reset)-31s reset firewall\n"
+" %(status)-31s show firewall status\n"
+" %(statusnum)-31s show firewall status as numbered list of %(rules)s\n"
+" %(statusverbose)-31s show verbose firewall status\n"
+" %(show)-31s show firewall report\n"
+" %(version)-31s display version information\n"
+"\n"
+"%(appcommands)s:\n"
+" %(applist)-31s list application profiles\n"
+" %(appinfo)-31s show information on %(profile)s\n"
+" %(appupdate)-31s update %(profile)s\n"
+" %(appdefault)-31s set default application policy\n"
+msgstr ""
+"\n"
+"Kullanım: %(progname)s %(command)s\n"
+"\n"
+"%(commands)s:\n"
+" %(enable)-31s güvenlik duvarını etkinleştirir\n"
+" %(disable)-31s güvenlik duvarını devre dışı bırakır\n"
+" %(default)-31s öntanımlı ilkeyi ayarla\n"
+" %(logging)-31s günlük seviyesini %(level)s olarak ayarla\n"
+" %(allow)-31s izin ver %(rule)s ekle\n"
+" %(deny)-31s engelle %(rule)s ekle\n"
+" %(reject)-31s reddet %(rule)s ekle\n"
+" %(limit)-31s sınır %(rule)s ekle\n"
+" %(delete)-31s %(urule)s sil\n"
+" %(insert)-31s %(urule)s kuralını %(number)s konumuna ekle\n"
+" %(reload)-31s güvenlik duvarını yeniden yükle\n"
+" %(reset)-31s güvenlik duvarını sıfırla\n"
+" %(status)-31s güvenlik duvarı durumunu göster\n"
+" %(statusnum)-31s güvenlik duvarı durumunu numaralı listeli %(rules)s olarak "
+"göster\n"
+" %(statusverbose)-31s ayrıntılı güvenlik duvarı durumunu göster\n"
+" %(show)-31s güvenlik duvarı raporunu göster\n"
+" %(version)-31s sürüm bilgisini göster\n"
+"\n"
+"%(appcommands)s:\n"
+" %(applist)-31s uygulama profillerini listele\n"
+" %(appinfo)-31s %(profile)s üzerinde bilgiyi göster\n"
+" %(appupdate)-31s %(profile)s güncelle\n"
+" %(appdefault)-31s öntanımlı uygulama ilkesini ayarla\n"
+
+#: src/frontend.py:164
+msgid "n"
+msgstr "h"
+
+#: src/frontend.py:165
+msgid "y"
+msgstr "e"
+
+#: src/frontend.py:166
+msgid "yes"
+msgstr "evet"
+
+#: src/frontend.py:211
+msgid "Firewall is active and enabled on system startup"
+msgstr "Güvenlik duvarı etkin ve sistem açılışında başlatılacak"
+
+#: src/frontend.py:218
+msgid "Firewall stopped and disabled on system startup"
+msgstr "Güvenlik duvarı kapalı ve sistem açılışında başlatılmayacak"
+
+#: src/frontend.py:270
+msgid "Could not get listening status"
+msgstr "Dinleme durumu alınamadı"
+
+#: src/frontend.py:339
+msgid "Added user rules (see 'ufw status' for running firewall):"
+msgstr ""
+"Kullanıcı kuralları eklendi (çalışan güvenlik duvarı için 'ufw status' "
+"komutuna bakın):"
+
+#: src/frontend.py:342
+msgid ""
+"\n"
+"(None)"
+msgstr ""
+"\n"
+"(Hiç)"
+
+#: src/frontend.py:398 src/frontend.py:496 src/frontend.py:506
+#, python-format
+msgid "Invalid IP version '%s'"
+msgstr "Geçersiz IP sürümü '%s'"
+
+#: src/frontend.py:429
+msgid "Invalid position '"
+msgstr "Geçersiz konum '"
+
+#: src/frontend.py:503
+msgid "IPv6 support not enabled"
+msgstr "IPv6 desteği etkin değil"
+
+#: src/frontend.py:514
+msgid "Rule changed after normalization"
+msgstr "Normalleştirme sonrası kural değişti"
+
+#: src/frontend.py:538
+#, python-format
+msgid "Could not back out rule '%s'"
+msgstr "'%s' kuralı geri alınamadı"
+
+#: src/frontend.py:542
+msgid ""
+"\n"
+"Error applying application rules."
+msgstr ""
+"\n"
+"Uygulama kuralları uygulanırken hata oluştu."
+
+#: src/frontend.py:544
+msgid " Some rules could not be unapplied."
+msgstr " Bazı kurallar uygulanmamış olamaz."
+
+#: src/frontend.py:546
+msgid " Attempted rules successfully unapplied."
+msgstr " Kurallar başarıyla uygulanmamış hale getirildi."
+
+#: src/frontend.py:557
+#, python-format
+msgid "Could not find rule '%s'"
+msgstr "'%s' kural dosyası bulunamadı"
+
+#: src/frontend.py:562 src/frontend.py:567
+#, python-format
+msgid "Could not find rule '%d'"
+msgstr "'%d' kuralı bulunamadı"
+
+#: src/frontend.py:583
+#, python-format
+msgid ""
+"Deleting:\n"
+" %(rule)s\n"
+"Proceed with operation (%(yes)s|%(no)s)? "
+msgstr ""
+"Siliniyor:\n"
+" %(rule)s\n"
+"İşleme devam et (%(yes)s|%(no)s)? "
+
+#: src/frontend.py:614
+msgid "Unsupported default policy"
+msgstr "Desteklenmeyen varsayılan politika"
+
+#: src/frontend.py:643 src/frontend.py:788
+msgid "Firewall reloaded"
+msgstr "Güvenlik duvarı yeniden yüklendi"
+
+#: src/frontend.py:645
+msgid "Firewall not enabled (skipping reload)"
+msgstr "Güvenlik duvarı etkin değil (yeniden yükleme atlanıyor)"
+
+#: src/frontend.py:662 src/frontend.py:676 src/frontend.py:713
+msgid "Invalid profile name"
+msgstr "Geçersiz profil adı"
+
+#: src/frontend.py:681 src/frontend.py:863
+#, python-format
+msgid "Unsupported action '%s'"
+msgstr "Desteklenmeyen '%s' eylemi"
+
+#: src/frontend.py:700
+msgid "Available applications:"
+msgstr "Kullanılabilir uygulamalar:"
+
+#: src/frontend.py:721
+#, python-format
+msgid "Could not find profile '%s'"
+msgstr "'%s' profili bulunamadı"
+
+#: src/frontend.py:726
+msgid "Invalid profile"
+msgstr "Geçersiz profil"
+
+#: src/frontend.py:729
+#, python-format
+msgid "Profile: %s\n"
+msgstr "Profil: %s\n"
+
+#: src/frontend.py:730
+#, python-format
+msgid "Title: %s\n"
+msgstr "Başlık: %s\n"
+
+#: src/frontend.py:733
+#, python-format
+msgid ""
+"Description: %s\n"
+"\n"
+msgstr ""
+"Tanımlama: %s\n"
+"\n"
+
+#: src/frontend.py:739
+msgid "Ports:"
+msgstr "Bağlantı Noktaları:"
+
+#: src/frontend.py:741
+msgid "Port:"
+msgstr "Bağlantı Noktası:"
+
+#: src/frontend.py:790
+msgid "Skipped reloading firewall"
+msgstr "Güvenlik duvarının yeniden yüklenmesi atlandı"
+
+#: src/frontend.py:800
+msgid "Cannot specify 'all' with '--add-new'"
+msgstr "'--add-new' ile birlikte 'all' kullanılamaz"
+
+#: src/frontend.py:815
+#, python-format
+msgid "Unknown policy '%s'"
+msgstr "Bilinmeyen politika '%s'"
+
+#: src/frontend.py:872
+#, python-format
+msgid ""
+"Command may disrupt existing ssh connections. Proceed with operation "
+"(%(yes)s|%(no)s)? "
+msgstr ""
+"Bu komut mevcut ssh bağlantılarını bozabilir. İşleme devam et "
+"(%(yes)s|%(no)s)? "
+
+#: src/frontend.py:885
+#, python-format
+msgid ""
+"Resetting all rules to installed defaults. Proceed with operation "
+"(%(yes)s|%(no)s)? "
+msgstr ""
+"Tüm kurallar kurulum varsayılanlara sıfırlanıyor. İşleme devam edilsin mi "
+"(%(yes)s|%(no)s)? "
+
+#: src/frontend.py:889
+#, python-format
+msgid ""
+"Resetting all rules to installed defaults. This may disrupt existing ssh "
+"connections. Proceed with operation (%(yes)s|%(no)s)? "
+msgstr ""
+"Tüm kurallar kurulum varsayılanlara sıfırlanıyor. Bu mevcut ssh "
+"bağlantılarını bozabilir. İşleme devam edilsin mi (%(yes)s|%(no)s)? "
+
+#: src/parser.py:108
+#, python-format
+msgid "Cannot insert rule at position '%s'"
+msgstr "'%s' konumuna kural eklenemez"
+
+#: src/parser.py:142
+msgid "Invalid interface clause"
+msgstr "Geçersiz arayüz ifadesi"
+
+#: src/parser.py:168
+msgid "Option 'log' not allowed here"
+msgstr "'log' seçeneğine burada izin verilmiyor"
+
+#: src/parser.py:172
+msgid "Option 'log-all' not allowed here"
+msgstr "'log-all' seçeneğine burada izin verilmiyor"
+
+#: src/parser.py:205 src/parser.py:219
+msgid "Bad port"
+msgstr "Hatalı port"
+
+#: src/parser.py:210 src/parser.py:342
+msgid "Port ranges must be numeric"
+msgstr "Port aralıkları sayısal olmalıdır"
+
+#: src/parser.py:224 src/parser.py:441
+#, python-format
+msgid "Invalid port with protocol '%s'"
+msgstr "'%s' protokolünde geçersiz port"
+
+#: src/parser.py:228
+msgid "Wrong number of arguments"
+msgstr "Hatalı argüman sayısı"
+
+#: src/parser.py:232
+msgid "Need 'to' or 'from' clause"
+msgstr "'to' veya 'from' ifadesi gerekli"
+
+#: src/parser.py:247
+msgid "Improper rule syntax"
+msgstr "Uygunsuz kural sözdizimi"
+
+#: src/parser.py:254
+#, python-format
+msgid "Invalid token '%s'"
+msgstr "Geçersiz jeton '%s'"
+
+#: src/parser.py:266
+msgid "Invalid 'proto' clause"
+msgstr "Geçersiz 'proto' ifadesi"
+
+#: src/parser.py:281
+#, python-format
+msgid "Invalid '%s' clause"
+msgstr "Geçersiz '%s' ifadesi"
+
+#: src/parser.py:303
+msgid "Invalid 'from' clause"
+msgstr "Geçersiz 'from' ifadesi"
+
+#: src/parser.py:325
+msgid "Invalid 'to' clause"
+msgstr "Geçersiz 'to' ifadesi"
+
+#: src/parser.py:330
+#, python-format
+msgid "Need 'from' or 'to' with '%s'"
+msgstr "'%s' ile 'from' veya 'to' ifadesi gerekli"
+
+#: src/parser.py:357
+msgid "Invalid 'port' clause"
+msgstr "Geçersiz 'port' ifadesi"
+
+#: src/parser.py:366
+msgid "Mixed IP versions for 'from' and 'to'"
+msgstr "'from' ve 'to' için karışık IP sürümleri"
+
+#: src/parser.py:383 src/parser.py:393 src/parser.py:402
+msgid "Could not find protocol"
+msgstr "Protokol bulunamadı"
+
+#: src/parser.py:409
+msgid "Protocol mismatch (from/to)"
+msgstr "Protokol uyuşmazlığı (from/to)"
+
+#: src/parser.py:416
+#, python-format
+msgid "Protocol mismatch with specified protocol %s"
+msgstr "Belirtilen %s protokolüyle protokol uyuşmazlığı"
+
+#: src/parser.py:423
+#, python-format
+msgid "Improper rule syntax ('%s' specified with app rule)"
+msgstr "Uygunsuz kural sözdizimi ('%s' uygulama kuralında belirtilmiş)"
+
+#: src/parser.py:430
+#, python-format
+msgid "Invalid IPv6 address with protocol '%s'"
+msgstr "'%s' protokolüyle geçersiz IPv6 adresi"
+
+#: src/parser.py:563
+msgid "Invalid interface clause for route rule"
+msgstr "Yönlendirme kuralı için geçersiz arayüz ifadesi"
+
+#: src/parser.py:849
+#, python-format
+msgid "Command '%s' already exists"
+msgstr "'%s' komutu halihazırda var"
+
+#: src/util.py:434
+msgid "Couldn't find pid (is /proc mounted?)"
+msgstr "Pid bulunamadı (/proc dizini bağlı mı?)"
+
+#: src/util.py:438
+#, python-format
+msgid "Couldn't find parent pid for '%s'"
+msgstr "'%s' için üst sürece ait pid bulunamadı"
+
+#: src/util.py:448
+#, python-format
+msgid "Couldn't find '%s'"
+msgstr "'%s' bulunamadı"
+
+#: src/util.py:454
+#, python-format
+msgid "Could not find executable for '%s'"
+msgstr "'%s' için çalıştırılabilir dosya bulunamadı"
+
+#: src/util.py:1006
+#, python-format
+msgid "Could not get statistics for '%s'"
+msgstr "'%s' için istatistikler getirilemedi"

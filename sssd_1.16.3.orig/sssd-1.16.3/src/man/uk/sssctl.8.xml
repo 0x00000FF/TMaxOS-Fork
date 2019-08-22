@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssctl</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssctl</refname>
+        <refpurpose>Засіб керування і визначення стану SSSD</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sssctl</command> <arg
+choice='plain'><replaceable>КОМАНДА</replaceable></arg> <arg choice='opt'>
+<replaceable>параметри</replaceable> </arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            <command>sssctl</command> є простим і уніфікованим засобом отримання даних
+щодо стану SSSD, зокрема активного сервера, серверів автоматичного
+визначення, доменів і кешованих об'єктів. Крім того, програма здатна
+керувати файлами даних SSSD для усування вад у такий спосіб, щоб з ними
+можна було безпечно працювати, доки працює SSSD.
+        </para>
+    </refsect1>
+
+    <refsect1 id='commands'>
+        <title>ДОСТУПНІ КОМАНДИ</title>
+        <para>
+            Щоб ознайомитися зі списком усіх доступних команд, віддайте команду
+<command>sssctl</command> без параметрів. Щоб програма вивела довідкове
+повідомлення щодо певної команди, віддайте команду <command>sssctl КОМАНДА
+--help</command>.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>ЗАГАЛЬНІ ПАРАМЕТРИ</title>
+        <para>
+            Ці параметри можна використовувати з усіма командами.
+        </para>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>--debug</option> <replaceable>РІВЕНЬ</replaceable>
+                </term>
+                <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/debug_levels_tools.xml" />
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD-Handbuchseiten</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_userdel</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_userdel</refname>
+        <refpurpose>löscht ein Benutzerkonto</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_userdel</command> <arg choice='opt'>
+<replaceable>Optionen</replaceable> </arg> <arg
+choice='plain'><replaceable>ANMELDUNG</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>BESCHREIBUNG</title>
+        <para>
+            <command>sss_userdel</command> löscht einen Benutzer, der durch den
+Anmeldenamen <replaceable>ANMELDUNG</replaceable> vom System erkannt wird.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPTIONEN</title>
+        <variablelist remap='IP'>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+            <varlistentry>
+                <term>
+                    <option>-r</option>,<option>--remove</option>
+                </term>
+                <listitem>
+                    <para>
+                        Dateien im Home-Verzeichnis des Benutzers werden zusammen mit dem
+Home-Verzeichnis selbst und der Mail-Warteschlange des Benutzers
+entfernt. Dies setzt die Konfiguration außer Kraft.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-R</option>,<option>--no-remove</option>
+                </term>
+                <listitem>
+                    <para>
+                        Dateien im Home-Verzeichnis des Benutzers werden NICHT zusammen mit dem
+Home-Verzeichnis selbst und der Mail-Warteschlange des Benutzers
+entfernt. Dies setzt die Konfiguration außer Kraft.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-f</option>,<option>--force</option>
+                </term>
+                <listitem>
+                    <para>
+                        Diese Option erzwingt, dass <command>sss_userdel</command> das
+Home-Verzeichnis des Benutzers und die Mail-Warteschlange sogar dann
+entfernt, wenn sie dem angegebenen Nutzer nicht gehören.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-k</option>,<option>--kick</option>
+                </term>
+                <listitem>
+                    <para>
+                        beendet, bevor der Benutzer tatsächlich gelöscht wird, alle seine Prozesse.
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/local.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

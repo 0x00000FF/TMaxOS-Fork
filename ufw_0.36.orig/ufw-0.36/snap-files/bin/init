@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ -z "$SNAP" ]; then
+    echo "SNAP not set"
+    exit 1
+fi
+
+upgrade_path="$SNAP_DATA/.upgraded_${SNAP_VERSION}"
+
+# ufw.srv will have already done this on install.
+if [ ! -e "$upgrade_path" ]; then
+    echo "Rules not found in '$SNAP_DATA'. Aborting"
+    exit 1
+fi
+
+"$SNAP"/lib/ufw/ufw-init --rootdir "$SNAP" --datadir "$SNAP_DATA" "$@"

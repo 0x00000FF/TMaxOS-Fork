@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_seed</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_seed</refname>
+        <refpurpose>надсилає дані кешу SSSD щодо користувача</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_seed</command> <arg choice='opt'>
+<replaceable>параметри</replaceable> </arg> <arg choice='plain'>-D
+<replaceable>ДОМЕН</replaceable></arg> <arg choice='plain'>-n
+<replaceable>КОРИСТУВАЧ</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            <command>sss_seed</command> розповсюджує кеш SSSD з записом користувача і
+тимчасовим паролем. Якщо запис користувача вже є у кеші SSSD, запис буде
+оновлено зі встановленням тимчасового пароля.
+        </para>
+        <para>
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>ПАРАМЕТРИ</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-D</option>,<option>--domain</option>
+<replaceable>ДОМЕН</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Визначає назву домену, учасником якого є користувач. Домен  використовується
+для отримання даних щодо користувачів. Домен має бути налаштовано у
+sssd.conf. Має бути надано аргумент <replaceable>ДОМЕН</replaceable>. Дані,
+отримані з домену, матимуть вищий пріоритет за дані, вказані за допомогою
+параметрів.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-n</option>,<option>--username</option>
+<replaceable>КОРИСТУВАЧ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Ім’я користувача, запис якого слід створити або змінити у кеші. Має бути
+вказано аргумент <replaceable>КОРИСТУВАЧ</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-u</option>,<option>--uid</option> <replaceable>ідентифікатор
+користувача</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Встановити UID користувача у значення <replaceable>UID</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-g</option>,<option>--gid</option> <replaceable>GID</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Встановити GID користувача у значення <replaceable>GID</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-c</option>,<option>--gecos</option>
+<replaceable>КОМЕНТАР</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Будь-який рядок тексту, що описує користувача. Часто використовується для
+зберігання паспортного імені користувача.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-h</option>,<option>--home</option>
+<replaceable>ДОМАШНІЙ_КАТАЛОГ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Встановити домашній каталог користувача у значення
+<replaceable>ДОМАШНІЙ_КАТАЛОГ</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--shell</option>
+<replaceable>ОБОЛОНКА</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Встановити оболонку реєстрації користувача у значення
+<replaceable>ОБОЛОНКА</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-i</option>,<option>--interactive</option>
+                </term>
+                <listitem>
+                    <para>
+                        Інтерактивний режим для введення даних користувача. У разі використання
+цього параметра програма надсилатиме запит лише щодо даних, які не було
+отримано з параметрів команди або домену.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-p</option>,<option>--password-file</option>
+<replaceable>ФАЙЛ_ПАРОЛІВ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Вказати файл, звідки слід читати дані щодо паролів користувачів. Якщо пароль
+не буде знайдено, програма надішле запит на його введення.
+                    </para>
+                </listitem>
+            </varlistentry>
+           <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>ЗАУВАЖЕННЯ</title>
+        <para>
+            Довжина пароля (або розмір файла, визначеного за допомогою параметра -p або
+--password-file) має бути меншою або рівною PASS_MAX байтів (64 байти у
+системах без визначеного на загальному рівні значення PASS_MAX).
+        </para>
+        <para>
+        </para>
+    </refsect1>
+
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

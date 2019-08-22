@@ -1,0 +1,11 @@
+#!/bin/sh -x
+
+aclocal -I .
+libtoolize --copy --force
+autoconf
+
+# Not with libisoburn
+# autoheader
+
+automake --foreign --add-missing --copy --include-deps
+

@@ -1,0 +1,88 @@
+#!/bin/bash
+
+# Copyright 2011 George Danchev <danchev@spnet.net>
+# Licensed under GNU GPL version 2 or later
+
+set -e
+
+not_in_releng_exit() {
+  printf "\nPlease execute the tests from releng directory.\n\n"
+  exit 1
+}
+
+. inc/releng_getopts.inc || not_in_releng_exit
+
+print_specific_help() {
+cat << HLP
+Specific options:
+       none yet.
+Overview:
+ Tests both xorriso/xorriso.h and libisoburn/libisoburn.h
+ APIs for C++ cleanness.
+HLP
+}
+
+if test "$SPECIFIC_HELP" = 1; then
+  print_specific_help
+  exit 0
+fi
+
+# xorriso binary is not needed for that particular test
+SAMPLE_CODE_DIR=codesamples
+CC=g++
+
+# check compiler
+if ! which "${CC}" >/dev/null 2>&1; then
+    printf "\n${SELF}: Not found: ${CC}. Install ${CC}.\n"
+    cleanup
+    exit 5
+fi
+
+# check data dir
+if [ -d "${GEN_DATA_DIR}" ]; then
+ printf "\n${SELF}: directory %s exists!" ${GEN_DATA_DIR}
+ printf "\n${SELF}: use '${SELF} -c' to remove.\n"
+ exit 6
+else
+ mkdir "${GEN_DATA_DIR}"
+fi
+
+INCLUDE_DIRS="-I../ -I../../libburn -I../../libisofs -I/usr/local/include -I/usr/pkg/include"
+
+# process sample code tests
+ for SMPL in `ls "${SAMPLE_CODE_DIR}"/*.cpp`; do
+   # CMD_CPL="${CC} -I../ -L ../libisoburn/.libs/ ${CFLAGS} -lisoburn -o ${SMPL}.obj ${SMPL}"
+   CMD_CPL="${CC} -c ${INCLUDE_DIRS} ${CFLAGS} -o ${SMPL}.obj ${SMPL}"
+   printf "${SELF}: ${CMD_CPL}"
+   set +e
+   ${CMD_CPL}
+   RET_CPL="$?"
+   if [ ${RET_CPL} = 0 -a -f ${SMPL}.obj ]; then
+      mv ${SMPL}.obj ${GEN_DATA_DIR}
+      printf "...ok\n"
+   else
+      printf "\nFAIL : ${SELF}: Compilation of ${SMPL}\n"
+      cleanup
+      exit 7
+   fi
+#   BASE=$(basename ${SMPL}.obj)
+#   printf "${SELF}: Running LD_LIBRARY_PATH=../libisoburn/.libs/:${LD_LIBRARY_PATH} ${GEN_DATA_DIR}/${BASE}"
+#   LD_LIBRARY_PATH=../libisoburn/.libs/:${LD_LIBRARY_PATH} ${GEN_DATA_DIR}/${BASE}
+#   RET_SMPL="$?"
+#   case ${RET_SMPL} in
+#    0)
+#     printf "...ok\n"
+#    ;;
+#    *)
+#     printf "exit code: ${RET_SMPL}\n"
+#     cleanup
+#     exit 8
+#    ;;
+#   esac
+   set -e
+ done
+
+# clean
+cleanup
+
+exit 0

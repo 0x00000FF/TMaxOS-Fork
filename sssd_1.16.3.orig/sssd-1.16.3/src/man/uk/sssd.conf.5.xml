@@ -1,0 +1,2960 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd.conf</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Формати файлів та правила</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd.conf</refname>
+        <refpurpose>файл налаштування SSSD</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='file-format'>
+        <title>ФОРМАТ ФАЙЛА</title>
+
+        <para>
+            Файл складено з використанням синтаксичний конструкцій у стилі ini, він
+складається з розділів і окремих записів параметрів. Розділ починається з
+рядка назви розділу у квадратних дужках і продовжується до початку нового
+розділу. Приклад розділу з параметрами, які мають єдине і декілька значень:
+<programlisting>
+<replaceable>[розділ]</replaceable>
+<replaceable>ключ</replaceable> = <replaceable>значення</replaceable>
+<replaceable>ключ2</replaceable> = <replaceable>значення2,значення3</replaceable>
+            </programlisting>
+        </para>
+
+        <para>
+            Типами даних є рядок (без символів лапок), ціле число і булеве значення
+(можливі два значення — <quote>TRUE</quote> і <quote>FALSE</quote>).
+        </para>
+
+        <para>
+            A comment line starts with a hash sign (<quote>#</quote>) or a semicolon
+(<quote>;</quote>).  Inline comments are not supported.
+        </para>
+
+        <para>
+            Для всіх розділів передбачено додатковий параметр
+<replaceable>description</replaceable>. Його призначено лише для позначення
+розділу.
+        </para>
+
+        <para>
+            <filename>sssd.conf</filename> має бути звичайним файлом, власником якого є
+користувач root. Права на читання та запис до цього файла повинен мати лише
+користувач root.
+        </para>
+    </refsect1>
+
+    <refsect1 id='config-snippets'>
+        <title>ФРАГМЕНТИ НАЛАШТУВАНЬ З КАТАЛОГУ ВКЛЮЧЕННЯ</title>
+
+        <para>
+            До файла налаштувань <filename>sssd.conf</filename> буде включено фрагменти
+налаштувань з каталогу <filename>conf.d</filename>. Цією можливістю можна
+буде скористатися, якщо SSSD було зібрано із бібліотекою libini версії 1.3.0
+або новішою.
+        </para>
+
+        <para>
+            Будь-який файл, розташований у <filename>conf.d</filename>, назва якого
+завершується на <quote><filename>.conf</filename></quote> і не починається з
+крапки (<quote>.</quote>), буде використано разом із
+<filename>sssd.conf</filename> для налаштовування SSSD.
+        </para>
+
+        <para>
+            Фрагменти налаштувань з <filename>conf.d</filename> мають вищий пріоритет за
+<filename>sssd.conf</filename>, вони мають вищий пріоритет за
+<filename>sssd.conf</filename>, якщо виникне конфлікт. Якщо у
+<filename>conf.d</filename> буде виявлено декілька фрагментів, їх буде
+включено за абеткою (на основі параметрів локалі). Файли, які включаються
+пізніше, мають вищий пріоритет. Числові префікси
+(<filename>01_фрагмент.conf</filename>,
+<filename>02_фрагмент.conf</filename> тощо) можуть допомогти у візуалізації
+пріоритетності (більше число означає вищу пріоритетність).
+        </para>
+
+        <para>
+            Файли фрагментів мають належати одному користувачеві і мати однакові права
+доступу із файлом <filename>sssd.conf</filename>. Типовим власником є
+root:root, а типовими правами доступу — 0600.
+        </para>
+    </refsect1>
+
+    <refsect1 id='general-options'>
+        <title>ЗАГАЛЬНІ ПАРАМЕТРИ</title>
+        <para>
+            Нижче наведено параметри, які можна використовувати у декількох розділах
+налаштувань.
+        </para>
+        <refsect2 id='all-section-options'>
+            <title>Параметри, які можна використовувати у всіх розділах</title>
+            <para>
+              <variablelist>
+                <varlistentry>
+                    <term>debug_level (ціле число)</term>
+                    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/debug_levels.xml" />
+                </varlistentry>
+                <varlistentry>
+                    <term>debug (ціле число)</term>
+                    <listitem>
+                        <para>
+                            У SSSD 1.14 і новіших версіях з міркувань зручності також передбачено
+альтернативний варіант <replaceable>debug</replaceable> для
+<replaceable>debug_level</replaceable>. Якщо вказано одразу обидва варіанти,
+буде використано варіант <replaceable>debug_level</replaceable>.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>debug_timestamps (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Додати часову позначку до діагностичних повідомлень. Якщо для запису
+діагностичного журналу у SSSD увімкнено journald, цей параметр буде
+проігноровано.
+                        </para>
+                        <para>
+                            Типове значення: true
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>debug_microseconds (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Додати значення мікросекунд до часової позначки у діагностичних
+повідомлення. Якщо для запису діагностичного журналу у SSSD увімкнено
+journald, цей параметр буде проігноровано.
+                        </para>
+                        <para>
+                            Типове значення: false
+                        </para>
+                    </listitem>
+                </varlistentry>
+              </variablelist>
+            </para>
+        </refsect2>
+
+        <refsect2 id='services-and-domains-section-options'>
+            <title>Параметри які можна використовувати у розділах SERVICE та DOMAIN</title>
+            <para>
+              <variablelist>
+                <varlistentry>
+                    <term>timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Проміжок у секундах між циклами роботи цієї служби. Використовується для
+перевірки працездатності процесу та його змоги відповідати на
+запити. Зауважте, що після трьох пропущених циклів процес перерве своє
+виконання самостійно.
+                        </para>
+                        <para>
+                            Типове значення: 10
+                        </para>
+                    </listitem>
+                </varlistentry>
+              </variablelist>
+            </para>
+        </refsect2>
+    </refsect1>
+
+    <refsect1 id='special-sections'>
+        <title>ОСОБЛИВІ РОЗДІЛИ</title>
+
+        <refsect2 id='services'>
+            <title>Розділ [sssd]</title>
+            <para>
+                Окремі функції у SSSD виконуються особливими службами SSSD, які запускаються
+і зупиняються разом SSSD. Ці служби керуються окремою службою, яку часто
+називають «монітором». Розділ <quote>[sssd]</quote> використовується для
+налаштування монітора та деяких інших важливих параметрів, зокрема доменів
+профілів.  <variablelist>
+                    <title>Параметри розділу</title>
+                    <varlistentry>
+                        <term>config_file_version (ціле число)</term>
+                        <listitem>
+                            <para>
+                                Визначає версію синтаксичних конструкцій файла налаштування. Для версій SSSD
+0.6.0 та пізніших слід використовувати версію 2.
+                            </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>services</term>
+                        <listitem>
+                            <para>
+                                Список служб, відокремлених комами, які запускаються разом із sssd. <phrase
+condition="have_systemd">Список служб є необов'язковим на платформах, де
+передбачено підтримку systemd, оскільки там такі служби вмикаються за
+допомогою сокетів або D-Bus.</phrase>
+                            </para>
+                            <para>
+                                Підтримувані служби: nss, pam <phrase condition="with_sudo">, sudo</phrase>
+<phrase condition="with_autofs">, autofs</phrase> <phrase
+condition="with_ssh">, ssh</phrase> <phrase condition="with_pac_responder">,
+pac</phrase> <phrase condition="with_ifp">, ifp</phrase>
+                            </para>
+                            <para>
+                                <phrase condition="have_systemd">Типово усі служби вимкнено. Адміністратор
+має увімкнути дозволені до використання служби за допомогою такої команди:
+"systemctl enable sssd-@service@.socket".  </phrase>
+                            </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>reconnection_retries (ціле число)</term>
+                        <listitem>
+                            <para>
+                                Кількість повторних спроб встановлення зв’язку зі службами або їх
+перезапуску у разі аварійного завершення роботи інструменту надання даних до
+визнання подальших спроб безнадійними.
+                            </para>
+                            <para>
+                                Типове значення: 3
+                            </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>domains</term>
+                        <listitem>
+                            <para>
+                                Домен — це база даних, у якій містяться дані щодо користувачів. SSSD може
+одночасно використовувати декілька доменів. Вам слід вказати принаймні один
+домен, інакше SSSD просто не запуститься. За допомогою цього параметра можна
+вказати список доменів, впорядкованих за пріоритетністю під час надсилання
+до них запитів щодо даних. Назва домену має складатися лише з літер і цифр
+ASCII, дефісів, крапок та знаків підкреслювання.
+                            </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>re_expression (рядок)</term>
+                        <listitem>
+                            <para>
+                                Типовий формальний вираз, який описує спосіб поділу рядка з іменем
+користувача і доменом на його частини.
+                            </para>
+                            <para>
+                                Для кожного з доменів можна налаштувати окремий формальний вираз. Для деяких
+з засобів надання ідентифікаторів передбачено типові формальні
+вирази. Докладніше про ці формальні вирази можна дізнатися з довідки до
+РОЗДІЛІВ ДОМЕНІВ.
+                            </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>full_name_format (рядок)</term>
+                        <listitem>
+                            <para>
+                                Сумісний з <citerefentry> <refentrytitle>printf</refentrytitle>
+<manvolnum>3</manvolnum> </citerefentry> формат, який описує спосіб
+створення повного імені на основі імені користувача та компонентів назви
+домену.
+                            </para>
+                            <para>
+                                Передбачено використання таких замінників: <variablelist>
+                                    <varlistentry>
+                                        <term>%1$s</term>
+                                        <listitem><para>ім’я користувача</para></listitem>
+                                    </varlistentry>
+                                    <varlistentry>
+                                        <term>%2$s</term>
+                                        <listitem>
+                                            <para>
+                                                назва домену у форматі, вказаному у файлі налаштувань SSSD.
+                                            </para>
+                                        </listitem>
+                                    </varlistentry>
+                                    <varlistentry>
+                                        <term>%3$s</term>
+                                        <listitem>
+                                            <para>
+                                                проста назва домену. Здебільшого використовується для доменів Active
+Directory, налаштованих та автоматично виявлених за зв’язками довіри IPA.
+                                            </para>
+                                        </listitem>
+                                    </varlistentry>
+                                </variablelist>
+                            </para>
+                            <para>
+                                Для кожного з доменів можна налаштувати окремий рядок формату. Докладніше
+про ці рядки можна дізнатися з довідки до РОЗДІЛІВ ДОМЕНІВ.
+                            </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>try_inotify (булеве значення)</term>
+                        <listitem>
+                            <para>
+                                SSSD спостерігає за станом resolv.conf для визначення моменту, коли слід
+оновити дані вбудованого інструменту визначення DNS. Типово, з цією метою
+використовується inotify. У разі неможливості використання inotify,
+виконуватиметься опитування resolv.conf кожні п’ять секунд.
+                            </para>
+                            <para>
+                                Зрідка бажано не вдаватися навіть до спроб скористатися inotify. У цих
+рідкісних випадках слід встановити для цього параметра значення «false».
+                            </para>
+                            <para>
+                                Типове значення: «true» на платформах, де підтримується inotify. «false» на
+інших платформах.
+                            </para>
+                            <para>
+                                Зауваження: цей параметр ні на що не вплине на платформах, де inotify
+недоступний. На цих платформах завжди використовуватиметься безпосереднє
+опитування файла.
+                            </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>krb5_rcache_dir (рядок)</term>
+                        <listitem>
+                            <para>
+                                Каталог у файловій системі, де SSSD має зберігати файли кешу відтворення
+Kerberos.
+                            </para>
+                            <para>
+                                Цей параметр приймає особливе значення __LIBKRB5_DEFAULTS__, за допомогою
+якого можна наказати SSSD надати змогу libkrb5 визначити відповідну адресу
+для кешу відтворення.
+                            </para>
+                            <para>
+                                Типове значення: визначається дистрибутивом та вказується під час
+збирання. (__LIBKRB5_DEFAULTS__, якщо не вказано)
+                            </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>user (рядок)</term>
+                        <listitem>
+                            <para>
+                                Користувач, до якого слід скинути права доступу, якщо це потрібно для
+уникнення запуску від імені користувача root. <phrase
+condition="have_systemd"> Цей параметр не спрацює, якщо запущено служби, які
+активуються сокетами, оскільки ім'я користувача для запуску налаштовується
+під час збирання. Параметри файлів модулів systemd можна перевизначити
+створенням відповідних файлів у /etc/systemd/system/. Слід пам'ятати, щоб
+будь-які зміни у параметрах користувача, групи чи прав доступу можуть
+призвести до непрацездатності SSSD. Те саме може статися, якщо змінити
+користувача, від імені якого запущено відповідач NSS.  </phrase>
+                            </para>
+                            <para>
+                                Типове значення: не встановлено, процес буде запущено від імені root
+                            </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>default_domain_suffix (рядок)</term>
+                        <listitem>
+                            <para>
+                                Цей рядок буде використано як типову назву домену для всіх назв без
+компонента назви домену. Основним призначенням використання цього рядка є
+середовища, де основний домен призначено для керування правилами вузлів та
+всіма користувачами, розташованими на надійному (довіреному) домені. За
+допомогою цього параметра користувачі можуть входити до системи за допомогою
+лише імені користувача без додавання до нього назви домену.
+                            </para>
+                            <para>
+                                Будь ласка, зауважте, що якщо встановлено цей параметр, для усіх
+користувачів із основного домену доведеться використовувати ім’я повністю,
+тобто користувач@назва.домену, для входу до системи. Встановлення цього
+параметра змінює типове значення use_fully_qualified_names на True. Цей
+параметр не можна використовувати у поєднанні із значенням
+use_fully_qualified_names рівним False.
+                            </para>
+                            <para>
+                                Типове значення: not set
+                            </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>override_space (рядок)</term>
+                        <listitem>
+                            <para>
+                                За допомогою цього параметра можна змінити пробіли у іменах користувачів та
+назвах груп вказаним симовлом, наприклад _. Ім’я користувача «john doe» буде
+перетворено на «john_doe». Цю можливість було додано для сумісності із
+скриптами командної оболонки, у яких виникають проблеми із обробкою пробілів
+через типовий роздільник полів у оболонці.
+                            </para>
+                            <para>
+                                Будь ласка, зауважте, що використання символу-замінника, який може бути
+використано у іменах користувачів і назвах груп, є помилкою у
+налаштуваннях. Якщо назва містить символ-замінник, SSSD спробує повернути
+незмінену назву, але, загалом, результат пошуку буде невизначеним.
+                            </para>
+                            <para>
+                                Типове значення: не встановлено (пробіли не замінятимуться)
+                            </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>certificate_verification (рядок)</term>
+                        <listitem>
+                            <para>
+                                За допомогою цього параметра можна виконати тонке налаштовування перевірки
+сертифікатів на основі списку параметрів, відокремлених комами. Підтримувані
+параметри: <variablelist>
+                                <varlistentry>
+                                    <term>no_ocsp</term>
+                                    <listitem>
+                                        <para>Вимикає перевірки протоколу стану мережевої сертифікації (Online Certificate
+Status Protocol або OCSP). Це може знадобитися, якщо сервери OCSP, визначені
+у сертифікаті, є недоступними з клієнта.</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>no_verification</term>
+                                    <listitem>
+                                        <para>Повністю вимикає перевірку. Цим варіантом слід користуватися лише для
+тестування.</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>ocsp_default_responder=URL</term>
+                                    <listitem>
+                                        <para>Встановлює типовий відповідач OCSP, який слід використовувати замість
+визначеного у сертифікаті. Адресу слід замінити адресою типового
+відповідача, наприклад http://example.com:80/ocsp.</para>
+                                        <para>Цей параметр слід використовувати разом із параметром
+ocsp_default_responder_signing_cert.
+                                        </para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>
+                                    ocsp_default_responder_signing_cert=НАЗВА</term>
+                                    <listitem>
+                                        <para>Альтернативна назва сертифіката, якому слід довіряти (очікувано) для
+підписування відповідей OCSP. Сертифікат із вказаною альтернативною назвою
+має зберігатися у базі даних NSS системи.</para>
+                                        <para>Цим параметром слід користуватися разом із параметром
+ocsp_default_responder.</para>
+                                    </listitem>
+                                </varlistentry>
+                                </variablelist>
+                            </para>
+                            <para>
+                                Обробник параметрів повідомлятиме про невідомі параметри і просто
+ігноруватиме їх.
+                            </para>
+                            <para>
+                                Типове значення: не встановлено, тобто перевірка сертифікатів нічим не
+обмежуватиметься
+                            </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>disable_netlink (булеве значення)</term>
+                        <listitem>
+                            <para>
+                                Перехоплювачі SSSD у інтерфейсі netlink для стеження за змінами у маршрутах,
+адресах, посилання та виконання певних дій.
+                            </para>
+                            <para>
+                                Зміни стану SSSD, спричинені подіями netlink, можуть бути небажаними, їх
+можна вимкнути встановленням для цього параметра значення «true»
+                            </para>
+                            <para>
+                                Типове значення: false (виявлення змін у netlink)
+                            </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>enable_files_domain (булеве значення)</term>
+                        <listitem>
+                            <para>
+                                Якщо цю можливість увімкнено, SSSD дописуватиме неявний домен із
+<quote>id_provider=files</quote> до усіх явним чином налаштованих доменів.
+                            </para>
+                            <para condition="no_enable_files_domain">
+                                Типове значення: false
+                            </para>
+                            <para condition="enable_files_domain">
+                                Типове значення: true
+                            </para>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>domain_resolution_order</term>
+                        <listitem>
+                            <para>
+                                Список доменів і піддоменів, відокремлених комами, який визначає порядок
+пошуку, який використовуватиметься. Список не обов'язково включатиме усі
+можливі домени, оскільки пошук у пропущених доменах відбуватиметься у
+порядку, у якому їх вказано у параметрі налаштування
+<quote>domains</quote>. Пошук у піддоменах, яких немає у списку
+<quote>lookup_order</quote>, відбуватиметься у випадковому порядку для
+кожного батьківського домену.
+                            </para>
+                            <para>
+                                Please, note that when this option is set the output format of all commands
+is always fully-qualified even when using short names for input, for all
+users but the ones managed by the files provider.  In case the administrator
+wants the output not fully-qualified, the full_name_format option can be
+used as shown below: <quote>full_name_format=%1$s</quote> However, keep in
+mind that during login, login applications often canonicalize the username
+by calling <citerefentry> <refentrytitle>getpwnam</refentrytitle>
+<manvolnum>3</manvolnum> </citerefentry> which, if a shortname is returned
+for a qualified input (while trying to reach a user which exists in multiple
+domains) might re-route the login attempt into the domain which uses
+shortnames, making this workaround totally not recommended in cases where
+usernames may overlap between domains.
+                            </para>
+                            <para>
+                                Типове значення: не встановлено
+                            </para>
+                        </listitem>
+                    </varlistentry>
+                </variablelist>
+            </para>
+        </refsect2>
+
+    </refsect1>
+
+    <refsect1 id='services-sections'>
+        <title>РОЗДІЛИ СЛУЖБ</title>
+        <para>
+            У цьому розділі описано параметри, якими можна скористатися для налаштування
+різноманітних служб. Ці параметри має бути зібрано у розділах з назвами
+[<replaceable>$NAME</replaceable>]. Наприклад, параметри служби NSS зібрано
+у розділі <quote>[nss]</quote>
+        </para>
+
+        <refsect2 id='general'>
+            <title>Загальні параметри налаштування служб</title>
+            <para>
+                Цими параметрами можна скористатися для налаштування будь-яких служб.
+            </para>
+            <variablelist>
+                <varlistentry>
+                    <term>reconnection_retries (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Кількість повторних спроб встановлення зв’язку зі службами або їх
+перезапуску у разі аварійного завершення роботи інструменту надання даних до
+визнання подальших спроб безнадійними.
+                        </para>
+                        <para>
+                            Типове значення: 3
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>fd_limit</term>
+                    <listitem>
+                        <para>
+                            За допомогою цього параметра можна визначити максимальну кількість
+дескрипторів файлів, які одночасно може бути відкрито цим процесом SSSD. У
+системах, де SSSD надано можливості CAP_SYS_RESOURCE, цей параметр
+використовуватиметься незалежно від інших параметрів системи. У системах без
+цієї можливості, кількість дескрипторів визначатиметься найменшим зі значень
+цього параметра і обмеженням "hard" у  limits.conf.
+                        </para>
+                        <para>
+                            Типове значення: 8192 (або обмеження у limits.conf "hard")
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>client_idle_timeout</term>
+                    <listitem>
+                        <para>
+                            За допомогою цього параметра можна визначити кількість секунд, протягом яких
+клієнтська частина SSSD може утримувати дескриптор файла без здійснення за
+його допомогою обміну даними. Таке обмеження потрібне для того, щоб уникнути
+вичерпання ресурсів системи. Час очікування не може бути меншим за 10
+секунд. Якщо у налаштуваннях вказано менше значення, його буде скориговано
+до 10 секунд.
+                        </para>
+                        <para>
+                            Типове значення: 60
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>offline_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Коли SSSD перемикається на автономний режим роботи, час, який має минути,
+перш ніж буде здійснено спробу повернутися до режиму у мережі,
+збільшуватиметься, відповідно до часу, проведеного у режимі від’єднання. Це
+значення вказується у секундах і обчислюється за такою формулою:
+                        </para>
+                        <para>
+                             час_очікування_для_переходу_у_автономний_режим + випадковий_зсув
+                        </para>
+                        <para>
+                            Випадковий зсув може збільшувати час на інтервал до 30 секунд. Після кожної
+невдалої спроби переходу до режиму у мережі новий інтервал часу обчислюється
+таким чином:
+                        </para>
+                        <para>
+                            новий_інтервал = старий_інтервал*2 + випадковий_зсув
+                        </para>
+                        <para>
+                            Зауважте, що максимальна тривалість кожного з інтервалів у поточній версії
+обмежено однією годиною. Якщо обчислена тривалість нового інтервалу
+перевищує годину, буде встановлено інтервал у одну годину.
+                        </para>
+                        <para>
+                            Типове значення: 60
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>responder_idle_timeout</term>
+                    <listitem>
+                        <para>
+                            Цей параметр визначає кількість секунд, протягом яких процес відповідача
+SSSD може працювати без використання. Це значення обмежено з метою уникнення
+вичерпання ресурсів системи. Мінімальним прийнятним значенням для цього
+параметра є 60 секунд. Встановлення для цього параметра значення 0 (нуль)
+означає, що для відповідача не встановлюватиметься ніякого часу
+очікування. Цей параметр враховуватиметься, лише якщо SSSD зібрано з
+підтримкою systemd і якщо служби активуються за допомогою або сокетів або
+D-Bus.
+                        </para>
+                        <para>
+                            Типове значення: 300
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>cache_first</term>
+                    <listitem>
+                        <para>
+                            Цей параметр визначає, чи слід відповідачеві опитати усі кеші до надсилання
+запису до модулів засобів надання даних.
+                        </para>
+                        <para>
+                            Типове значення: false
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </refsect2>
+
+        <refsect2 id='NSS'>
+            <title>Параметри налаштування NSS</title>
+            <para>
+                Цими параметрами можна скористатися для налаштування служби Name Service
+Switch (NSS або перемикання служби визначення назв).
+            </para>
+            <variablelist>
+                <varlistentry>
+                    <term>enum_cache_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Тривалість зберігання переліків (запитів щодо даних всіх користувачів) у
+кеші nss_sss у секундах
+                        </para>
+                        <para>
+                            Типове значення: 120
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>entry_cache_nowait_percentage (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Можна встановити кеш записів для автоматичного оновлення записів у фоновому
+режимі, якщо запит щодо них надходить у визначений у відсотках від
+entry_cache_timeout для домену період часу.
+                        </para>
+                        <para>
+                            Наприклад, якщо entry_cache_timeout домену встановлено у значення 30s, а
+entry_cache_nowait_percentage — у значення 50 (у відсотках), записи, які
+надійдуть за 15 секунд після останнього оновлення кешу, буде повернуто
+одразу, але SSSD оновить власний кеш, отже наступні запити очікуватимуть на
+розблокування після оновлення кешу.
+                        </para>
+                        <para>
+                            Коректними значеннями цього параметра є 0-99. Ці значення відповідають
+відсоткам entry_cache_timeout для кожного з доменів. З міркувань покращення
+швидкодії це відсоткове значення ніколи не зменшуватиме час очікування
+nowait до значення, меншого за 10 секунд. Визначення значення 0 вимкне цю
+можливість.
+                        </para>
+                        <para>
+                            Типове значення: 50
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>entry_negative_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає кількість секунд, протягом яких nss_sss має кешувати негативні
+результати пошуку у кеші (тобто запити щодо некоректних записів у базі
+даних, зокрема неіснуючих) перед повторним запитом до сервера обробки.
+                        </para>
+                        <para>
+                            Типове значення: 15
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>local_negative_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Specifies for how many seconds nss_sss should keep local users and groups in
+negative cache before trying to look it up in the back end again. Setting
+the option to 0 disables this feature.
+                        </para>
+                        <para>
+                            Default: 14400 (4 hours)
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>filter_users, filter_groups (рядок)</term>
+                    <listitem>
+                        <para>
+                            Виключити певних користувачів або групи зі списку отримання даних з бази
+даних NSS sss. Таке виключення може бути корисним для облікових записів
+керування системою. Цей параметр також можна встановлювати для кожного з
+доменів окремо або включити до нього імена користувачів повністю для
+обмеження списку користувачами лише з певного домену.
+                        </para>
+                        <para>
+                            ЗАУВАЖЕННЯ: параметр filter_groups не впливає на успадкованість вкладених
+записів групи, оскільки фільтрування відбувається після їх передавання для
+повернення за допомогою NSS. Наприклад, у списку групи, що містить вкладену
+групу, яку відфільтровано, залишатимуться записи користувачів
+відфільтрованої групи.
+                        </para>
+                        <para>
+                            Типове значення: root
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>filter_users_in_groups (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Якщо ви хочете, щоб фільтровані користувачі залишалися учасниками груп,
+встановіть для цього параметра значення «false».
+                        </para>
+                        <para>
+                            Типове значення: true
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/override_homedir.xml" />
+                <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/homedir_substring.xml" />
+                <varlistentry>
+                    <term>fallback_homedir (рядок)</term>
+                    <listitem>
+                        <para>
+                            Встановити типовий шаблон назви домашнього каталогу користувача, якщо цей
+каталог не вказано явним чином засобом надання даних домену.
+                        </para>
+                        <para>
+                            Можливі варіанти значень для цього параметра збігаються з варіантами значень
+для параметра override_homedir.
+                        </para>
+                        <para>
+                            приклад: <programlisting>
+fallback_homedir = /home/%u
+                            </programlisting>
+                        </para>
+                        <para>
+                            Типове значення: не встановлено (без замін для невстановлених домашніх
+каталогів)
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>override_shell (рядок)</term>
+                    <listitem>
+                        <para>
+                            Перевизначити командну оболонку входу до системи для усіх користувачів. Цей
+параметр має пріоритет над будь-якими іншими параметрами визначення
+командної оболонки, якщо він діє. Його можна встановити або у розділі [nss]
+або для кожного з доменів окремо.
+                        </para>
+                        <para>
+                            Типове значення: не встановлено (SSSD використовуватиме значення, отримане
+від LDAP)
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>allowed_shells (рядок)</term>
+                    <listitem>
+                        <para>
+                            Обмежити перелік можливих командних оболонок користувачів вказаними. Порядок
+визначення оболонки є таким:
+                        </para>
+                        <para>
+                            1. Якщо оболонку вказано у <quote>/etc/shells</quote>, її буде використано.
+                        </para>
+                        <para>
+                            2. Якщо оболонку вказано у списку allowed_shells, але її немає у списку
+<quote>/etc/shells</quote>, буде використано значення параметра
+shell_fallback.
+                        </para>
+                        <para>
+                            3. Якщо оболонку не вказано у списку allowed_shells і її немає у списку
+<quote>/etc/shells</quote>, буде використано оболонку nologin.
+                        </para>
+                        <para>
+                            Для визначення будь-якої командної оболонки можна скористатися шаблоном
+заміни (*).
+                        </para>
+                        <para>
+                            Значенням (*) варто користуватися, якщо ви хочете скористатися
+shell_fallback, коли командної оболонки користувача немає у «/etc/shells», а
+супровід списку усіх командних оболонок у allowed_shells є надто марудною
+справою.
+                        </para>
+                        <para>
+                            Порожній рядок оболонки буде передано без обробки до libc.
+                        </para>
+                        <para>
+                            Читання <quote>/etc/shells</quote> виконується лише під час запуску SSSD,
+тобто у разі встановлення нової оболонки слід перезапустити SSSD.
+                        </para>
+                        <para>
+                            Типове значення: не встановлено. Автоматично використовується оболонка
+користувача.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>vetoed_shells (рядок)</term>
+                    <listitem>
+                        <para>
+                            Замінити всі записи цих оболонок на shell_fallback
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>shell_fallback (рядок)</term>
+                    <listitem>
+                        <para>
+                            Типова оболонка, яку слід використовувати, якщо дозволеної оболонки у
+системі не встановлено.
+                        </para>
+                        <para>
+                            Типове значення: /bin/sh
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>default_shell</term>
+                    <listitem>
+                        <para>
+                            Типова командна оболонка, яку буде використано, якщо засобом надання даних
+не було повернуто назви оболонки під час пошуку. Цей параметр можна вказати
+або на загальному рівні у розділі [nss], або окремо для кожного з доменів.
+                        </para>
+                        <para>
+                            Типове значення: не встановлено (повернути NULL, якщо оболонку не
+встановлено і покластися на libc у визначенні потрібного програмі значення,
+зазвичай /bin/sh)
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>get_domains_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає час у секундах, протягом якого список піддоменів вважатиметься
+чинним.
+                        </para>
+                        <para>
+                            Типове значення: 60
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>memcache_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає час у секундах, протягом якого список піддоменів вважатиметься
+чинним. Встановлення для цього параметра нульового значення вимикає кеш у
+пам'яті.
+                        </para>
+                        <para>
+                            Типове значення: 300
+                        </para>
+                        <para>
+                            Попередження: вимикання кешу у пам'яті значно погіршить швидкодію SSSD, ним
+варто користуватися лише для тестування.
+                        </para>
+                        <para>
+                            ЗАУВАЖЕННЯ: якщо для змінної середовища SSS_NSS_USE_MEMCACHE встановлено
+значення «NO», клієнтські програми не використовуватимуть fast у кеші у
+пам’яті.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>user_attributes (рядок)</term>
+                    <listitem>
+                        <para>
+                            Деякі із додаткових запитів до відповідача NSS можуть повертати більшу
+кількість атрибутів, ніж це визначено POSIX для інтерфейсу NSS. Списком
+атрибутів можна керувати за допомогою цього параметра. Обробка виконується у
+той самий спосіб, що і для параметра «user_attributes» відповідача InfoPipe
+(див. <citerefentry> <refentrytitle>sssd-ifp</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>, щоб дізнатися більше), але без
+типових значень.
+                        </para>
+                        <para>
+                            Щоб полегшити налаштовування відповідач NSS перевірятиме параметр InfoPipe
+на те, чи не встановлено його для відповідача NSS.
+                        </para>
+                        <para>
+                            Типове значення: не встановлено, резервне значення визначається за
+параметром InfoPipe
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>pwfield (рядок)</term>
+                    <listitem>
+                        <para>
+                            Значення, яке повертають операції NSS, які повертають записи користувачів чи
+груп, для поля <quote>password</quote>.
+                        </para>
+                        <para>
+                            Значення цього параметра можна встановлювати для кожного з доменів окремо.
+                        </para>
+                        <para>
+                            Типове значення: <quote>*</quote> (віддалені домени) або <quote>x</quote>
+(файловий домен)
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </refsect2>
+        <refsect2 id='PAM'>
+            <title>Параметри налаштування PAM</title>
+            <para>
+                Цими параметрами можна скористатися для налаштування служби Pluggable
+Authentication Module (PAM або блокового модуля розпізнавання).
+            </para>
+            <variablelist>
+                <varlistentry>
+                    <term>offline_credentials_expiration (ціле число)</term>
+                    <listitem>
+                        <para>
+                            У разі неможливості встановлення з’єднання з сервером розпізнавання визначає
+тривалість зберігання кешованих входів (у днях з часу останнього успішного
+входу до системи).
+                        </para>
+                        <para>
+                            Типове значення: 0 (без обмежень)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>offline_failed_login_attempts (ціле число)</term>
+                    <listitem>
+                        <para>
+                            У разі неможливості встановлення з’єднання з сервером розпізнавання визначає
+дозволену кількість спроб входу з визначенням помилкового пароля.
+                        </para>
+                        <para>
+                            Типове значення: 0 (без обмежень)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>offline_failed_login_delay (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Час у хвилинах, який має пройти між досягненням значення
+offline_failed_login_attempts і повторним вмиканням можливості входу до
+системи.
+                        </para>
+                        <para>
+                            Якщо встановлено значення 0, користувач не зможе пройти розпізнавання у
+автономному режимі, якщо буде досягнуто значення
+offline_failed_login_attempts. Лише успішне розпізнавання може знову
+увімкнути можливість автономного розпізнавання.
+                        </para>
+                        <para>
+                            Типове значення: 5
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>pam_verbosity (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Керує типами повідомлень, які буде показано користувачеві під час
+розпізнавання. Чим більшим є значення, тим більше повідомлень буде показано.
+                        </para>
+                        <para>
+                             У поточній версії sssd передбачено підтримку таких значень:
+                        </para>
+                        <para>
+                             <emphasis>0</emphasis>: не показувати жодних повідомлень
+                        </para>
+                        <para>
+                             <emphasis>1</emphasis>: показувати лише важливі повідомлення
+                        </para>
+                        <para>
+                             <emphasis>2</emphasis>: показувати всі інформаційні повідомлення
+                        </para>
+                        <para>
+                             <emphasis>3</emphasis>: показувати всі повідомлення та діагностичні дані
+                        </para>
+                        <para>
+                            Типове значення: 1
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>pam_response_filter (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Список рядків, відокремлених комами, за допомогою якого можна вилучати
+(фільтрувати) дані, які надсилаються відповідачем PAM до модуля PAM
+pam_sss. Існують різні тип відповідей, які надсилаються до pam_sss,
+наприклад повідомлення, які показуються користувачеві, або змінні
+середовища, які слід встановлювати за допомогою pam_sss.
+                        </para>
+                        <para>
+                            Хоча повідомленнями вже можна керувати за допомогою параметра pam_verbosity,
+за допомогою цього параметра можна відфільтрувати також інші типи
+повідомлень.
+                        </para>
+                        <para>
+                            У поточній версії передбачено підтримку таких фільтрів: <variablelist>
+                                <varlistentry><term>ENV</term>
+                                    <listitem><para>Не надсилати жодних змінних середовища до жодної служби.</para></listitem>
+                                </varlistentry>
+                                <varlistentry><term>ENV:назва_змінної</term>
+                                    <listitem><para>Не надсилати змінної середовища назва_змінної до жодної служби.</para></listitem>
+                                </varlistentry>
+                                <varlistentry><term>ENV:назва_змінної:служба</term>
+                                    <listitem><para>Не надсилати змінної середовища назва_змінної до вказаної служби.</para></listitem>
+                                </varlistentry>
+                            </variablelist>
+                        </para>
+                        <para>
+                            Типове значення: not set
+                        </para>
+                        <para>
+                            Приклад: ENV:KRB5CCNAME:sudo-i
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term>pam_id_timeout (ціле число)</term>
+                  <listitem>
+                    <para>
+                      Для кожного з запитів PAM під час роботи SSSD система SSSD зробить спробу
+негайно оновити кешовані дані щодо профілю користувача з метою переконатися,
+що розпізнавання виконується на основі найсвіжіших даних.
+                    </para>
+                    <para>
+                      Повний обмін даними сеансу PAM може включати декілька запитів PAM, зокрема
+для керування обліковими записами та відкриття сеансів. За допомогою цього
+параметра можна керувати (для окремих клієнтів-програм) тривалістю (у
+секундах) кешування даних профілю з метою уникнути повторних викликів засобу
+надання даних профілів.
+                    </para>
+                    <para>
+                      Типове значення: 5
+                    </para>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term>pam_pwd_expiration_warning (ціле число)</term>
+                  <listitem>
+                    <para>
+                      Показати попередження за вказану кількість днів перед завершенням дії
+пароля.
+                    </para>
+                    <para>
+                      Будь ласка, зауважте, що сервер обробки має надати дані щодо часу завершення
+дії пароля. Якщо ці дані не буде виявлено, sssd не зможе показати
+попередження.
+                    </para>
+                    <para>
+                      Якщо встановлено нульове значення, цей фільтр не застосовуватиметься, тобто
+якщо з сервера обробки надійде попередження щодо завершення строку дії, його
+буде автоматично показано.
+                    </para>
+                    <para>
+                      Цей параметр може бути перевизначено встановленням параметра
+<emphasis>pwd_expiration_warning</emphasis> для окремого домену.
+                    </para>
+                    <para>
+                      Типове значення: 0
+                    </para>
+                  </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>get_domains_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає час у секундах, протягом якого список піддоменів вважатиметься
+чинним.
+                        </para>
+                        <para>
+                            Типове значення: 60
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>pam_trusted_users (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає список відокремлених комами значень UID або імен користувачів, яким
+дозволено виконувати обмін даними PAM із довіреними доменами. Користувачі,
+яких не включено до цього списку, можуть отримувати доступ лише до доменів,
+які позначено як загальнодоступні (public) за допомогою
+<quote>pam_public_domains</quote>. Імена користувачів перетворюються на UID
+під час запуску системи.
+                        </para>
+                        <para>
+                            Типове значення: типово усі користувачі вважаються надійними (довіреними)
+                        </para>
+                        <para>
+                            Будь ласка, зауважте, що користувачеві з UID 0 завжди мають доступ до
+відповідача PAM, навіть якщо користувача немає у списку pam_trusted_users.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>pam_public_domains (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає список назв доменів, відокремлених комами, доступ до яких можуть
+отримувати навіть ненадійні користувачі.
+                        </para>
+                        <para>
+                            Визначено два спеціальних значення параметра pam_public_domains:
+                        </para>
+                        <para>
+                            all (Ненадійним користувачам відкрито доступ до усіх доменів у відповідачі
+PAM.)
+                        </para>
+                        <para>
+                            none (Ненадійним користувачам заборонено доступ до усіх доменів PAM у
+відповідачі.)
+                        </para>
+                        <para>
+                            Типове значення: none
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>pam_account_expired_message (рядок)</term>
+                    <listitem>
+                        <para>
+                           Надає змогу встановити нетипове повідомлення щодо завершення строку дії, яке
+замінити типове повідомлення «Доступ заборонено» («Permission denied»).
+                        </para>
+                        <para>
+                            Зауваження: будь ласка, зверніть увагу на те, що повідомлення буде виведено
+для служби SSH, лише якщо pam_verbosity не встановлено у значення 3
+(показувати усі повідомлення і діагностичні дані).
+                        </para>
+                        <para>
+                            приклад: <programlisting>
+pam_account_expired_message = Account expired, please contact help desk.
+                            </programlisting>
+                        </para>
+                        <para>
+                            Типове значення: none
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>pam_account_locked_message (рядок)</term>
+                    <listitem>
+                        <para>
+                           Надає змогу встановити нетипове повідомлення щодо блокування, яке замінити
+типове повідомлення «Доступ заборонено» («Permission denied»).
+                        </para>
+                        <para>
+                            приклад: <programlisting>
+pam_account_locked_message = Account locked, please contact help desk.
+                            </programlisting>
+                        </para>
+                        <para>
+                            Типове значення: none
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>pam_cert_auth (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Увімкнути сертифікацію на основі розпізнавання за смарткартками. Оскільки це
+потребує додаткового обміну даним із смарткарткою, що затримує процес
+розпізнавання, типово таку сертифікацію вимкнено.
+                        </para>
+                        <para>
+                            Типове значення: False
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>pam_cert_db_path (рядок)</term>
+                    <listitem>
+                        <para>
+                            Шлях до бази даних сертифікатів, яка містить модулі PKCS#11 для доступу до
+смарткартки.
+                        </para>
+                        <para>
+                            Default:
+                            <itemizedlist>
+                                <listitem><para>/etc/pki/nssdb (NSS version, path to a NSS database)</para></listitem>
+                                <listitem><para>/etc/sssd/pki/sssd_auth_ca_db.pem (OpenSSL version, path to a file with
+trusted CA certificates in PEM format)</para></listitem>
+                            </itemizedlist>
+                        </para>
+                        <para condition="with_nss">
+                            This man page was generated for the NSS version.
+                        </para>
+                        <para condition="with_openssl">
+                            This man page was generated for the OpenSSL version.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>p11_child_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Час у секундах, протягом якого pam_sss очікуватиме на завершення роботи
+p11_child.
+                        </para>
+                        <para>
+                            Типове значення: 10
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>pam_app_services (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає, яким службам PAM дозволено встановлювати з'єднання із доменами
+типу <quote>application</quote>
+                        </para>
+                        <para>
+                            Типове значення: не встановлено
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+            </variablelist>
+        </refsect2>
+
+        <refsect2 id='SUDO' condition="with_sudo">
+            <title>Параметри налаштування SUDO</title>
+            <para>
+                Цими параметрами можна скористатися для налаштовування служби sudo. Докладні
+настанови щодо налаштовування <citerefentry>
+<refentrytitle>sudo</refentrytitle> <manvolnum>8</manvolnum> </citerefentry>
+на роботу з <citerefentry> <refentrytitle>sssd</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry> можна знайти на сторінці довідника
+<citerefentry> <refentrytitle>sssd-sudo</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+            </para>
+            <variablelist>
+                <varlistentry>
+                    <term>sudo_timed (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, чи слід обробляти атрибути sudoNotBefore і sudoNotAfter,
+призначені для визначення часових обмежень для записів sudoers.
+                        </para>
+                        <para>
+                            Типове значення: false
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+            <variablelist>
+                <varlistentry>
+                    <term>sudo_threshold (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Максимальна кількість застарілих правил, які можна оновлювати за один
+крок. Якщо кількість застарілих правил є нижчою за це порогове значення,
+правила буде оновлено за допомогою механізму <quote>rules
+refresh</quote>. Якщо порогове значення перевищено, замість нього буде
+використано <quote>full refresh</quote> з правил sudo. Це порогове значення
+також стосується команди sudo IPA та групових пошуків команд.
+                        </para>
+                        <para>
+                            Типове значення: 50
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </refsect2>
+
+        <refsect2 id='AUTOFS' condition="with_autofs">
+            <title>Параметри налаштування AUTOFS</title>
+            <para>
+                Цими параметрами можна скористатися для налаштування служби autofs.
+            </para>
+            <variablelist>
+                <varlistentry>
+                    <term>autofs_negative_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає кількість секунд, протягом яких відповідач autofs має кешувати
+негативні результати пошуку у кеші (тобто запити щодо некоректних записів у
+базі даних, зокрема неіснуючих) перед повторним запитом до сервера обробки.
+                        </para>
+                        <para>
+                            Типове значення: 15
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/autofs_restart.xml" />
+        </refsect2>
+
+        <refsect2 id='SSH' condition="with_ssh">
+            <title>Параметри налаштувань SSH</title>
+            <para>
+                Цими параметрами можна скористатися для налаштування служби SSH.
+            </para>
+            <variablelist>
+                <varlistentry>
+                    <term>ssh_hash_known_hosts (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Чи слід хешувати назви та адреси вузлів у керованому файлі known_hosts.
+                        </para>
+                        <para>
+                            Типове значення: true
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ssh_known_hosts_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Кількість секунд, протягом яких запису вузла зберігатиметься у керованому
+файлі known_hosts після надсилання запиту щодо ключів вузла.
+                        </para>
+                        <para>
+                            Типове значення: 180
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ssh_use_certificate_keys (bool)</term>
+                    <listitem>
+                        <para>
+                            If set to true the <command>sss_ssh_authorizedkeys</command> will return ssh
+keys derived from the public key of X.509 certificates stored in the user
+entry as well. See <citerefentry>
+<refentrytitle>sss_ssh_authorizedkeys</refentrytitle>
+<manvolnum>1</manvolnum> </citerefentry> for details.
+                        </para>
+                        <para>
+                            Типове значення: true
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ca_db (рядок)</term>
+                    <listitem>
+                        <para>
+                            Шлях до сховища довірених сертифікатів CA. Параметр використовується для
+перевірки сертифікатів користувачів до отримання з них відкритих ключів ssh.
+                        </para>
+                        <para>
+                            Default:
+                            <itemizedlist>
+                                <listitem><para>/etc/pki/nssdb (NSS version, path to a NSS database)</para></listitem>
+                                <listitem><para>/etc/sssd/pki/sssd_auth_ca_db.pem (OpenSSL version, path to a file with
+trusted CA certificates in PEM format)</para></listitem>
+                            </itemizedlist>
+                        </para>
+                        <para condition="with_nss">
+                            This man page was generated for the NSS version.
+                        </para>
+                        <para condition="with_openssl">
+                            This man page was generated for the OpenSSL version.
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </refsect2>
+
+        <refsect2 id='PAC_RESPONDER' condition="with_pac_responder">
+            <title>Параметри налаштування відповідача PAC</title>
+            <para>
+                Відповідач PAC працює разом з додатком даних уповноваження для
+sssd_pac_plugin.so зі складу MIT Kerberos та засобу надання даних
+піддоменів. Цей додаток надсилає до відповідача PAC дані PAC під час
+розпізнавання за допомогою GSSAPI. Засіб надання даних піддоменів збирає
+дані щодо діапазонів SID і ID домену, до якого долучено клієнт, та
+віддалених надійних доменів з локального контролера доменів. Якщо PAC
+декодовано і визначено, виконуються деякі з таких дій:
+                <itemizedlist>
+                    <listitem><para>Якщо у кеші немає даних віддаленого користувача, запис цих даних буде
+створено. UID буде визначено за допомогою SID, надійні домени матимуть UPG,
+а gid матиме те саме значення, що і UID. Дані домашнього каталогу буде
+засновано на значенні параметра subdomain_homedir. Типово, для командної
+оболонки буде вибрано порожнє значення, тобто використовуватимуться типові
+параметри системи. Значення для оболонки можна змінити за допомогою
+параметра default_shell.</para>
+                    </listitem>
+                    <listitem><para>Якщо існують SID груп з доменів, про які відомо SSSD, запис користувача буде
+додано до цих груп.
+                    </para></listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                Цими параметрами можна скористатися для налаштовування відповідача PAC.
+            </para>
+            <variablelist>
+                <varlistentry>
+                    <term>allowed_uids (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає список значень UID або імен користувачів, відокремлених
+комами. Користувачам з цього списку буде дозволено доступ до відповідача
+PAC. UID за іменами користувачів визначатимуться під час запуску.
+                        </para>
+                        <para>
+                            Типове значення: 0 (доступ до відповідача PAC має лише адміністративний
+користувач (root))
+                        </para>
+                        <para>
+                            Будь ласка, зауважте, що хоча типово використовується UID 0, значення UID
+буде перевизначено на основі цього параметра. Якщо ви хочете надати
+адміністративному користувачеві (root) доступ до відповідача PAC, що може
+бути типовим варіантом, вам слід додати до списку UID з правами доступу
+запис 0.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>pac_lifetime (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Строк дії запису PAC у секундах. Якщо PAC є чинним, дані PAC можна
+використовувати для визначення членства користувача у групі.
+                        </para>
+                        <para>
+                            Типове значення: 300
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </refsect2>
+
+        <refsect2 id='SESSION_RECORDING'>
+            <title>Параметри налаштовування запису сеансів</title>
+            <para>
+                Запис сеансів працює у зв'язці з <citerefentry>
+<refentrytitle>tlog-rec-session</refentrytitle> <manvolnum>8</manvolnum>
+</citerefentry>, частиною пакунка tlog, для запису даних, які бачать і
+вводять користувачі після входу до текстового термінала. Див. також
+<citerefentry> <refentrytitle>sssd-session-recording</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+            </para>
+            <para>
+                Цими параметрами можна скористатися для налаштовування запису сеансів.
+            </para>
+            <variablelist>
+                <varlistentry>
+                    <term>scope (рядок)</term>
+                    <listitem>
+                        <para>
+                            Один із вказаних нижче рядків, що визначають область запису сеансів:
+<variablelist>
+                                <varlistentry>
+                                    <term>"none"</term>
+                                    <listitem>
+                                        <para>
+                                            Користувачі не записуються.
+                                        </para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>"some"</term>
+                                    <listitem>
+                                        <para>
+                                            Запис вестиметься для користувачів і груп, вказаних параметрами
+<replaceable>користувачі</replaceable> і <replaceable>групи</replaceable>.
+                                        </para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>"all"</term>
+                                    <listitem>
+                                        <para>
+                                            Усі користувачі записуються.
+                                        </para>
+                                    </listitem>
+                                </varlistentry>
+                            </variablelist>
+                        </para>
+                        <para>
+                            Типове значення: none
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>users (рядок)</term>
+                    <listitem>
+                        <para>
+                            Список відокремлених комами записів користувачів, для яких увімкнено
+записування сеансів. Належність до списку визначатиметься за іменами,
+повернутими NSS, тобто після можливих замін пробілів, змін регістру символів
+тощо.
+                        </para>
+                        <para>
+                            Типове значення: порожнє. Не відповідає жодному користувачу.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>groups (рядок)</term>
+                    <listitem>
+                        <para>
+                            Список відокремлених комами записів груп, для користувачів яких буде
+увімкнено записування сеансів. Належність до списку визначатиметься за
+назвами, повернутими NSS, тобто після можливих замін пробілів, змін регістру
+символів тощо.
+                        </para>
+                        <para>
+                            Зауваження: використання цього параметра (встановлення для нього будь-якого
+значення) значно впливає на швидкодію, оскільки некешований запит щодо
+користувача потребує отримання і встановлення відповідності груп, до яких
+належить користувач.
+                        </para>
+                        <para>
+                            Типове значення: порожнє. Не відповідає жодній групі.
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </refsect2>
+
+    </refsect1>
+
+    <refsect1 id='domain-sections'>
+        <title>РОЗДІЛИ ДОМЕНІВ</title>
+        <para>
+            Ці параметри налаштування може бути вказано у розділі налаштування домену,
+тобто у розділі з назвою
+<quote>[domain/<replaceable>НАЗВА</replaceable>]</quote> <variablelist>
+                <varlistentry>
+                    <term>domain_type (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає, чи призначено домен для використання клієнтами у стандарті POSIX,
+зокрема NSS, або програмами, які не потребують наявності або створення даних
+POSIX. Інтерфейсам та інструментам операційних систем доступні лише об'єкти
+з доменів POSIX.
+                        </para>
+                        <para>
+                            Дозволеними значеннями цього параметра є <quote>posix</quote> і
+<quote>application</quote>.
+                        </para>
+                        <para>
+                            Домени POSIX доступні для усіх служб. Домени програм доступні лише з
+відповідача InfoPipe (див. <citerefentry>
+<refentrytitle>sssd-ifp</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>) і відповідача PAM.
+                        </para>
+                        <para>
+                            ЗАУВАЖЕННЯ: належне тестування у поточній версії виконано лише для доменів
+application з <quote>id_provider=ldap</quote>.
+                        </para>
+                        <para>
+                            Щоб ознайомитися із простим способом налаштовування не-POSIX доменів, будь
+ласка, ознайомтеся із розділом <quote>Домени програм</quote>.
+                        </para>
+                        <para>
+                            Типове значення: posix
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>min_id,max_id (ціле значення)</term>
+                    <listitem>
+                        <para>
+                            Обмеження UID і GID для домену. Якщо у домені міститься запис, що не
+відповідає цим обмеженням, його буде проігноровано.
+                        </para>
+                        <para>
+                            Для користувачів зміна цього параметра вплине на основне обмеження
+GID. Запис користувача не буде повернуто до NSS, якщо UID або основний GID
+не належать вказаному діапазону. Записи користувачів, які не є учасниками
+основної групи і належать діапазону, буде виведено у звичайному режимі.
+                        </para>
+                        <para>
+                            Ці обмеження на ідентифікатори стосуються і збереження записів до кешу, не
+лише повернення записів за назвою або ідентифікатором.
+                        </para>
+                        <para>
+                            Типові значення: 1 для min_id, 0 (без обмежень) для max_id
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>enumerate (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, чи можна нумерувати домен, тобто, чи може домен створити список
+усіх користувачів і груп, які у ньому містяться. Зауважте, що вмикання
+нумерування не є обов'язковим для показу вторинних груп. Цей параметр може
+мати такі значення:
+                        </para>
+                        <para>
+                            TRUE = користувачі і групи нумеруються
+                        </para>
+                        <para>
+                            FALSE = не використовувати нумерацію для цього домену
+                        </para>
+                        <para>
+                            Типове значення: FALSE
+                        </para>
+                        <para>
+                            Нумерування домену потребує від SSSD отримання і зберігання усіх записів
+користувачів і груп із віддаленого сервера.
+                        </para>
+                        <para>
+                            Зауваження: вмикання нумерації помірно знизить швидкодію SSSD на час
+виконання нумерації. Нумерація може тривати до декількох хвилин після
+запуску SSSD. Протягом виконання нумерації окремі запити щодо даних буде
+надіслано безпосередньо до LDAP, хоча і з уповільненням через навантаження
+системи виконанням нумерації. Збереження великої кількості записів до кешу
+після завершення нумерації може також значно навантажити процесор, оскільки
+повторне визначення параметрів участі також іноді є складним завданням. Це
+може призвести до проблем із отриманням відповіді від процесу
+<quote>sssd_be</quote> або навіть перезапуску усього засобу стеження.
+                        </para>
+                        <para>
+                            Під час першого виконання нумерації запити щодо повних списків користувачів
+та груп можуть не повертати жодних результатів, аж доки нумерацію не буде
+завершено.
+                        </para>
+                        <para>
+                            Крім того, вмикання нумерації може збільшити час, потрібний для виявлення
+того, що мережеве з’єднання розірвано, оскільки потрібне буде збільшення
+часу очікування для забезпечення успішного завершення пошуків нумерації. Щоб
+отримати додаткову інформацію, зверніться до сторінок довідника (man)
+відповідного використаного засобу обробки ідентифікаторів (id_provider).
+                        </para>
+                        <para>
+                            З вказаних вище причин не рекомендуємо вам вмикати нумерацію, особливо у
+об’ємних середовищах.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>subdomain_enumerate (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає, чи слід нумерувати усі автоматично виявлені надійні (довірені)
+домени. Підтримувані значення: <variablelist>
+                                <varlistentry>
+                                    <term>all</term>
+                                    <listitem><para>Усі виявлені надійні домени буде пронумеровано</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>none</term>
+                                    <listitem><para>Нумерація виявлених надійних доменів не виконуватиметься</para></listitem>
+                                </varlistentry>
+                            </variablelist>
+Якщо потрібно, можна вказати список з однієї або декількох назв надійних
+доменів, для яких буде увімкнено нумерацію.
+                        </para>
+                        <para>
+                            Типове значення: none
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>entry_cache_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Кількість секунд, протягом яких nss_sss вважатиме записи чинними, перш ніж
+надсилати повторний запит до сервера
+                        </para>
+                        <para>
+                            Дані щодо часових позначок завершення строку дії записів кешу зберігаються
+як атрибути окремих об’єктів у кеші. Тому зміна часу очікування на дані у
+кеші впливає лише на нові записи та записи, строк дії яких вичерпано. Для
+примусового оновлення записів, які вже було кешовано, вам слід запустити
+програму <citerefentry> <refentrytitle>sss_cache</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry>.
+                        </para>
+                        <para>
+                            Типове значення: 5400
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>entry_cache_user_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Кількість секунд, протягом яких nss_sss вважатиме записи користувачів
+чинними, перш ніж надсилати повторний запит до сервера
+                        </para>
+                        <para>
+                            Типове значення: entry_cache_timeout
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>entry_cache_group_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Кількість секунд, протягом яких nss_sss вважатиме записи груп чинними, перш
+ніж надсилати повторний запит до сервера
+                        </para>
+                        <para>
+                            Типове значення: entry_cache_timeout
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>entry_cache_netgroup_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Кількість секунд, протягом яких nss_sss вважатиме записи мережевих груп
+чинними, перш ніж надсилати повторний запит до сервера
+                        </para>
+                        <para>
+                            Типове значення: entry_cache_timeout
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>entry_cache_service_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Кількість секунд, протягом яких nss_sss вважатиме записи служб чинними, перш
+ніж надсилати повторний запит до сервера
+                        </para>
+                        <para>
+                            Типове значення: entry_cache_timeout
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry condition="with_sudo">
+                    <term>entry_cache_sudo_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Кількість секунд, протягом яких sudo вважатиме правила чинними, перш ніж
+надсилати повторний запит до сервера
+                        </para>
+                        <para>
+                            Типове значення: entry_cache_timeout
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry condition="with_autofs">
+                    <term>entry_cache_autofs_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Кількість секунд, протягом яких служба autofs вважатиме карти автомонтування
+чинними, перш ніж надсилати повторний запит до сервера
+                        </para>
+                        <para>
+                            Типове значення: entry_cache_timeout
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry condition="with_ssh">
+                    <term>entry_cache_ssh_host_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Кількість секунд, протягом яких слід зберігати ключ ssh вузла після
+оновлення. Іншими словами, параметр визначає тривалість зберігання ключа
+вузла у кеші.
+                        </para>
+                        <para>
+                            Типове значення: entry_cache_timeout
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>refresh_expired_interval (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає кількість секунд, протягом яких SSSD має очікувати до запуску
+завдання з оновлення у фоновому режимі записів кешу, строк дії яких
+вичерпано або майже вичерпано.
+                        </para>
+                        <para>
+                            Під час фонового оновлення виконуватиметься обробка записів користувачів,
+груп та мережевих груп у кеші.
+                        </para>
+                        <para>
+                            Варто визначити для цього параметра значення 3/4 * entry_cache_timeout.
+                        </para>
+                        <para>
+                            Типове значення: 0 (вимкнено)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>cache_credentials (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, чи слід також кешувати реєстраційні дані користувача у локальному
+кеші LDB
+                        </para>
+                        <para>
+                            Реєстраційні дані користувача зберігаються у форматі хешу SHA512, а не у
+форматі звичайного тексту
+                        </para>
+                        <para>
+                            Типове значення: FALSE
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>cache_credentials_minimal_first_factor_length (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Якщо використано двофакторне розпізнавання (2FA) і реєстраційні дані мають
+зберігатися, це значення визначає мінімальну довжину першого фактора
+розпізнавання (довготривалого пароля), який має бути збережено у форматі
+контрольної суми SHA512 у кеші.
+                        </para>
+                        <para>
+                            Таким чином забезпечується уникнення випадку, коли короткі PIN-коди
+заснованої на PIN-кодах схеми 2FA зберігаються у кеші, що робить їх простою
+мішенню атак із перебиранням паролів.
+                        </para>
+                        <para>
+                            Типове значення: 8
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>account_cache_expiration (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Кількість днів, протягом яких записи залишатимуться у кеші після успішного
+входу до системи до вилучення під час спорожнення кешу. 0 — не вилучати
+записи. Значення цього параметра має бути більшим або рівним значенню
+offline_credentials_expiration.
+                        </para>
+                        <para>
+                            Типове значення: 0 (без обмежень)
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                  <term>pwd_expiration_warning (ціле число)</term>
+                  <listitem>
+                    <para>
+                      Показати попередження за вказану кількість днів перед завершенням дії
+пароля.
+                    </para>
+                    <para>
+                        Якщо встановлено нульове значення, цей фільтр не застосовуватиметься, тобто
+якщо з сервера обробки надійде попередження щодо завершення строку дії, його
+буде автоматично показано.
+                    </para>
+                    <para>
+                      Будь ласка, зауважте, що сервер обробки має надати дані щодо часу завершення
+дії пароля. Якщо ці дані не буде виявлено, sssd не зможе показати
+попередження. Крім того для цього сервера може бути вказано службу надання
+даних розпізнавання.
+                    </para>
+                    <para>
+                      Типове значення: 7 (Kerberos), 0 (LDAP)
+                    </para>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>id_provider (рядок)</term>
+                    <listitem>
+                        <para>
+                            Засіб надання даних ідентифікації, який використовується для цього
+домену. Серед підтримуваних засобів такі:
+                        </para>
+                        <para>
+                            <quote>proxy</quote>: Support a legacy NSS provider.
+                        </para>
+                        <para>
+                            <quote>local</quote>: SSSD internal provider for local users (DEPRECATED).
+                        </para>
+                        <para>
+                            <quote>files</quote>: FILES provider. See <citerefentry>
+<refentrytitle>sssd-files</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> for more information on how to mirror local users and groups
+into SSSD.
+                        </para>
+                        <para>
+                            <quote>ldap</quote>: засіб LDAP. Докладніше про налаштовування LDAP можна
+дізнатися з довідки до <citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+                        </para>
+                        <para>
+                            <quote>ipa</quote>: засіб FreeIPA та керування профілями Red Hat
+Enterprise. Докладніші відомості щодо налаштовування IPA викладено у
+довіднику з <citerefentry> <refentrytitle>sssd-ipa</refentrytitle>
+<manvolnum></manvolnum> </citerefentry>.
+                        </para>
+                        <para>
+                            <quote>ad</quote>: засіб Active Directory. Докладніші відомості щодо
+налаштовування Active Directory викладено у довіднику з <citerefentry>
+<refentrytitle>sssd-ad</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>use_fully_qualified_names (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Використовувати ім’я та домен повністю (у форматі, визначеному
+full_name_format домену) як ім’я користувача у системі, що повідомляється
+NSS.
+                        </para>
+                        <para>
+                            Якщо встановлено значення TRUE, всі запити до цього домену мають
+використовувати повні назви. Наприклад, якщо використано домен LOCAL, який
+містить запис користувача «test» user, <command>getent passwd test</command>
+не покаже користувача, а <command>getent passwd test@LOCAL</command> покаже.
+                        </para>
+                        <para>
+                            ЗАУВАЖЕННЯ: цей параметр не впливатиме на пошук у мережевих групах через
+тенденцію до включення до таких груп вкладених мережевих груп. Для мережевих
+груп, якщо задано неповну назву, буде виконано пошук у всіх доменах.
+                        </para>
+                        <para>
+                            Типове значення: FALSE (TRUE, якщо використано default_domain_suffix)
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ignore_group_members (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Не повертати записи учасників груп для пошуків груп.
+                        </para>
+                        <para>
+                            Якщо встановлено значення TRUE, сервер LDAP не запитуватиме дані щодо
+атрибутів участі у групах, а списки учасників груп не повертаються під час
+обробки запитів щодо пошуку груп, зокрема <citerefentry>
+<refentrytitle>getgrnam</refentrytitle> <manvolnum>3</manvolnum>
+</citerefentry> або <citerefentry> <refentrytitle>getgrgid</refentrytitle>
+<manvolnum>3</manvolnum> </citerefentry>. Отже, <quote>getent group
+$groupname</quote> поверне запитану групу так, наче вона була порожня.
+                        </para>
+                        <para>
+                            Вмикання цього параметра може також значно пришвидшити перевірки засобу
+надання доступу для участі у групі, особливо для груп, у яких багато
+учасників.
+                        </para>
+                        <para>
+                            Типове значення: FALSE
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>auth_provider (рядок)</term>
+                    <listitem>
+                        <para>
+                            Служба розпізнавання, яку використано для цього домену. Серед підтримуваних
+служб розпізнавання:
+                        </para>
+                        <para>
+                            <quote>ldap</quote> — вбудоване розпізнавання LDAP. Докладніші відомості
+щодо налаштовування LDAP викладено у довіднику з <citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+                        </para>
+                        <para>
+                            <quote>krb5</quote> — вбудоване розпізнавання Kerberos. Докладніші відомості
+щодо налаштовування Kerberos викладено у довіднику з <citerefentry>
+<refentrytitle>sssd-krb5</refentrytitle> <manvolnum></manvolnum>
+</citerefentry>.
+                        </para>
+                        <para>
+                            <quote>ipa</quote>: засіб FreeIPA та керування профілями Red Hat
+Enterprise. Докладніші відомості щодо налаштовування IPA викладено у
+довіднику з <citerefentry> <refentrytitle>sssd-ipa</refentrytitle>
+<manvolnum></manvolnum> </citerefentry>.
+                        </para>
+                        <para>
+                            <quote>ad</quote>: засіб Active Directory. Докладніші відомості щодо
+налаштовування Active Directory викладено у довіднику з <citerefentry>
+<refentrytitle>sssd-ad</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+                        </para>
+                        <para>
+                            <quote>proxy</quote> — трансльоване розпізнавання у іншій системі PAM.
+                        </para>
+                        <para>
+                            <quote>local</quote>: вбудований засіб SSSD для локальних користувачів
+                        </para>
+                        <para>
+                            <quote>none</quote> — вимкнути розпізнавання повністю.
+                        </para>
+                        <para>
+                            Типове значення: буде використано <quote>id_provider</quote>, якщо цей
+спосіб встановлено і можлива обробка запитів щодо розпізнавання.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>access_provider (рядок)</term>
+                    <listitem>
+                        <para>
+                            Програма керування доступом для домену. Передбачено дві вбудованих програми
+керування доступом (окрім всіх встановлених додаткових
+серверів). Вбудованими програмами є:
+                        </para>
+                        <para>
+                            <quote>permit</quote> дозволяти доступ завжди. Єдиний дозволений засіб
+доступу для локального домену.
+                        </para>
+                        <para>
+                            <quote>deny</quote> — завжди забороняти доступ.
+                        </para>
+                        <para>
+                            <quote>ldap</quote> — вбудоване розпізнавання LDAP. Докладніші відомості
+щодо налаштовування LDAP викладено у довіднику з <citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+                        </para>
+                        <para>
+                            <quote>ipa</quote>: засіб FreeIPA та керування профілями Red Hat
+Enterprise. Докладніші відомості щодо налаштовування IPA викладено у
+довіднику з <citerefentry> <refentrytitle>sssd-ipa</refentrytitle>
+<manvolnum></manvolnum> </citerefentry>.
+                        </para>
+                        <para>
+                            <quote>ad</quote>: засіб Active Directory. Докладніші відомості щодо
+налаштовування Active Directory викладено у довіднику з <citerefentry>
+<refentrytitle>sssd-ad</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+                        </para>
+                        <para>
+                            <quote>simple</quote> — керування доступом на основі списків дозволу або
+заборони. Докладніші відомості щодо налаштовування модуля доступу simple
+можна знайти у довідці до <citerefentry>
+<refentrytitle>sssd-simple</refentrytitle>
+<manvolnum>5</manvolnum></citerefentry>.
+                        </para>
+                        <para>
+                            <quote>krb5</quote> — керування доступом на основі .k5login. Докладніші
+відомості щодо налаштовування Kerberos викладено у довіднику з
+<citerefentry> <refentrytitle>sssd-krb5</refentrytitle>
+<manvolnum></manvolnum> </citerefentry>.
+                        </para>
+                        <para>
+                            <quote>proxy</quote> — для трансляції керування доступом до іншого модуля
+PAM.
+                        </para>
+                        <para>
+                            Типове значення: <quote>permit</quote>
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>chpass_provider (рядок)</term>
+                    <listitem>
+                        <para>
+                            Система, яка має обробляти дії зі зміни паролів для домену. Передбачено
+підтримку таких систем зміни паролів:
+                        </para>
+                        <para>
+                            <quote>ldap</quote> — змінити пароль, що зберігається на сервері
+LDAP. Докладніші відомості щодо налаштовування LDAP викладено у довіднику з
+<citerefentry> <refentrytitle>sssd-ldap</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+                        </para>
+                        <para>
+                            <quote>krb5</quote> — змінити пароль Kerberos. Докладніші відомості щодо
+налаштовування Kerberos викладено у довіднику з <citerefentry>
+<refentrytitle>sssd-krb5</refentrytitle> <manvolnum></manvolnum>
+</citerefentry>.
+                        </para>
+                        <para>
+                            <quote>ipa</quote>: засіб FreeIPA та керування профілями Red Hat
+Enterprise. Докладніші відомості щодо налаштовування IPA викладено у
+довіднику з <citerefentry> <refentrytitle>sssd-ipa</refentrytitle>
+<manvolnum></manvolnum> </citerefentry>.
+                        </para>
+                        <para>
+                            <quote>ad</quote>: засіб Active Directory. Докладніші відомості щодо
+налаштовування Active Directory викладено у довіднику з <citerefentry>
+<refentrytitle>sssd-ad</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+                        </para>
+                        <para>
+                            <quote>proxy</quote> — трансльована зміна пароля у іншій системі PAM.
+                        </para>
+                        <para>
+                            <quote>none</quote> — явно вимкнути можливість зміни пароля.
+                        </para>
+                        <para>
+                            Типове значення: використовується «auth_provider», якщо встановлено значення
+цього параметра і якщо система здатна обробляти запити щодо паролів.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry condition="with_sudo">
+                    <term>sudo_provider (рядок)</term>
+                    <listitem>
+                        <para>
+                            Служба SUDO, яку використано для цього домену. Серед підтримуваних служб
+SUDO:
+                        </para>
+                        <para>
+                            <quote>ldap</quote> для правил, що зберігаються у LDAP. Докладніше про
+налаштовування LDAP можна дізнатися з довідки до <citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+                        </para>
+                        <para>
+                            <quote>ipa</quote> — те саме, що і <quote>ldap</quote>, але з типовими
+параметрами IPA.
+                        </para>
+                        <para>
+                            <quote>ad</quote> — те саме, що і <quote>ldap</quote>, але з типовими
+параметрами AD.
+                        </para>
+                        <para>
+                            <quote>none</quote> явним чином вимикає SUDO.
+                        </para>
+                        <para>
+                            Типове значення: використовується значення <quote>id_provider</quote>, якщо
+його встановлено.
+                        </para>
+                        <para>
+                            З докладними настановами щодо налаштовування sudo_provider можна
+ознайомитися за допомогою сторінки підручника (man) <citerefentry>
+<refentrytitle>sssd-sudo</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>. Передбачено доволі багато параметрів налаштовування, якими
+можна скористатися для коригування поведінки програми. Докладніший опис
+можна знайти у розділах щодо «ldap_sudo_*»" у підручнику з <citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+                        </para>
+                        <para>
+                            <emphasis>Зауваження:</emphasis> правила sudo періодично отримуються у
+фоновому режимі, якщо постачальник даних sudo не вимкнено явним
+чином. Встановіть значення <emphasis>sudo_provider = None</emphasis>, щоб
+вимкнути усі дії, пов'язані із sudo у SSSD, якщо ви взагалі не хочете
+використовувати sudo у SSSD.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>selinux_provider (рядок)</term>
+                    <listitem>
+                        <para>
+                            Засіб, який має відповідати за завантаження параметрів SELinux. Зауважте, що
+цей засіб буде викликано одразу після завершення роботи служби надання
+доступу. Передбачено підтримку таких засобів надання даних SELinux:
+                        </para>
+                        <para>
+                            <quote>ipa</quote> для завантаження параметрів selinux з сервера
+IPA. Докладніші відомості щодо налаштовування IPA викладено у довіднику з
+<citerefentry> <refentrytitle>sssd-ipa</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+                        </para>
+                        <para>
+                            <quote>none</quote> явним чином забороняє отримання даних щодо параметрів
+SELinux.
+                        </para>
+                        <para>
+                            Типове значення: буде використано <quote>id_provider</quote>, якщо цей
+спосіб встановлено і можлива обробка запитів щодо завантаження SELinux.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>subdomains_provider (рядок)</term>
+                    <listitem>
+                        <para>
+                            Засіб надання даних, який має обробляти отримання даних піддоменів. Це
+значення має завжди збігатися зі значенням id_provider. Передбачено
+підтримку таких засобів надання даних піддоменів:
+                        </para>
+                        <para>
+                            <quote>ipa</quote> для завантаження списку піддоменів з сервера
+IPA. Докладніші відомості щодо налаштовування IPA викладено у довіднику з
+<citerefentry> <refentrytitle>sssd-ipa</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+                        </para>
+                        <para>
+                            «ad», з якої слід завантажувати список піддоменів з сервера Active
+Directory. Див. <citerefentry> <refentrytitle>sssd-ad</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>, щоб дізнатися більше про
+налаштовування засобу надання даних AD.
+                        </para>
+                        <para>
+                            <quote>none</quote> забороняє ячним чином отримання даних піддоменів.
+                        </para>
+                        <para>
+                            Типове значення: використовується значення <quote>id_provider</quote>, якщо
+його встановлено.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>session_provider (рядок)</term>
+                    <listitem>
+                        <para>
+                            Постачальник даних, який налаштовує завдання, пов'язані із сеансами
+користувачів, і керує ними. Єдиним завданням сеансів користувача у поточній
+версії є інтеграція із Fleet Commander, який працює лише з IPA. Підтримувані
+постачальники даних сеансів:
+                        </para>
+                        <para>
+                            <quote>ipa</quote>, щоб дозволити пов'язані із сеансами користувачів
+завдання.
+                        </para>
+                        <para>
+                            <quote>none</quote> — не виконувати жодних пов'язаних із сеансами
+користувачів завдань.
+                        </para>
+                        <para>
+                            Типове значення: використовується значення <quote>id_provider</quote>, якщо
+його встановлено і дозволено виконувати пов'язані із сеансами завдання.
+                        </para>
+                        <para>
+                            <emphasis>Зауваження:</emphasis> щоб ця можливість працювала як слід, SSSD
+має бути запущено від імені користувача root, а не якогось іншого
+непривілейованого користувача.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry condition="with_autofs">
+                    <term>autofs_provider (рядок)</term>
+                    <listitem>
+                        <para>
+                            Служба autofs, яку використано для цього домену. Серед підтримуваних служб
+autofs:
+                        </para>
+                        <para>
+                            <quote>ldap</quote> — завантажити карти, що зберігаються у LDAP. Докладніше
+про налаштовування LDAP можна дізнатися з довідки до <citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+                        </para>
+                        <para>
+                            <quote>ipa</quote> — завантажити карти, що зберігається на сервері
+IPA. Докладніші відомості щодо налаштовування IPA викладено у довіднику з
+<citerefentry> <refentrytitle>sssd-ipa</refentrytitle>
+<manvolnum></manvolnum> </citerefentry>.
+                        </para>
+                        <para>
+                            <quote>ad</quote> — завантажити карти, що зберігаються на сервері
+AD. Див. <citerefentry> <refentrytitle>sssd-ad</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>, щоб дізнатися більше про
+налаштовування засобу надання даних AD.
+                        </para>
+                        <para>
+                            <quote>none</quote> вимикає autofs повністю.
+                        </para>
+                        <para>
+                            Типове значення: використовується значення <quote>id_provider</quote>, якщо
+його встановлено.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>hostid_provider (рядок)</term>
+                    <listitem>
+                        <para>
+                            Засіб надання даних, який використовується для отримання даних щодо профілю
+вузла. Серед підтримуваних засобів надання hostid:
+                        </para>
+                        <para>
+                            <quote>ipa</quote> — завантажити профіль системи, що зберігається на сервері
+IPA. Докладніші відомості щодо налаштовування IPA викладено у довіднику з
+<citerefentry> <refentrytitle>sssd-ipa</refentrytitle>
+<manvolnum></manvolnum> </citerefentry>.
+                        </para>
+                        <para>
+                            <quote>none</quote> вимикає hostid повністю.
+                        </para>
+                        <para>
+                            Типове значення: використовується значення <quote>id_provider</quote>, якщо
+його встановлено.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>re_expression (рядок)</term>
+                    <listitem>
+                        <para>
+                            Формальний вираз для цього домену, який описує спосіб поділи рядка, що
+містить ім’я користувача та назву домену на ці компоненти. «Домен» може
+відповідати назві домену налаштувань SSSD або, у випадку піддоменів довіри
+IPA та доменів Active Directory, простій назві (NetBIOS) домену.
+                        </para>
+                        <para>
+                            Типовий для засобів надання AD і IPA:
+<quote>(((?P&lt;domain&gt;[^\\]+)\\(?P&lt;name&gt;.+$))|((?P&lt;name&gt;[^@]+)@(?P&lt;domain&gt;.+$))|(^(?P&lt;name&gt;[^@\\]+)$))</quote>
+За його допомогою можна визначати три різні стилі запису імен користувачів:
+                            <itemizedlist>
+                                <listitem>
+                                    <para>користувач</para>
+                                </listitem>
+                                <listitem>
+                                    <para>користувач@назва.домену</para>
+                                </listitem>
+                                <listitem>
+                                    <para>домен\користувач</para>
+                                </listitem>
+                            </itemizedlist>
+                            Перші два стилі відповідають загальним типовим стилям, а третій введено для
+того, щоб полегшити інтеграцію користувачів з доменів Windows.
+                        </para>
+                        <para>
+                            Типове значення:
+<quote>(?P&lt;name&gt;[^@]+)@?(?P&lt;domain&gt;[^@]*$)</quote>, можна
+висловити так: іменем користувача є все до символу «@», назвою домену — все
+після цього символу.
+                        </para>
+                        <para>
+                            NOTE: Some Active Directory groups, typically those used for MS Exchange
+contain an <quote>@</quote> sign in the name, which clashes with the default
+re_expression value for the AD and IPA providers. To support these groups,
+consider changing the re_expression value to:
+<quote>((?P&lt;name&gt;.+)@(?P&lt;domain&gt;[^@]+$))</quote>.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>full_name_format (рядок)</term>
+                    <listitem>
+                        <para>
+                            Сумісний з <citerefentry> <refentrytitle>printf</refentrytitle>
+<manvolnum>3</manvolnum> </citerefentry> формат, який описує спосіб
+створення повного імені на основі імені користувача та компонентів назви
+домену.
+                        </para>
+                        <para>
+                            Передбачено використання таких замінників: <variablelist>
+                                <varlistentry>
+                                    <term>%1$s</term>
+                                    <listitem><para>ім’я користувача</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%2$s</term>
+                                    <listitem>
+                                        <para>
+                                            назва домену у форматі, вказаному у файлі налаштувань SSSD.
+                                        </para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%3$s</term>
+                                    <listitem>
+                                        <para>
+                                            проста назва домену. Здебільшого використовується для доменів Active
+Directory, налаштованих та автоматично виявлених за зв’язками довіри IPA.
+                                        </para>
+                                    </listitem>
+                                </varlistentry>
+                            </variablelist>
+                        </para>
+                        <para>
+                            Типове значення: <quote>%1$s@%2$s</quote>.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>lookup_family_order (рядок)</term>
+                    <listitem>
+                        <para>
+                            Надає можливість вибрати бажане сімейство адрес, яке слід використовувати
+під час виконання пошуків у DNS.
+                        </para>
+                        <para>
+                            Передбачено підтримку таких значень:
+                        </para>
+                        <para>
+                            ipv4_first: спробувати визначити адресу у форматі IPv4, у разі невдачі
+спробувати формат IPv6
+                        </para>
+                        <para>
+                            ipv4_only: намагатися визначити назви вузлів лише у форматі адрес IPv4.
+                        </para>
+                        <para>
+                            ipv6_first: спробувати визначити адресу у форматі IPv6, у разі невдачі
+спробувати формат IPv4
+                        </para>
+                        <para>
+                            ipv6_only: намагатися визначити назви вузлів лише у форматі адрес IPv6.
+                        </para>
+                        <para>
+                            Типове значення: ipv4_first
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>dns_resolver_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає кількість часу (у секундах) очікування відповіді від внутрішньої
+служби перемикання на резервний ресурс, перш ніж службу буде визначено
+недоступним. Якщо час очікування буде перевищено, домен продовжуватиме
+роботу у автономному режимі.
+                        </para>
+                        <para>
+                            Будь ласка, ознайомтеся із розділом <quote>РЕЗЕРВ</quote>, щоб дізнатися
+більше про розв'язування питань, пов'язаних із службами.
+                        </para>
+                        <para>
+                            Типове значення: 6
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>dns_discovery_domain (рядок)</term>
+                    <listitem>
+                        <para>
+                            Якщо у модулі обробки використовується визначення служб, вказує доменну
+частину запиту визначення служб DNS.
+                        </para>
+                        <para>
+                            Типова поведінка: використовувати назву домену з назви вузла комп’ютера.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>override_gid (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Замірити значення основного GID на вказане.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>case_sensitive (рядок)</term>
+                    <listitem>
+                        <para>
+                            Враховувати регістр записів імен користувачів та назв груп. У поточній
+версії підтримку передбачено лише для локальних надавачів даних. Можливі
+значення параметра: <variablelist>
+                            <varlistentry>
+                                <term>True</term>
+                                <listitem>
+                                    <para>
+                                        Враховується регістр. Це значення є некоректним для засобу надання даних AD.
+                                    </para>
+                                </listitem>
+                            </varlistentry>
+                            <varlistentry>
+                                <term>False</term>
+                                <listitem>
+                                    <para>Без врахування регістру.</para>
+                                </listitem>
+                            </varlistentry>
+                            <varlistentry>
+                                <term>Preserving</term>
+                                <listitem>
+                                    <para>
+                                        Те саме, що і False (без врахування регістру символів), але без переведення
+у нижній регістр імен у результатах дій NSS. Зауважте, що альтернативні
+імена (у випадку служб також назви протоколів) у виведених даних все одно
+буде переведено у нижній регістр.
+                                    </para>
+                                </listitem>
+                            </varlistentry>
+                        </variablelist>
+                        </para>
+                        <para>
+                            Типове значення: True (False для засобу надання даних AD)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>subdomain_inherit (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає список параметрів налаштування, які слід успадковувати для
+піддомену. Будь ласка, зауважте, що успадковуватимуться лише вказані
+параметри. У поточній версії передбачено можливість успадковування таких
+параметрів:
+                        </para>
+                        <para>
+                            ignore_group_members
+                        </para>
+                        <para>
+                            ldap_purge_cache_timeout
+                        </para>
+                        <para>
+                            ldap_use_tokengroups
+                        </para>
+                        <para>
+                            ldap_user_principal
+                        </para>
+                        <para>
+                            ldap_krb5_keytab (значення krb5_keytab буде використано, якщо
+ldap_krb5_keytab не встановлено явним чином)
+                        </para>
+                        <para>
+                            Приклад: <programlisting>
+subdomain_inherit = ldap_purge_cache_timeout
+                            </programlisting>
+                        </para>
+                        <para>
+                            Типове значення: none
+                        </para>
+                        <para>
+                            Зауваження: цей параметр працює лише для засобів надання даних IPA і AD.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>subdomain_homedir (рядок)</term>
+                    <listitem>
+                        <para>
+                            Використовувати вказаний домашній каталог як типовий для всіх піддоменів у
+цьому домені у межах довіри AD IPA. Дані щодо можливих значень наведено у
+описі параметра <emphasis>override_homedir</emphasis>. Крім того,
+розгортання можна використовувати лише з
+<emphasis>subdomain_homedir</emphasis>.  <variablelist>
+                                <varlistentry>
+                                    <term>%F</term>
+                                    <listitem><para>спрощена (NetBIOS) назва піддомену.</para></listitem>
+                                </varlistentry>
+                            </variablelist>
+                        </para>
+                        <para>
+                            Це значення може бути перевизначено параметром
+<emphasis>override_homedir</emphasis>.
+                        </para>
+                        <para>
+                            Типове значення: <filename>/home/%d/%u</filename>
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>realmd_tags (рядок)</term>
+                    <listitem>
+                        <para>
+                            Різноманітні теґи, що зберігаються службою налаштовування realmd для цього
+домену.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>cached_auth_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає час у секундах з моменту останнього успішного розпізнавання у
+мережі, для якого користувача буде розпізнано за допомогою кешованих
+реєстраційних даних, доки SSSD перебуває у режимі «у мережі».
+                        </para>
+                        <para>
+                            Спеціальне значення 0 означає, що цю можливість вимкнено.
+                        </para>
+                        <para>
+                            Будь ласка, зауважте, що якщо <quote>cached_auth_timeout</quote> має більше
+значення за <quote>pam_id_timeout</quote>, модуль може бути викликано для
+обробки <quote>initgroups</quote>.
+                        </para>
+                        <para>
+                            Типове значення: 0
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>auto_private_groups (рядок)</term>
+                    <listitem>
+                        <para>
+                            Якщо увімкнено цей параметр, SSSD автоматично створюватиме приватні групи
+користувачів на основі номера UID користувача. Номер GID у цьому випадку
+ігноруватиметься.
+		        </para>
+			<para>
+			    Для піддоменів POSIX встановлення для цього параметра значення головного
+домену успадковується у піддомені.
+			</para>
+			<para>
+			    Для піддоменів із прив'язкою за ідентифікатором auto_private_groups вже
+увімкнено для піддоменів, встановлення для нього значення false ніяк не
+впливатиме на піддомен.
+			</para>
+                        <para>
+                            Зауваження: оскільки номер GID і приватна група користувача успадковуються з
+номера UID, підтримки декількох записів із однаковим номером UID або GID у
+цьому параметрі не передбачено. Іншими словами, вмикання цього параметра
+примусово встановлює унікальність записів у просторі ідентифікаторів.
+                        </para>
+                        <para>
+                            Типове значення: False
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+
+        <para>
+            Параметри, які є чинними для доменів проксі.  <variablelist>
+                <varlistentry>
+                    <term>proxy_pam_target (рядок)</term>
+                    <listitem>
+                        <para>
+                            Комп’ютер, для якого виконує проксі-сервер PAM.
+                        </para>
+                        <para>
+                            Типове значення: типово не встановлено, вам слід скористатися вже створеними
+налаштуваннями pam або створити нові і тут додати назву служби.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>proxy_lib_name (рядок)</term>
+                    <listitem>
+                        <para>
+                            Назва бібліотеки NSS для використання у доменах з проксі-серверами. Функції
+NSS шукаються у бібліотеці у форматі _nss_$(назва_бібліотеки)_$(функція),
+наприклад _nss_files_getpwent.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>proxy_fast_alias (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Під час пошуку запису користувача чи групи за назвою у системі надання даних
+переадресації виконується вторинний пошук за ідентифікатором з метою
+визначення «канонічної» форми назви, якщо результат знайдено за
+альтернативною назвою (псевдонімом). Встановлення для цього параметра
+значення «true» призведе до того, що SSSD виконуватиме пошук ідентифікатора
+у кеші, щоб пришвидшити надання результатів.
+                        </para>
+                        <para>
+                            Типове значення: false
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>proxy_max_children (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Цей параметр визначає кількість попередньо розгалужених дочірніх проксі. Він
+корисний для високонавантажених середовищ SSSD, де sssd може вичерпати
+кількість доступних дочірніх слотів, що може спричинити деякі вади через
+використання черги запитів.
+                        </para>
+                        <para>
+                            Типове значення: 10
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+            </variablelist>
+        </para>
+
+        <refsect2 id='app_domains'>
+            <title>Домени програм (application)</title>
+            <para>
+                SSSD, з його інтерфейсом D-Bus (див. <citerefentry>
+<refentrytitle>sssd-ifp</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>) є привабливим для програм як шлюз до каталогу LDAP, де
+зберігаються дані користувачів і груп. Втім, на відміну від традиційного
+формату роботи SSSD, де усі користувачі і групи або мають атрибути POSIX,
+або ці атрибути може бути успадковано з SID Windows, у багатьох випадках
+користувачі і групи у сценарії підтримки роботи програм не мають атрибутів
+POSIX. Замість визначення розділу
+<quote>[domain/<replaceable>НАЗВА</replaceable>]</quote> адміністратор може
+визначити розділ
+<quote>[application/<replaceable>НАЗВА</replaceable>]</quote>, який на
+внутрішньому рівні представляє домен типу <quote>application</quote>, який
+може успадковувати параметр з традиційного домену SSSD.
+            </para>
+            <para>
+                Будь ласка, зауважте, що домен програм має так само явним чином увімкнено у
+параметрі <quote>domains</quote>, отже порядок пошуку між доменом програм і
+його доменом-близнюком у POSIX має бути встановлено належним чином.
+            </para>
+            <variablelist>
+                <title>Параметри доменів програм</title>
+                <varlistentry>
+                    <term>inherit_from (рядок)</term>
+                    <listitem>
+                        <para>
+                            Домен типу POSIX SSSD, з якого домен програм успадковує усі параметри. Далі,
+домен програм поже додавати власні параметри до параметрів програми, які
+розширюють або перевизначають параметри домену-<quote>близнюка</quote>.
+                        </para>
+                        <para>
+                            Типове значення: не встановлено
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+            <para>
+                У наведеному нижче прикладі проілюстровано використання домену програм. У
+цій конфігурації домен POSIX з'єднано із сервером LDAP, він використовується
+операційною системою через відповідач NSS. Крім того, домен програм також
+надсилає запит щодо атрибута telephoneNumber, зберігає його як атрибут phone
+у кеші і робить атрибут phone доступним через інтерфейс D-Bus.
+            </para>
+<programlisting>
+[sssd]
+domains = appdom, posixdom
+
+[ifp]
+user_attributes = +phone
+
+[domain/posixdom]
+id_provider = ldap
+ldap_uri = ldap://ldap.example.com
+ldap_search_base = dc=example,dc=com
+
+[application/appdom]
+inherit_from = posixdom
+ldap_user_extra_attrs = phone:telephoneNumber
+</programlisting>
+        </refsect2>
+
+        <refsect2 id='local_domain'>
+            <title>Розділ локального домену</title>
+            <para>
+                У цьому розділі містяться параметри для домену, який зберігає записи
+користувачів і груп у вбудованій базі даних SSSD, тобто домену, який
+використовує <replaceable>id_provider=local</replaceable>.
+            </para>
+            <variablelist>
+                <title>Параметри розділу</title>
+                <varlistentry>
+                    <term>default_shell (рядок)</term>
+                    <listitem>
+                        <para>
+                            Типова оболонка для записів користувачів, створених за допомогою
+інструментів простору користувачів SSSD.
+                        </para>
+                        <para>
+                            Типове значення: <filename>/bin/bash</filename>
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>base_directory (рядок)</term>
+                    <listitem>
+                        <para>
+                            Інструменти додають ім’я користувача до
+<replaceable>base_directory</replaceable> і використовують отриману адресу
+як адресу домашнього каталогу.
+                        </para>
+                        <para>
+                            Типове значення: <filename>/home</filename>
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>create_homedir (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, чи слід типово створювати домашній каталог для нових
+користувачів. Може бути перевизначено з командного рядка.
+                        </para>
+                        <para>
+                            Типове значення: TRUE
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>remove_homedir (булівське значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, чи слід вилучати домашній каталог для вилучених записів
+користувачів. Може бути перевизначено з командного рядка.
+                        </para>
+                        <para>
+                            Типове значення: TRUE
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>homedir_umask (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Використовується <citerefentry> <refentrytitle>sss_useradd</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry> для визначення типових прав доступу
+до щойно створеного домашнього каталогу.
+                        </para>
+                        <para>
+                            Типове значення: 077
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>skel_dir (рядок)</term>
+                    <listitem>
+                        <para>
+                            Каркасний каталог, який містить файли і каталоги, які буде скопійовано до
+домашнього каталогу користувача, коли такий домашній каталог створюється
+командою <citerefentry> <refentrytitle>sss_useradd</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry>
+                        </para>
+                        <para>
+                            Типове значення: <filename>/etc/skel</filename>
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>mail_dir (рядок)</term>
+                    <listitem>
+                        <para>
+                            Каталог буфера пошти. Цей каталог потрібен для обробки поштової скриньки,
+якщо відповідний обліковий запис користувача змінено або вилучено. Якщо
+каталог не вказано, буде використано типове значення.
+                        </para>
+                        <para>
+                            Типове значення: <filename>/var/mail</filename>
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>userdel_cmd (рядок)</term>
+                    <listitem>
+                        <para>
+                            Команда, яку буде виконано після вилучення запису користувача. Команді, як
+перший і єдиний параметр, передається ім’я користувача, запис якого
+вилучається. Код виконання, повернутий програмою не обробляється.
+                        </para>
+                        <para>
+                            Типове значення: None, не виконувати жодних команд
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </refsect2>
+
+    </refsect1>
+
+    <refsect1 id='trusted-domains'>
+        <title>РОЗДІЛ ДОВІРЕНИХ ДОМЕНІВ</title>
+        <para>
+            Деякі параметри, які використовуються у розділі домену, можна також
+використовувати у розділі довіреного домену, тобто у розділі, який
+називається
+<quote>[domain/<replaceable>НАЗВА_ДОМЕНУ</replaceable>/<replaceable>НАЗВА_ДОВІРЕНОГО_ДОМЕНУ</replaceable>]</quote>.
+Де НАЗВА_ДОМЕНУ є справжнім базовим доменом для долучення. Приклади наведено
+нижче. У поточній версії підтримуваними параметрами у розділі довіреного
+домену є такі параметри:
+        </para>
+            <para>ldap_search_base,</para>
+            <para>ldap_user_search_base,</para>
+            <para>ldap_group_search_base,</para>
+            <para>ldap_netgroup_search_base,</para>
+            <para>ldap_service_search_base,</para>
+            <para>ad_server,</para>
+            <para>ad_backup_server,</para>
+            <para>ad_site,</para>
+            <para>use_fully_qualified_names</para>
+        <para>
+            Докладніший опис цих параметрів можна знайти у окремих описах на сторінці
+підручника.
+        </para>
+    </refsect1>
+
+    <refsect1 id='example'>
+        <title>ПРИКЛАДИ</title>
+        <para>
+            1. Нижче наведено приклад типових налаштувань SSSD. Налаштування самого
+домену не наведено, — щоб дізнатися більше про неї, ознайомтеся з
+документацією щодо налаштовування доменів.  <programlisting>
+[sssd]
+domains = LDAP
+services = nss, pam
+config_file_version = 2
+
+[nss]
+filter_groups = root
+filter_users = root
+
+[pam]
+
+[domain/LDAP]
+id_provider = ldap
+ldap_uri = ldap://ldap.example.com
+ldap_search_base = dc=example,dc=com
+
+auth_provider = krb5
+krb5_server = kerberos.example.com
+krb5_realm = EXAMPLE.COM
+cache_credentials = true
+
+min_id = 10000
+max_id = 20000
+enumerate = False
+</programlisting>
+        </para>
+        <para>
+            2. У наведеному нижче прикладі показано налаштування довіри AD у IPA, де ліс
+AD складається з двох доменів у структурі батьківський-дочірній. Нехай домен
+IPA (ipa.com) має стосунки довіри з доменом AD (ad.com). ad.com має дочірній
+домен (child.ad.com). Щоб увімкнути скорочені назви у дочірньому домені,
+слід скористатися наведеними нижче налаштуваннями. <programlisting>
+[domain/ipa.com/child.ad.com]
+use_fully_qualified_names = false
+</programlisting>
+        </para>
+    </refsect1>
+
+	<xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

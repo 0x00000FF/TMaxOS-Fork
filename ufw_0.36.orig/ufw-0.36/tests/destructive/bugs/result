@@ -1,0 +1,59 @@
+Bug #262451 (part 2)
+0: disable
+WARN: Checks disabled
+Firewall stopped and disabled on system startup
+
+
+1: status
+WARN: Checks disabled
+Status: inactive
+
+
+2: enable
+WARN: Checks disabled
+ERROR: Couldn't determine iptables version
+
+
+3: status
+WARN: Checks disabled
+ERROR: Couldn't determine iptables version
+
+
+Bug #268084
+4: disable
+WARN: Checks disabled
+Firewall stopped and disabled on system startup
+
+
+5: enable
+WARN: Checks disabled
+Firewall is active and enabled on system startup
+
+
+6: status
+WARN: Checks disabled
+Status: active
+
+
+7: app update all
+WARN: Checks disabled
+
+
+8: disable
+WARN: Checks disabled
+Firewall stopped and disabled on system startup
+
+
+9: enable
+WARN: Checks disabled
+Firewall is active and enabled on system startup
+
+
+10: status
+WARN: Checks disabled
+Status: active
+
+
+11: disable
+
+

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pàgines del manual de l'SSSD</title>
+<refentry>
+    <refentryinfo>
+<productname>sss rpc.idmapd plugin</productname> <author>
+<firstname>Noam</firstname> <surname>Meltzer</surname> <affiliation>
+<orgname>Primary Data Inc.</orgname> </affiliation> <contrib>Desenvolupador
+(2013-2014)</contrib> </author> <author> <firstname>Noam</firstname>
+<surname>Meltzer</surname> <contrib>Desenvolupador (2014-)</contrib>
+<email>tsnoam@gmail.com</email> </author></refentryinfo>
+
+    <refmeta>
+        <refentrytitle>sss_rpcidmapd</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Formats i convencions dels fitxers</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_rpcidmapd</refname>
+        <refpurpose>les directrius de configuració del complement sss per al rpc.idmapd</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='conf-file'>
+        <title>FITXER DE CONFIGURACIÓ</title>
+        <para>
+            El fitxer de configuració rpc.idmapd normalment es troba a
+<emphasis>/etc/idmapd.conf</emphasis>. Vegeu <citerefentry>
+<refentrytitle>idmapd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> per més informació.
+        </para>
+    </refsect1>
+
+    <refsect1 id='sss-conf-extension'>
+        <title>AMPLIACIÓ DE LA CONFIGURACIÓ DE L'SSS</title>
+        <refsect2 id='enable-sss'>
+            <title>Habilita el complement SSS</title>
+            <para>
+                En la secció <quote>[Translation]</quote>, modifiqueu o establiu l'atribut
+<quote>Method</quote> per abastar <emphasis>sss</emphasis>.
+            </para>
+        </refsect2>
+        <refsect2 id='sss-conf-sect'>
+            <title>Secció de configuració [sss]</title>
+            <para>
+                Per canviar el valor per defecte d'un dels atributs de configuració del
+connector de l'<emphasis>sss</emphasis> que es llisten a continuació,
+necessitareu crear-li una secció de configuració, anomenada
+<quote>[sss]</quote>.
+            </para>
+            <variablelist>
+                <title>Atributs de configuració</title>
+                <varlistentry>
+                    <term>memcache (booleà)</term>
+                    <listitem>
+                        <para>
+                            Indica si s'utilitza o no la tècnica d'optimització de la memòria cau.
+                        </para>
+                        <para>
+                            Per defecte: True
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </refsect2>
+    </refsect1>
+
+    <refsect1 id='sssd-integration'>
+        <title>INTEGRACIÓ DE L'SSSD</title>
+        <para>
+            El connector sss requereix que s'habiliti el <emphasis>contestador del
+NSS</emphasis> al sssd.
+        </para>
+        <para>
+            L'atribut <quote>use_fully_qualified_names</quote> ha d'estar habilitat en
+tots els dominis (els clients de NFSv4 esperen un FQN per a ser enviats al
+cable).
+        </para>
+    </refsect1>
+
+    <refsect1 id='example'>
+        <title>EXEMPLE</title>
+        <para>
+            En el següent exemple es mostra un idmapd.conf mínim que fa ús del connector
+sss.  <programlisting>
+[General]
+Verbosity = 2
+# el domini ha de sincronitzar-se entre el servidor i els clients del NFSv4
+# Solaris/Illumos/AIX utilitzen "localdomain" com a predeterminat!
+Domain = default
+
+[Mapping]
+Nobody-User = nfsnobody
+Nobody-Group = nfsnobody
+
+[Translation]
+Method = sss
+</programlisting>
+        </para>
+    </refsect1>
+
+    <refsect1 id='see_also'>
+        <title>VEGEU TAMBÉ</title>
+        <para>
+            <citerefentry> <refentrytitle>sssd</refentrytitle><manvolnum>8</manvolnum>
+</citerefentry>, <citerefentry> <refentrytitle>idmapd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>
+        </para>
+    </refsect1>
+</refentry>
+</reference>

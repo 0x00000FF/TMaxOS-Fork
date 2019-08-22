@@ -1,0 +1,22 @@
+== Clean out everything
+
+== Run srv on 23 for the first time
+
+== Convert 23 back to rules.orig
+
+== Simulate upgrade from 23 to 85
+
+== Run srv on 85
+'./var/snap/ufw/85/etc/ufw/sysctl.conf' not updated for snap revision 85 (changes cannot be merged). For details, see: $ diff -Nau './snap/ufw/85/etc/ufw/sysctl.conf' './var/snap/ufw/85/etc/ufw/sysctl.conf'
+'./var/snap/ufw/85/etc/ufw/applications.d/ufw-bittorent' not updated for snap revision 85 (changes cannot be merged). For details, see: $ diff -Nau './snap/ufw/85/etc/ufw/applications.d/ufw-bittorent' './var/snap/ufw/85/etc/ufw/applications.d/ufw-bittorent'
+
+== Simulate the user merged everything from 85
+
+== Simulate user change to after.rules
+
+== Simulate upgrade from 85 to 86
+
+== Run srv on 86
+'./var/snap/ufw/86/etc/ufw/before.rules' updated to contain version from snap revision 86
+'./var/snap/ufw/86/etc/ufw/after.rules' not updated for snap revision 86 (changes cannot be merged). For details, see: $ diff -Nau './snap/ufw/86/etc/ufw/after.rules' './var/snap/ufw/86/etc/ufw/after.rules'
+'./var/snap/ufw/86/etc/ufw/applications.d/ufw-chat' updated to contain version from snap revision 86

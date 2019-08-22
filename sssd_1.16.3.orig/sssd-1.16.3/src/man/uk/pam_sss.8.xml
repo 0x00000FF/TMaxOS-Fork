@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+                href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>pam_sss</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>pam_sss</refname>
+        <refpurpose>модуль PAM для SSSD</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>pam_sss.so</command> <arg choice='opt'>
+<replaceable>quiet</replaceable> </arg> <arg choice='opt'>
+<replaceable>forward_pass</replaceable> </arg> <arg choice='opt'>
+<replaceable>use_first_pass</replaceable> </arg> <arg choice='opt'>
+<replaceable>use_authtok</replaceable> </arg> <arg choice='opt'>
+<replaceable>retry=N</replaceable> </arg> <arg choice='opt'>
+<replaceable>ignore_unknown_user</replaceable> </arg> <arg choice='opt'>
+<replaceable>ignore_authinfo_unavail</replaceable> </arg> <arg choice='opt'>
+<replaceable>domains=X</replaceable> </arg> <arg choice='opt'>
+<replaceable>allow_missing_name</replaceable> </arg> <arg choice='opt'>
+<replaceable>prompt_always</replaceable> </arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para><command>pam_sss.so</command> — інтерфейс PAM до System Security Services
+daemon (SSSD). Помилки та результати роботи записуються за допомогою
+<command>syslog(3)</command> до запису LOG_AUTHPRIV.</para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>ПАРАМЕТРИ</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>quiet</option>
+                </term>
+                <listitem>
+                    <para>Не показувати у журналі повідомлень для невідомих користувачів.</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>forward_pass</option>
+                </term>
+                <listitem>
+                    <para>Якщо встановлено значення <option>forward_pass</option>, введений пароль
+буде збережено у стосі паролів для використання іншими модулями PAM.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>use_first_pass</option>
+                </term>
+                <listitem>
+                    <para>Використання аргументу use_first_pass примушує модуль до використання пароля
+з модулів попереднього рівня. Ніяких запитів до користувача не
+надсилатиметься, — якщо пароль не буде виявлено або пароль виявиться
+непридатним, доступ користувачеві буде заборонено.</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>use_authtok</option>
+                </term>
+                <listitem>
+                    <para>Визначає ситуацію, коли зміна пароля примушує модуль встановлювати новий
+пароль на основі пароля, наданого попереднім модулем обробки паролів зі
+стосу модулів.</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>retry=N</option>
+                </term>
+                <listitem>
+                    <para>Якщо вказано, користувача запитуватимуть про пароль ще N разів, якщо перший
+раз розпізнавання зазнає невдачі. Типовим значенням є 0.</para>
+                    <para>Будь ласка, зауважте, що цей параметр може працювати не так, як очікується,
+якщо програма, яка викликає PAM, має власний обробник діалогових вікон
+взаємодії з користувачем. Типовим прикладом є <command>sshd</command> з
+<option>PasswordAuthentication</option>.</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>ignore_unknown_user</option>
+                </term>
+                <listitem>
+                    <para>Якщо вказано цей параметр і облікового запису не існує, модуль PAM поверне
+PAM_IGNORE. Це призводить до ігнорування цього модуля оболонкою PAM.</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>ignore_authinfo_unavail</option>
+                </term>
+                <listitem>
+                    <para>
+                    Визначає, що модуль PAM має повертати PAM_IGNORE, якщо не вдається
+встановити зв’язок із фоновою службою SSSD. У результаті набір інструментів
+PAM ігнорує цей модуль.</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>domains</option>
+                </term>
+                <listitem>
+                    <para>
+                        Надає змогу адміністратору обмежити домен певною службою PAM, за допомогою
+якої можна буде виконувати розпізнавання. Формат значення: список назв
+доменів SSSD, відокремлених комами, так, як їх вказано у файлі sssd.conf.
+                    </para>
+                    <para>
+                        Зауваження: слід використовувати разом із параметрами «pam_trusted_users» і
+«pam_public_domains». Будь ласка, ознайомтеся із сторінкою підручника
+<citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>, щоб дізнатися більше про ці два
+параметри відповідача PAM.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>allow_missing_name</option>
+                </term>
+                <listitem>
+                    <para>
+                        Основним призначенням цього параметра є надання SSSD змоги визначати ім'я
+користувача на основі додаткових даних, наприклад сертифіката зі
+смарткартки.
+                    </para>
+                    <para>
+                        Поточним основним призначенням є засоби керування входом до системи, які
+можуть спостерігати за подіями обробки карток на засобі читання
+смарткарток. Щойно буде вставлено смарткартку, засіб керування входом до
+системи викличе стос PAM, до якого включено рядок, подібний до <programlisting>
+auth sufficient pam_sss.so allow_missing_name
+                        </programlisting> Якщо SSSD спробує визначити ім'я користувача
+на основі вмісту смарткартки, повертає його до pam_sss, який, нарешті,
+передасть його стосу PAM.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>prompt_always</option>
+                </term>
+                <listitem>
+                    <para>
+                        Завжди запитувати у користувача реєстраційні дані. Якщо використано цей
+параметр, реєстраційні дані, запит на які надійшов від інших модулів PAM,
+типово, пароль, буде проігноровано, а pam_sss надсилатиме запит щодо
+реєстраційних даних знову. На основі відповіді на попереднє розпізнавання
+від SSSD pam_sss може надіслати запит щодо пароля, пін-коду смарткартки або
+інших реєстраційних даних.
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <refsect1 id='module_types_provides'>
+        <title>ПЕРЕДБАЧЕНІ ТИПИ МОДУЛІВ</title>
+        <para>Передбачено всі типи модулів (<option>account</option>,
+<option>auth</option>, <option>password</option> і
+<option>session</option>).
+        </para>
+    </refsect1>
+
+    <refsect1 id='files'>
+        <title>ФАЙЛИ</title>
+        <para>Якщо спроба скидання пароля від імені адміністративного користувача (root)
+зазнає невдачі, оскільки у відповідному засобі обробки SSSD не передбачено
+скидання паролів, може бути показано певне повідомлення. У цьому
+повідомленні, наприклад, можуть міститися настанови щодо скидання пароля.</para>
+
+        <para>Текст повідомлення буде прочитано з файла
+<filename>pam_sss_pw_reset_message.LOC</filename>, де «LOC» — рядок локалі у
+форматі, повернутому <citerefentry>
+<refentrytitle>setlocale</refentrytitle><manvolnum>3</manvolnum>
+</citerefentry>. Якщо відповідного файла знайдено не буде, буде показано
+вміст файла <filename>pam_sss_pw_reset_message.txt</filename>. Власником
+файлів має бути адміністративний користувач (root). Доступ до запису файлів
+також повинен мати лише адміністративний користувач. Всім іншим користувачам
+може бути надано лише право читання файлів.</para>
+
+        <para>Пошук цих файлів виконуватиметься у каталозі
+<filename>/etc/sssd/customize/НАЗВА_ДОМЕНУ/</filename>. Якщо відповідний
+файл не буде знайдено, буде показано типове повідомлення.</para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

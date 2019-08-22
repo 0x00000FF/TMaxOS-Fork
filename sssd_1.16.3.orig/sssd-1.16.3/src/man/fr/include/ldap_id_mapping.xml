@@ -1,0 +1,288 @@
+<refsect1 id='idmap'>
+    <title>CORRESPONDANCE D'IDENTIFIANTS</title>
+    <para>
+        La fonctionnalité de correspondance d'ID permet à SSSD d'agir comme un
+client de Active Directory sans demander aux administrateurs d'étendre les
+attributs utilisateur pour prendre en charge les attributs POSIX pour les
+identifiants d'utilisateur et de groupe.
+    </para>
+    <para>
+        Remarque : Lorsque la mise en correspondance des ID est activée, les
+attributs uidNumber et gidNumber sont ignorés. Ceci afin d'éviter les
+risques de conflit entre les valeurs attribuées automatiquement et assignées
+manuellement. Si vous avez besoin d'utiliser des valeurs attribuées
+manuellement, TOUTES les valeurs doivent être assignées manuellement.
+    </para>
+    <para>
+        Please note that changing the ID mapping related configuration options will
+cause user and group IDs to change. At the moment, SSSD does not support
+changing IDs, so the SSSD database must be removed. Because cached passwords
+are also stored in the database, removing the database should only be
+performed while the authentication servers are reachable, otherwise users
+might get locked out. In order to cache the password, an authentication must
+be performed. It is not sufficient to use <citerefentry>
+<refentrytitle>sss_cache</refentrytitle> <manvolnum>8</manvolnum>
+</citerefentry> to remove the database, rather the process consists of:
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        Making sure the remote servers are reachable
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Arrêter le service SSSD
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Supprimer la base de donnée
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Démarrer le service SSSD
+                    </para>
+                </listitem>
+            </itemizedlist>
+        Moreover, as the change of IDs might necessitate the adjustment of other
+system properties such as file and directory ownership, it's advisable to
+plan ahead and test the ID mapping configuration thoroughly.
+    </para>
+
+    <refsect2 id='idmap_algorithm'>
+        <title>Algorithme de correspondance</title>
+        <para>
+            Active Directory fournit un objectSID pour chaque objet d'utilisateur et de
+groupe dans l'annuaire. Cet objectSID peut être divisé en composants qui
+représentent l'identité de domaine Active Directory et l'identificateur
+relatif (RID) de l'objet utilisateur ou groupe.
+        </para>
+        <para>
+            L'algorithme de mise en correspondance des ID de SSSD tient un éventail
+d'uid disponibles et le divise en sections de même taille, appelées «
+tranches ». Chaque tranche représente l'espace disponible dans un domaine
+Active Directory.
+        </para>
+        <para>
+            Lorsqu'une entrée d'utilisateur ou de groupe pour un domaine particulier est
+rencontrée pour la première fois, SSSD alloue une des plages disponibles
+pour ce domaine. Afin de rendre cette affectation de plage reproductible sur
+les ordinateurs clients différents, l'algorithme de sélection de plage
+suivant est utilisé :
+        </para>
+        <para>
+            La chaîne du SID est passée par l'intermédiaire de l'algorithme murmurhash3
+pour le convertir en une valeur de hachage de 32 bits. Nous prenons ensuite
+le modulo de cette valeur avec le nombre total des tranches disponibles pour
+prendre la tranche.
+        </para>
+        <para>
+            Remarque : Il est possible de rencontrer les collisions dans le hachage et
+le modulo en découlant. Dans ces situations, la tranche suivante disponible
+sera sélectionnée, mais il n'est pas possible de reproduire le même jeu
+exact des tranches sur d'autres machines (puisque l'ordre dans lequel elles
+sont rencontrées déterminera leur tranche). Dans ce cas, il est recommandé
+de passer à l'utilisation des attributs POSIX explicites dans Active
+Directory (en désactivant la correspondance d'ID) ou configurer un domaine
+par défaut afin de garantir qu'au moins un est toujours cohérent. Pour plus
+d'informations, voir <quote>Configuration</quote>.
+        </para>
+    </refsect2>
+
+    <refsect2 id='idmap_config'>
+        <title>Configuration</title>
+        <para>
+            Configuration minimale (dans la section <quote>[domain/DOMAINNAME]</quote>)
+:
+        </para>
+        <para>
+<programlisting>
+ldap_id_mapping = True
+ldap_schema = ad
+</programlisting>
+        </para>
+        <para>
+            The default configuration results in configuring 10,000 slices, each capable
+of holding up to 200,000 IDs, starting from 200,000 and going up to
+2,000,200,000. This should be sufficient for most deployments.
+        </para>
+        <refsect3 id='idmap_advanced_config'>
+            <title>Configuration avancée</title>
+            <variablelist>
+                <varlistentry>
+                    <term>ldap_idmap_range_min (integer)</term>
+                    <listitem>
+                        <para>
+                            Spécifie la limite inférieure de la plage d'ID POSIX à utiliser pour la mise
+en correspondance d'identifiants utilisateurs et groupes Active Directory.
+                        </para>
+                        <para>
+                            NOTE : Cette option est différente de <quote>min_id</quote> en ce sens que
+<quote>min_id</quote> agit comme filtre sur le résultat des requêtes vers ce
+domaine, alors que cette option contrôle les plages de correspondance
+d'ID. Il s'agit d'une distinction subtile, mais les bonnes pratiques
+conseillent d'avoir <quote>min_id</quote> inférieur ou égal à
+<quote>ldap_idmap_range_min</quote>
+                        </para>
+                        <para>
+                            Par défaut : 200000
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_range_max (integer)</term>
+                    <listitem>
+                        <para>
+                            Spécifie la limite supérieure de la plage d'ID POSIX à utiliser pour la mise
+en correspondance d'identifiants utilisateurs et groupes Active Directory.
+                        </para>
+                        <para>
+                            NOTE : Cette option est différente de <quote>max_id</quote> en ce sens que
+<quote>max_id</quote> agit comme filtre sur le résultat des requêtes vers ce
+domaine, alors que cette option contrôle les plages de correspondance
+d'ID. Il s'agit d'une distinction subtile, mais les bonnes pratiques
+conseillent d'avoir <quote>max_id</quote> supérieur ou égal à
+<quote>ldap_idmap_range_max</quote>
+                        </para>
+                        <para>
+                            Par défaut : 2000200000
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_range_size (integer)</term>
+                    <listitem>
+                        <para>
+                            Spécifie le nombre d'identifiants pour chaque tranche.  Si la taille de la
+plage ne divise pas uniformément dans les valeurs minimale et maximale, des
+tranches complètes seront créées autant que possible.
+                        </para>
+                        <para>
+                            NOTE: The value of this option must be at least as large as the highest user
+RID planned for use on the Active Directory server. User lookups and login
+will fail for any user whose RID is greater than this value.
+                        </para>
+                        <para>
+                            For example, if your most recently-added Active Directory user has
+objectSid=S-1-5-21-2153326666-2176343378-3404031434-1107,
+<quote>ldap_idmap_range_size</quote> must be at least 1108 as range size is
+equal to maximal SID minus minimal SID plus one (e.g. 1108 = 1107 - 0 + 1).
+                        </para>
+                        <para>
+                            It is important to plan ahead for future expansion, as changing this value
+will result in changing all of the ID mappings on the system, leading to
+users with different local IDs than they previously had.
+                        </para>
+                        <para>
+                            Par défaut : 200000
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_default_domain_sid (chaîne)</term>
+                    <listitem>
+                        <para>
+                            Spécifier le SID de domaine du domaine par défaut. Cela garantira que ce
+domaine est toujours affecté à la tranche zéro dans la carte d'ID, sans
+passer par l'algorithme murmurhash décrit ci-dessus.
+                        </para>
+                        <para>
+                            Par défaut : non défini
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_default_domain (chaîne)</term>
+                    <listitem>
+                        <para>
+                            Spécifier le nom de domaine par défaut.
+                        </para>
+                        <para>
+                            Par défaut : non défini
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_autorid_compat (boolean)</term>
+                    <listitem>
+                        <para>
+                            Modifie le comportement de l'algorithme de mise en correspondance des ID
+afin qu'il se comporte de manière identique à celui
+<quote>idmap_autorid</quote> de winbind.
+                        </para>
+                        <para>
+                            Lorsque cette option est configurée, les domaines seront alloués en
+commençant par la tranche zéro et augmentant de manière monotone pour chaque
+domaine supplémentaire.
+                        </para>
+                        <para>
+                            Remarque : Cet algorithme n'est pas déterministe (il dépend de l'ordre dans
+lequel utilisateurs et groupes sont invités). Si ce mode est nécessaire pour
+assurer la compatibilité avec les ordinateurs qui utilisent winbind, il est
+recommandé d'utiliser également l'option
+<quote>ldap_idmap_default_domain_sid</quote> pour garantir qu'au moins un
+domaine est systématiquement alloué à la tranche zéro.
+                        </para>
+                        <para>
+                            Par défaut : False
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_helper_table_size (integer)</term>
+                    <listitem>
+                        <para>
+                          Maximal number of secondary slices that is tried when performing mapping
+from UNIX id to SID.
+                        </para>
+                        <para>
+                          Note: Additional secondary slices might be generated when SID is being
+mapped to UNIX id and RID part of SID is out of range for secondary slices
+generated so far. If value of ldap_idmap_helper_table_size is equal to 0
+then no additional secondary slices are generated.
+                        </para>
+                        <para>
+                            Par défaut : 10
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </refsect3>
+    </refsect2>
+
+    <refsect2 id='well_known_sids'>
+        <title>SID bien connus</title>
+        <para>
+            SSSD supports to look up the names of Well-Known SIDs, i.e. SIDs with a
+special hardcoded meaning. Since the generic users and groups related to
+those Well-Known SIDs have no equivalent in a Linux/UNIX environment no
+POSIX IDs are available for those objects.
+        </para>
+        <para>
+            The SID name space is organized in authorities which can be seen as
+different domains. The authorities for the Well-Known SIDs are
+            <itemizedlist>
+                <listitem><para>Null Authority</para></listitem>
+                <listitem><para>World Authority</para></listitem>
+                <listitem><para>Local Authority</para></listitem>
+                <listitem><para>Creator Authority</para></listitem>
+                <listitem><para>NT Authority</para></listitem>
+                <listitem><para>Built-in</para></listitem>
+            </itemizedlist>
+            The capitalized version of these names are used as domain names when
+returning the fully qualified name of a Well-Known SID.
+        </para>
+        <para>
+            Since some utilities allow to modify SID based access control information
+with the help of a name instead of using the SID directly SSSD supports to
+look up the SID by the name as well. To avoid collisions only the fully
+qualified names can be used to look up Well-Known SIDs. As a result the
+domain names <quote>NULL AUTHORITY</quote>, <quote>WORLD AUTHORITY</quote>,
+<quote> LOCAL AUTHORITY</quote>, <quote>CREATOR AUTHORITY</quote>, <quote>NT
+AUTHORITY</quote> and <quote>BUILTIN</quote> should not be used as domain
+names in <filename>sssd.conf</filename>.
+        </para>
+    </refsect2>
+
+</refsect1>

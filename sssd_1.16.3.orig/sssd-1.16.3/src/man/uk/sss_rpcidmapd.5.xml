@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <refentryinfo>
+<productname>sss rpc.idmapd plugin</productname> <author>
+<firstname>Noam</firstname> <surname>Meltzer</surname> <affiliation>
+<orgname>Primary Data Inc.</orgname> </affiliation> <contrib>Розробник
+(2013-2014)</contrib> </author> <author> <firstname>Noam</firstname>
+<surname>Meltzer</surname> <contrib>Розробник (2014-)</contrib>
+<email>tsnoam@gmail.com</email> </author></refentryinfo>
+
+    <refmeta>
+        <refentrytitle>sss_rpcidmapd</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Формати файлів та правила</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_rpcidmapd</refname>
+        <refpurpose>Директиви налаштовування додатка sss для rpc.idmapd</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='conf-file'>
+        <title>ФАЙЛ НАЛАШТУВАНЬ</title>
+        <para>
+            Файл налаштувань rpc.idmapd зазвичай зберігається тут:
+<emphasis>/etc/idmapd.conf</emphasis>. Див. підручник з <citerefentry>
+<refentrytitle>idmapd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>, щоб дізнатися більше.
+        </para>
+    </refsect1>
+
+    <refsect1 id='sss-conf-extension'>
+        <title>РОЗШИРЕННЯ НАЛАШТОВУВАННЯ SSS</title>
+        <refsect2 id='enable-sss'>
+            <title>Вмикання додатка SSS</title>
+            <para>
+                У розділі «[Translation]» змініть або додайте атрибут «Method» із вмістом
+<emphasis>sss</emphasis>.
+            </para>
+        </refsect2>
+        <refsect2 id='sss-conf-sect'>
+            <title>Розділ налаштовування [sss]</title>
+            <para>
+                Якщо вам потрібно змінити типове значення одного з атрибутів налаштувань,
+перелічених нижче, додатка <emphasis>sss</emphasis>, вам слід створити
+розділ налаштувань для нього з назвою «[sss]».
+            </para>
+            <variablelist>
+                <title>Атрибути налаштувань</title>
+                <varlistentry>
+                    <term>memcache (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, чи слід використовувати методику оптимізації кешу у пам’яті.
+                        </para>
+                        <para>
+                            Типове значення: True
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </refsect2>
+    </refsect1>
+
+    <refsect1 id='sssd-integration'>
+        <title>ІНТЕГРАЦІЯ З SSSD</title>
+        <para>
+            Додаток sss потребує вмикання <emphasis>Відповідача NSS</emphasis> у sssd.
+        </para>
+        <para>
+            Атрибут «use_fully_qualified_names» має бути увімкнено для усіх доменів
+(клієнти NFSv4 очікують на те, що надсилається назва повністю).
+        </para>
+    </refsect1>
+
+    <refsect1 id='example'>
+        <title>ПРИКЛАД</title>
+        <para>
+            У наведеному нижче прикладі показано мінімальний вигляд idmapd.conf, де
+використовується додаток sss.  <programlisting>
+[General]
+Verbosity = 2
+# домен має бути синхронізовано між сервером NFSv4 та клієнтами
+# У Solaris/Illumos/AIX типово використовується "локальний домен"!
+Domain = default
+
+[Mapping]
+Nobody-User = nfsnobody
+Nobody-Group = nfsnobody
+
+[Translation]
+Method = sss
+</programlisting>
+        </para>
+    </refsect1>
+
+    <refsect1 id='see_also'>
+        <title>ТАКОЖ ПЕРЕГЛЯНЬТЕ</title>
+        <para>
+            <citerefentry> <refentrytitle>sssd</refentrytitle><manvolnum>8</manvolnum>
+</citerefentry>, <citerefentry> <refentrytitle>idmapd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>
+        </para>
+    </refsect1>
+</refentry>
+</reference>

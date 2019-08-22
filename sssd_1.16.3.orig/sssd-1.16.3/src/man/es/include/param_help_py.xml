@@ -1,0 +1,10 @@
+<varlistentry>
+    <term>
+        <option>-h</option>,<option>--help</option>
+    </term>
+    <listitem>
+        <para>
+            Muestra mensaje de ayuda y sale.
+        </para>
+    </listitem>
+</varlistentry>

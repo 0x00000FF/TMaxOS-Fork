@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pàgines del manual de l'SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_seed</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_seed</refname>
+        <refpurpose>implanta la memòria cau de l'SSSD amb un usuari</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_seed</command> <arg choice='opt'>
+<replaceable>opcions</replaceable> </arg> <arg choice='plain'>-D
+<replaceable>DOMINI</replaceable></arg> <arg choice='plain'>-n
+<replaceable>USUARI</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPCIÓ</title>
+        <para>
+            <command>sss_seed</command> implanta la memòria cau de l'SSSD amb una
+entrada d'un usuari i la contrasenya temporal. Si l'entrada d'un usuari ja
+està present a la memòria cau de l'SSSD aleshores s'actualitza l'entrada amb
+la contrasenya temporal.
+        </para>
+        <para>
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPCIONS</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-D</option>,<option>--domain</option>
+<replaceable>DOMINI</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Proporciona el nom del domini en el qual l'usuari n'és membre. El domini
+també s'utilitza per recuperar la informació de l'usuari. El domini ha
+d'estar configurat a l'sssd.conf. S'ha de proporcionar l'opció del
+<replaceable>DOMINI</replaceable>. La informació recuperada del domini
+anul·la aquella que es proporcioni a les opcions.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-n</option>,<option>--username</option>
+<replaceable>USER</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        L'entrada del nom d'usuari a crear o modificar a la memòria cau. S'ha de
+proporcionar l'opció de l'<replaceable>USUARI</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-u</option>,<option>--uid</option> <replaceable>UID</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Estableix l'UID de l'usuari a <replaceable>UID</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-g</option>,<option>--gid</option> <replaceable>GID</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Estableix el GID de l'usuari a <replaceable>GID</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-c</option>,<option>--gecos</option>
+<replaceable>COMMENTARI</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Qualsevol cadena de text amb la descripció de l'usuari. Sovint s'utilitza
+com a camp per al nom complet de l'usuari.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-h</option>,<option>--home</option>
+<replaceable>DIRECTORI_INICIAL</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Establix el directori inicial de l'usuari a
+<replaceable>DIRECTORI_INICIAL</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--shell</option>
+<replaceable>SHELL</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Estableix el shell d'inici de sessió de l'usuari a
+<replaceable>SHELL</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-i</option>,<option>--interactive</option>
+                </term>
+                <listitem>
+                    <para>
+                        Mode interactiu per a la introducció de la informació de l'usuari. Aquesta
+opció només demanà la informació no proporcionada a les opcions o que no es
+recuperi del domini.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-p</option>,<option>--password-file</option>
+<replaceable>FITXER_CONTRASENYA</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Especifica el fitxer des d'on llegir la contrasenya de l'usuari. (si no
+s'especifica, es demana per la contrasenya)
+                    </para>
+                </listitem>
+            </varlistentry>
+           <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>NOTES</title>
+        <para>
+            La longitud de la contrasenya (o la mida del fitxer que s'especifica amb
+l'opció -p o --password-file) ha de ser més petita o igual que PASS_MAX
+bytes (64 bytes en els sistemes que no defineixen globalment el valor de
+PASS_MAX).
+        </para>
+        <para>
+        </para>
+    </refsect1>
+
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

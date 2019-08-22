@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pages de manuel de SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-krb5</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Formats de fichier et conventions</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-krb5</refname>
+        <refpurpose>Fournisseur Kerberos SSSD</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPTION</title>
+        <para>
+            Cette page de manuel décrit la configuration du moteur d'authentification de
+Kerberos 5 pour <citerefentry> <refentrytitle>sssd</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry>. Pour une référence détaillée sur
+la syntaex, veuillez vous référer à la section <quote>FORMAT DE
+FICHIER</quote> du manuel de <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+        </para>
+        <para>
+            Le moteur d'authentification Kerberos 5 contient les fournisseurs
+d'authentification et de changement de mot de passe. Il doit être couplé
+avec un fournisseur d'identité de manière à fonctionner proprement (par
+exemple, id_provider = ldap). Plusieurs informations requises par le moteur
+d'authentification Kerberos 5 doivent être fournies par le fournisseur
+d'identité, telles que le nom du principal de l'utilisateur Kerberos
+(UPN). La configuration du fournisseur d'identité doit avoir une entrée pour
+spécifier l'UPN. Veuillez vous référer aux pages du manuel du fournisseur
+d'identité ad-hoc pour pouvoir le configurer.
+        </para>
+        <para>
+            Ce moteur fournit aussi un contrôle d'accès sur le fichier .k5login dans le
+répertoire personnel de l'utilisateur. Voir <citerefentry>
+<refentrytitle>.k5login</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry> pour plus de détails. Veuillez noter qu'un fichier .k5login
+vide interdira tout accès pour cet utilisateur. Pour activer cette option,
+utilisez « access_provider = krb5 » dans votre configuration de SSSD.
+        </para>
+        <para>
+            Dans le cas où l'UPN n'est pas valide dans le moteur d'identité,
+<command>sssd</command> construira un UPN en utilisant le format
+<replaceable>utilisateur</replaceable>@<replaceable>krb5_realm</replaceable>.
+        </para>
+
+    </refsect1>
+
+    <refsect1 id='configuration-options'>
+        <title>OPTIONS DE CONFIGURATION</title>
+        <para>
+            Si le module auth krb5 est utilisé dans un domaine SSSD, les options
+suivantes doivent être utilisées. Cf. la page de manuel
+<citerefentry><refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum></citerefentry>, section <quote>SECTIONS
+DOMAINE</quote> pour plus de détails sur la configuration d'un domaine
+SSSD.  <variablelist>
+                <varlistentry>
+                    <term>krb5_server, krb5_backup_server (string)</term>
+                    <listitem>
+                        <para>
+                            Spécifie la liste séparée par des virgules des adresses IP ou des noms de
+systèmes des serveurs Kerberos auquel SSSD doit se connecter, par ordre de
+préférence. Pour plus d'informations sur la redondance par bascule et le
+serveur, consultez la section de <quote>BASCULE</quote>. Un numéro de port
+facultatif (précédé de deux-points) peut être ajouté aux adresses ou aux
+noms de systèmes. Si vide, le service de découverte est activé - pour plus
+d'informations, se reporter à la section <quote>DÉCOUVERTE DE
+SERVICE</quote>.
+                        </para>
+                        <para>
+                            Lors de l'utilisation de découverte de services pour le KDC ou les serveurs
+kpasswd, SSSD recherche en premier les entrées DNS qui définissent _udp
+comme protocole, et passe sur _tcp si aucune entrée n'est trouvée.
+                        </para>
+                        <para>
+                            Cette option s'appelait <quote>krb5_kdcip</quote> dans les versions
+précédentes de SSSD. Bien que ce nom soit toujours reconnu à l'heure
+actuelle, il est conseillé de migrer les fichiers de configuration vers
+l'utilisation de <quote>krb5_server</quote>.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_realm (chaîne)</term>
+                    <listitem>
+                        <para>
+                            Le nom du domaine Kerberos. Cette option est nécessaire et doit être
+renseignée.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_kpasswd, krb5_backup_kpasswd (string)</term>
+                    <listitem>
+                        <para>
+                            Si le service de changement de mot de passe ne fonctionne pas sur le KDC,
+des serveurs de secours  peuvent être définis ici. Un numéro de port
+facultatif (précédé par un signe deux-points) peut-être être suffixé aux
+adresses ou aux noms de systèmes.
+                        </para>
+                        <para>
+                            Pour plus d'information sur la bascule et la redondance de serveurs, voir la
+section <quote>BASCULE</quote>. Noter que même si il n'y a plus de serveurs
+kpasswd à essayer, le moteur ne passe pas en mode hors-ligne si
+l'authentification KDC est toujours possible.
+                        </para>
+                        <para>
+                            Par défaut : utiliser le KDC
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_ccachedir (chaîne)</term>
+                    <listitem>
+                        <para>
+                            Directory to store credential caches. All the substitution sequences of
+krb5_ccname_template can be used here, too, except %d and %P.  The directory
+is created as private and owned by the user, with permissions set to 0700.
+                        </para>
+                        <para>
+                            Par défaut : /tmp
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_ccname_template (chaîne)</term>
+                    <listitem>
+                        <para>
+                            Location of the user's credential cache. Three credential cache types are
+currently supported: <quote>FILE</quote>, <quote>DIR</quote> and
+<quote>KEYRING:persistent</quote>. The cache can be specified either as
+<replaceable>TYPE:RESIDUAL</replaceable>, or as an absolute path, which
+implies the <quote>FILE</quote> type. In the template, the following
+sequences are substituted: <variablelist>
+                                <varlistentry>
+                                    <term>%u</term>
+                                    <listitem><para>identifiant de connexion</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%U</term>
+                                    <listitem><para>UID de l'utilisateur</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%p</term>
+                                    <listitem><para>nom du principal</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%r</term>
+                                    <listitem><para>nom de domaine</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%h</term>
+                                    <listitem><para>répertoire personnel</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%d</term>
+                                    <listitem><para>valeur de krb5_ccachedir
+                                              </para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%P</term>
+                                    <listitem><para>l'ID de processus du client SSSD</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%%</term>
+                                    <listitem><para>un « % » littéral</para>
+                                    </listitem>
+                                </varlistentry>
+                            </variablelist> If the
+template ends with 'XXXXXX' mkstemp(3) is used to create a unique filename
+in a safe way.
+                        </para>
+                        <para>
+                            When using KEYRING types, the only supported mechanism is
+<quote>KEYRING:persistent:%U</quote>, which uses the Linux kernel keyring to
+store credentials on a per-UID basis. This is also the recommended choice,
+as it is the most secure and predictable method.
+                        </para>
+                        <para>
+                            The default value for the credential cache name is sourced from the profile
+stored in the system wide krb5.conf configuration file in the [libdefaults]
+section. The option name is default_ccache_name.  See krb5.conf(5)'s
+PARAMETER EXPANSION paragraph for additional information on the expansion
+format defined by krb5.conf.
+                        </para>
+                        <para>
+                          NOTE: Please be aware that libkrb5 ccache expansion template from
+<citerefentry> <refentrytitle>krb5.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> uses different expansion sequences
+than SSSD.
+                        </para>
+                        <para>
+                            Par défaut : (valeur provenant de libkrb5)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_auth_timeout (entier)</term>
+                    <listitem>
+                        <para>
+                            Délai d'attente, en secondes, après l'annulation d'une requête
+d'authentification en ligne ou de changement de mot de passe. La requête
+d'authentification sera effectuée hors-ligne si cela est possible.
+                        </para>
+                        <para>
+                            Par défaut : 6
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_validate (booléen)</term>
+                    <listitem>
+                        <para>
+                            Vérifie à l'aide de krb5_keytab que le TGT obtenu n'a pas été usurpé. Les
+entrées d'un fichier keytab sont vérifiées dans l'ordre, et la première
+entrée avec un domaine correspondant est utilisée pour la validation. Si
+aucune entrée ne correspond au domaine, la dernière entrée dans le fichier
+keytab est utilisée. Ce processus peut être utilisé pour valider des
+environnements utilisant l'approbation entre domaines en plaçant l'entrée
+keytab appropriée comme dernière ou comme seule entrée dans le fichier
+keytab.
+                        </para>
+                        <para>
+                            Par défaut : false
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_keytab (chaîne)</term>
+                    <listitem>
+                        <para>
+                            L'emplacement du fichier keytab à utiliser pour valider les données
+d'identification obtenues à partir de KDC.
+                        </para>
+                        <para>
+                            Par défaut : /etc/krb5.keytab
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_store_password_if_offline (booléen)</term>
+                    <listitem>
+                        <para>
+                            Stocke le mot de passe de l'utilisateur si le fournisseur est hors-ligne,
+puis l'utilise pour obtenir un TGT lorsque le fournisseur redevient
+disponible en ligne.
+                        </para>
+                        <para>
+                            NOTE : cette fonctionnalité n'est actuellement disponible que sur les
+plates-formes Linux. Les mots de passe stockés de cette manière sont
+conservés en texte brut dans le trousseau de clés du noyau et sont
+potentiellement accessibles à l'utilisateur root (avec difficulté).
+                        </para>
+                        <para>
+                            Par défaut : false
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_renewable_lifetime (chaîne)</term>
+                    <listitem>
+                        <para>
+                            Demande un ticket renouvelable avec une durée de vie totale, donnée par un
+entier immédiatement suivi par une unité de temps :
+                        </para>
+                        <para>
+                            <emphasis>s</emphasis> pour secondes
+                        </para>
+                        <para>
+                            <emphasis>m</emphasis> pour minutes
+                        </para>
+                        <para>
+                            <emphasis>h</emphasis> pour heures
+                        </para>
+                        <para>
+                            <emphasis>d</emphasis> pour jours.
+                        </para>
+                        <para>
+                            Si aucune unité n'est spécifiée, <emphasis>s</emphasis> est utilisé.
+                        </para>
+                        <para>
+                            NOTE : il n'est pas possible de mélanger les unités. Pour indiquer une durée
+de vie renouvelable de une heure et trente minutes, utiliser « 90m » au lieu
+de « 1h30m ».
+                        </para>
+                        <para>
+                            Par défaut : non défini, c'est-à-dire que le TGT n'est pas renouvelable
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_lifetime (chaîne)</term>
+                    <listitem>
+                        <para>
+                            Demande un ticket avec une durée de vie, donnée par un entier immédiatement
+suivi par une unité de temps :
+                        </para>
+                        <para>
+                            <emphasis>s</emphasis> pour secondes
+                        </para>
+                        <para>
+                            <emphasis>m</emphasis> pour minutes
+                        </para>
+                        <para>
+                            <emphasis>h</emphasis> pour heures
+                        </para>
+                        <para>
+                            <emphasis>d</emphasis> pour jours.
+                        </para>
+                        <para>
+                            Si aucune unité n'est spécifiée, <emphasis>s</emphasis> est utilisé.
+                        </para>
+                        <para>
+                            NOTE : il n'est pas possible de mélanger les unités. Pour indiquer une durée
+de vie de une heure et trente minutes, utiliser « 90m » au lieu de « 1h30m
+».
+                        </para>
+                        <para>
+                            Par défaut : non défini, c'est-à-dire la durée de vie par défaut configurée
+dans le KDC.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_renew_interval (chaîne)</term>
+                    <listitem>
+                        <para>
+                            La durée, en secondes, entre deux vérifications pour savoir si le TGT doit
+être renouvelé. Les TGT sont renouvelés si environ la moitié de leur durée
+de vie est dépassée. Indiquée par un entier immédiatement suivi d'une unité
+de temps :
+                        </para>
+                        <para>
+                            <emphasis>s</emphasis> pour secondes
+                        </para>
+                        <para>
+                            <emphasis>m</emphasis> pour minutes
+                        </para>
+                        <para>
+                            <emphasis>h</emphasis> pour heures
+                        </para>
+                        <para>
+                            <emphasis>d</emphasis> pour jours.
+                        </para>
+                        <para>
+                            Si aucune unité n'est spécifiée, <emphasis>s</emphasis> est utilisé.
+                        </para>
+                        <para>
+                            NOTE : il n'est pas possible de mélanger les unités. Pour indiquer une durée
+de vie renouvelable de une heure et trente minutes, utiliser « 90m » au lieu
+de « 1h30m ».
+                        </para>
+                        <para>
+                             Si cette option n'est pas définie ou définie à 0, le renouvellement
+automatique est désactivé.
+                        </para>
+                        <para>
+                            Par défaut : non défini
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_use_fast (chaîne)</term>
+                    <listitem>
+                        <para>
+                            Active le flexible authentication secure tunneling (FAST) pour la
+pré-authentification Kerberos. Les options suivantes sont supportées :
+                        </para>
+                        <para>
+                            <emphasis>never</emphasis> : ne jamais utiliser FAST. Ceci équivaut à ne pas
+définir cette option.
+                        </para>
+                        <para>
+                            <emphasis>try</emphasis> : eassyer d'utiliser FAST. Si le serveur ne prend
+pas en charge FAST, continuer l'authentification sans.
+                        </para>
+                        <para>
+                            <emphasis>demander</emphasis>  : imposer d'utiliser FAST. L'authentification
+échoue si le serveur ne requiert pas FAST.
+                        </para>
+                        <para>
+                            Par défaut : non défini, i.e. FAST n'est pas utilisé.
+                        </para>
+                        <para>
+                            NOTE : un fichier keytab est requis pour utiliser FAST.
+                        </para>
+                        <para>
+                            NOTE : SSSD prend en charge le paramètre FAST uniquement avec MIT Kerberos
+version 1.8 et au-delà. L'utilisation de SSSD avec une version antérieure de
+MIT Kerberos avec cette option est une erreur de configuration.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_fast_principal (chaîne)</term>
+                    <listitem>
+                        <para>
+                            Spécifie le principal de serveur afin d'utiliser FAST.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_canonicalize (booléen)</term>
+                    <listitem>
+                        <para>
+                            Spécifie si les principaux du système et de l'utilisateur doivent être
+rendus canoniques. Cette fonctionnalité est disponible avec MIT Kerberos 1.7
+et versions suivantes.
+                        </para>
+
+                        <para>
+                            Par défaut : false
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_use_kdcinfo (booléen)</term>
+                    <listitem>
+                        <para>
+                            Indique si SSSD doit préciser aux bibliothèques Kerberos quels domaine et
+KDC utiliser. Cette option est activée par défaut, si elle est désactivée,
+la bibliothèque Kerberos doit être configurée à l'aide du fichier de
+configuration <citerefentry> <refentrytitle>krb5.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+                        </para>
+                        <para>
+                            Consulter la page de manuel de <citerefentry>
+<refentrytitle>sssd_krb5_locator_plugin</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry> pour plus d'informations sur le
+greffon de localisation.
+                        </para>
+                        <para>
+                            Par défaut : true
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_use_enterprise_principal (booléen)</term>
+                    <listitem>
+                        <para>
+                            Indique si le principal de l'utilisateur doit être traité comme un principal
+d'entreprise. Cf. la section 5 de la RFC 6806 pour plus de détails sur les
+principals d'entreprise.
+                        </para>
+
+                        <para>
+                            Par défaut : false (AD provider : true)
+                        </para>
+                        <para>
+                            The IPA provider will set to option to 'true' if it detects that the server
+is capable of handling enterprise principals and the option is not set
+explicitly in the config file.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_map_user (chaîne)</term>
+                    <listitem>
+                        <para>
+                             The list of mappings is given as a comma-separated list of pairs
+<quote>username:primary</quote> where <quote>username</quote> is a UNIX user
+name and <quote>primary</quote> is a user part of a kerberos principal. This
+mapping is used when user is authenticating using <quote>auth_provider =
+krb5</quote>.
+                        </para>
+
+                        <para>
+                             exemple : <programlisting>
+krb5_realm = REALM
+krb5_map_user = joe:juser,dick:richard
+</programlisting>
+                        </para>
+                        <para>
+                             <quote>joe</quote> and <quote>dick</quote> are UNIX user names and
+<quote>juser</quote> and <quote>richard</quote> are primaries of kerberos
+principals. For user <quote>joe</quote> resp.  <quote>dick</quote> SSSD will
+try to kinit as <quote>juser@REALM</quote> resp.
+<quote>richard@REALM</quote>.
+                        </para>
+
+                        <para>
+                            Par défaut : non défini
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+            </variablelist>
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/failover.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/service_discovery.xml" />
+
+    <refsect1 id='example'>
+        <title>EXEMPLE</title>
+        <para>
+            L'exemple suivant suppose que SSSD est correctement configuré et que FOO est
+l'un des domaines de la section <replaceable>[sssd]</replaceable>. Cet
+exemple montre uniquement la configuration de l'authentification Kerberos,
+et n'inclut aucun fournisseur d'identité.
+        </para>
+        <para>
+<programlisting>
+[domain/FOO]
+auth_provider = krb5
+krb5_server = 192.168.1.1
+krb5_realm = EXAMPLE.COM
+</programlisting>
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

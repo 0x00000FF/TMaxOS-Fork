@@ -1,0 +1,2648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-ldap</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Формати файлів та правила</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-ldap</refname>
+        <refpurpose>Модуль надання даних LDAP SSSD</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            На цій сторінці довідника описано налаштування доменів LDAP для
+<citerefentry> <refentrytitle>sssd</refentrytitle> <manvolnum>8</manvolnum>
+</citerefentry>. Щоб дізнатися більше про синтаксис налаштування, зверніться
+до розділу «ФОРМАТ ФАЙЛА» сторінки довідника <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.</para>
+        <para>
+            Ви можете налаштувати SSSD на використання декількох доменів LDAP.
+        </para>
+        <para>
+            У основному модулі LDAP передбачено підтримку засобів надання ідентифікатора
+(id), уповноважень (auth), доступу (access) та зміни паролів (chpass). Якщо
+ви бажаєте виконувати розпізнавання на сервері LDAP, потрібен TLS/SSL або
+LDAPS. У <command>sssd</command> <emphasis>не передбачено</emphasis>
+підтримки розпізнавання за допомогою шифрованого каналу обміну даними. Якщо
+сервер LDAP використовується лише для надання даних профілів, потреби у
+шифруванні каналу обміну даними немає. Будь ласка, зверніться до опису
+параметра налаштування <quote>ldap_access_filter</quote>, щоб дізнатися
+більше про використання LDAP, як засобу керування доступом.
+        </para>
+    </refsect1>
+
+    <refsect1 id='configuration-options'>
+        <title>ПАРАМЕТРИ НАЛАШТУВАННЯ</title>
+        <para>
+            Всі загальні параметри налаштування, які стосуються доменів SSSD, також
+стосуються і доменів LDAP. Зверніться до розділу «РОЗДІЛИ ДОМЕНІВ» сторінки
+підручника <citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>, щоб дізнатися більше.
+<variablelist>
+                <varlistentry>
+                    <term>ldap_uri, ldap_backup_uri (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає список адрес серверів LDAP, відокремлених комами, з якими SSSD має
+встановлювати з’єднання у порядку пріоритету. Зверніться до розділу
+«РЕЗЕРВ», щоб дізнатися більше про перемикання на резервні ресурси та
+додаткові сервери. Якщо не вказано, буде використано автоматичне виявлення
+служб. Докладніші відомості можна знайти у розділі «ПОШУК СЛУЖБ».
+                        </para>
+                        <para>
+                            Формат адреси має відповідати формату, що визначається RFC 2732:
+                        </para>
+                        <para>
+                            ldap[s]://&lt;вузол&gt;[:порт]
+                        </para>
+                        <para>
+                            У явних адресах IPv6 &lt;вузол&gt; має бути вказано у квадратних дужках, []
+                        </para>
+                        <para>
+                            приклад: ldap://[fc00::126:25]:389
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_chpass_uri, ldap_chpass_backup_uri (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає список адрес серверів LDAP, відокремлених комами, з якими SSSD має
+встановлювати з’єднання у порядку пріоритету для зміни пароля
+користувача. Зверніться до розділу «РЕЗЕРВ», щоб дізнатися більше про
+перемикання на резервні ресурси та додаткові сервери.
+                        </para>
+                        <para>
+                            Для того, щоб уможливити визначення служб, слід встановити значення
+параметра ldap_chpass_dns_service_name.
+                        </para>
+                        <para>
+                            Типове значення: порожнє, тобто використовується ldap_uri.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_search_base (рядок)</term>
+                    <listitem>
+                        <para>
+                            Типова базова назва домену, яку слід використовувати для виконання дій від
+імені користувача LDAP.
+                        </para>
+                        <para>
+                            Починаючи з SSSD 1.7.0, у SSSD передбачено підтримку визначення декількох
+основ для пошуку за допомогою таких синтаксичних конструкцій:
+                        </para>
+                        <para>
+                            основа_пошуку[?діапазон?[фільтр][?основа_пошуку?діапазон?[фільтр]]*]
+                        </para>
+                        <para>
+                            Діапазоном може бути одне зі значень, «base» (основа), «onelevel» (окремий
+рівень) або «subtree» (піддерево).
+                        </para>
+                        <para>
+                            Фільтром має бути коректний запис фільтрування LDAP, відповідно до
+специфікації http://www.ietf.org/rfc/rfc2254.txt
+                        </para>
+                        <para>
+                            Приклади:
+                        </para>
+                        <para>
+                            ldap_search_base = dc=example,dc=com (еквівалентне до)  ldap_search_base =
+dc=example,dc=com?subtree?
+                        </para>
+                        <para>
+                            ldap_search_base =
+cn=host_specific,dc=example,dc=com?subtree?(host=thishost)?dc=example.com?subtree?
+                        </para>
+                        <para>
+                            Зауваження: підтримки визначення декількох основ пошуку з посиланням на
+об’єкти з однаковими назвами (наприклад груп з однаковою назвою у двох
+різних основах пошуку) не передбачено. Такі визначення можуть призвести до
+непередбачуваних результатів на клієнтських комп’ютерах.
+                        </para>
+                        <para>
+                            Типове значення: якщо значення не встановлено, буде використано значення
+атрибута defaultNamingContext або namingContexts з RootDSE сервера
+LDAP. Якщо запису defaultNamingContext не існує або цей запис має порожнє
+значення, буде використано namingContexts. Для роботи системи потрібно, щоб
+атрибут namingContexts має єдине значення DN бази пошуку сервера
+LDAP. Підтримки визначення декількох значень не передбачено.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_schema (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає тип схеми, що використовується на сервері LDAP
+призначення. Відповідно до вибраної схеми, типові назви атрибутів, отриманих
+з сервера, можуть бути різними. Спосіб обробки атрибутів також може бути
+різним.
+                        </para>
+                        <para>
+                            У поточній версії передбачено підтримку чотирьох типів схем:
+                            <itemizedlist>
+                                <listitem>
+                                    <para>
+                                        rfc2307
+                                    </para>
+                                </listitem>
+                                <listitem>
+                                    <para>
+                                        rfc2307bis
+                                    </para>
+                                </listitem>
+                                <listitem>
+                                    <para>
+                                        IPA
+                                    </para>
+                                </listitem>
+                                <listitem>
+                                    <para>
+                                        AD
+                                    </para>
+                                </listitem>
+                            </itemizedlist>
+                        </para>
+                        <para>
+                            Основною відмінністю між цими типами схем є спосіб запису даних щодо участі
+у групах на сервері. Відповідно до rfc2307, список учасників груп
+впорядковується за користувачами у атрибуті
+<emphasis>memberUid</emphasis>. Відповідно до rfc2307bis і IPA, список
+учасників груп впорядковується за назвою домену (DN) і зберігається у
+атрибуті <emphasis>member</emphasis>. Відповідно до типу схеми AD,
+встановлюється відповідність зі значеннями Active Directory 2008r2.
+                        </para>
+                        <para>
+                            Типове значення: rfc2307
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_default_bind_dn (рядок)</term>
+                    <listitem>
+                        <para>
+                            Типова назва домену прив’язки, яку слід використовувати для виконання дій
+LDAP.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_default_authtok_type (рядок)</term>
+                    <listitem>
+                        <para>
+                            Тип розпізнавання для типової назви сервера прив’язки.
+                        </para>
+                        <para>
+                            У поточній версії передбачено підтримку двох механізмів:
+                        </para>
+                        <para>
+                            password
+                        </para>
+                        <para>
+                            obfuscated_password
+                        </para>
+                        <para>
+                            Типове значення: password
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_default_authtok (рядок)</term>
+                    <listitem>
+                        <para>
+                            Лексема розпізнавання типової назви сервера прив’язки. У поточній версії
+передбачено підтримку лише паролів у форматі звичайного тексту.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_object_class (рядок)</term>
+                    <listitem>
+                        <para>
+                            Клас об’єктів запису користувача у LDAP.
+                        </para>
+                        <para>
+                            Типове значення: posixAccount
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_name (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає назві облікового запису користувача.
+                        </para>
+                        <para>
+                            Типове значення: uid (rfc2307, rfc2307bis і IPA), sAMAccountName (AD)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_uid_number (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає ідентифікатору користувача.
+                        </para>
+                        <para>
+                            Типове значення: uidNumber
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_gid_number (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає ідентифікатору основної групи користувача.
+                        </para>
+                        <para>
+                            Типове значення: gidNumber
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_primary_group (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут основної групи Active Directory для встановлення відповідності
+ідентифікатора. Зауважте, що цей атрибут слід встановлювати вручну, лише
+якщо ви користуєтеся засобом надання даних <quote>ldap</quote> з прив'язкою
+до ідентифікаторів.
+                        </para>
+                        <para>
+                            Типове значення: unset (LDAP), primaryGroupID (AD)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_gecos (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає полю gecos користувача.
+                        </para>
+                        <para>
+                            Типове значення: gecos
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_home_directory (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить назву домашнього каталогу користувача.
+                        </para>
+                        <para>
+                            Типове значення: homeDirectory
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_shell (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить шлях до типової командної оболонки користувача.
+                        </para>
+                        <para>
+                            Типове значення: loginShell
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_uuid (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить UUID/GUID об’єкта користувача LDAP.
+                        </para>
+                        <para>
+                            Типове значення: не встановлено у загальному випадку, objectGUID для AD і
+ipaUniqueID для IPA
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_objectsid (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить objectSID об’єкта користувача LDAP. Зазвичай,
+потрібен лише для серверів ActiveDirectory.
+                        </para>
+                        <para>
+                            Типове значення: objectSid для ActiveDirectory, не встановлено для інших
+серверів.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_modify_timestamp (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить часову позначку останньої зміни батьківського
+об’єкта.
+                        </para>
+                        <para>
+                            Типове значення: modifyTimestamp
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_shadow_last_change (рядок)</term>
+                    <listitem>
+                        <para>
+                            У разі використання ldap_pwd_policy=shadow цей параметр містить назву
+атрибута LDAP, який є відповідником параметра  <citerefentry>
+<refentrytitle>shadow</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> (дати останньої зміни пароля).
+                        </para>
+                        <para>
+                            Типове значення: shadowLastChange
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_shadow_min (рядок)</term>
+                    <listitem>
+                        <para>
+                            У разі використання ldap_pwd_policy=shadow цей параметр містить назву
+атрибута LDAP, який є відповідником параметра  <citerefentry>
+<refentrytitle>shadow</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> (мінімального віку пароля).
+                        </para>
+                        <para>
+                            Типове значення: shadowMin
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_shadow_max (рядок)</term>
+                    <listitem>
+                        <para>
+                            У разі використання ldap_pwd_policy=shadow цей параметр містить назву
+атрибута LDAP, який є відповідником параметра  <citerefentry>
+<refentrytitle>shadow</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> (максимального віку пароля).
+                        </para>
+                        <para>
+                            Типове значення: shadowMax
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_shadow_warning (рядок)</term>
+                    <listitem>
+                        <para>
+                            У разі використання ldap_pwd_policy=shadow цей параметр містить назву
+атрибута LDAP, який є відповідником параметра  <citerefentry>
+<refentrytitle>shadow</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> (проміжку попередження щодо пароля).
+                        </para>
+                        <para>
+                            Типове значення: shadowWarning
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_shadow_inactive (рядок)</term>
+                    <listitem>
+                        <para>
+                            У разі використання ldap_pwd_policy=shadow цей параметр містить назву
+атрибута LDAP, який є відповідником параметра  <citerefentry>
+<refentrytitle>shadow</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> (тривалості періоду невикористання пароля).
+                        </para>
+                        <para>
+                            Типове значення: shadowInactive
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_shadow_expire (рядок)</term>
+                    <listitem>
+                        <para>
+                            У разі використання ldap_pwd_policy=shadow або
+ldap_account_expire_policy=shadow цей параметр містить назву атрибута LDAP,
+який є відповідником параметра  <citerefentry>
+<refentrytitle>shadow</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> (дати завершення строку дії пароля).
+                        </para>
+                        <para>
+                            Типове значення: shadowExpire
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_krb_last_pwd_change (рядок)</term>
+                    <listitem>
+                        <para>
+                            Якщо використано значення ldap_pwd_policy=mit_kerberos, цей параметр містить
+назву атрибута LDAP, у якому зберігається дата і час останньої зміни пароля
+у kerberos.
+                        </para>
+                        <para>
+                            Типове значення: krbLastPwdChange
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_krb_password_expiration (рядок)</term>
+                    <listitem>
+                        <para>
+                            Якщо використано значення ldap_pwd_policy=mit_kerberos, цей параметр містить
+назву атрибута LDAP, у якому зберігається дата і час завершення строку дії
+поточного пароля.
+                        </para>
+                        <para>
+                            Типове значення: krbPasswordExpiration
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_ad_account_expires (рядок)</term>
+                    <listitem>
+                        <para>
+                            Якщо вказано ldap_account_expire_policy=ad, цей параметр містить назву
+атрибута LDAP, у якому зберігаються дані щодо строку завершення дії
+облікового запису.
+                        </para>
+                        <para>
+                            Типове значення: accountExpires
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_ad_user_account_control (рядок)</term>
+                    <listitem>
+                        <para>
+                            Якщо вказано ldap_account_expire_policy=ad, цей параметр містить назву
+атрибута LDAP, у якому зберігаються дані щодо поля контрольного біта
+облікового запису користувача.
+                        </para>
+                        <para>
+                            Типове значення: userAccountControl
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_ns_account_lock (рядок)</term>
+                    <listitem>
+                        <para>
+                            Якщо вказано ldap_account_expire_policy=rhds або еквівалентне налаштування,
+цей параметр визначає, заборонено чи дозволено доступ.
+                        </para>
+                        <para>
+                            Типове значення: nsAccountLock
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_nds_login_disabled (рядок)</term>
+                    <listitem>
+                        <para>
+                            Якщо вказано ldap_account_expire_policy=nds, цей атрибут визначає, дозволено
+чи заборонено доступ.
+                        </para>
+                        <para>
+                            Типове значення: loginDisabled
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_nds_login_expiration_time (рядок)</term>
+                    <listitem>
+                        <para>
+                            Якщо вказано ldap_account_expire_policy=nds, цей атрибут визначає дату, до
+якої надано доступ.
+                        </para>
+                        <para>
+                            Типове значення: loginDisabled
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_nds_login_allowed_time_map (рядок)</term>
+                    <listitem>
+                        <para>
+                            Якщо вказано ldap_account_expire_policy=nds, цей атрибут визначає годити дня
+тижня, коли надається доступ.
+                        </para>
+                        <para>
+                            Типове значення: loginAllowedTimeMap
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_principal (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить Kerberos User Principal Name (UPN) користувача.
+                        </para>
+                        <para>
+                            Типове значення: krbPrincipalName
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_extra_attrs (рядок)</term>
+                    <listitem>
+                        <para>
+                            Відокремлений комами список атрибутів LDAP, які SSSD має отримувати разом зі
+звичайним набором атрибутів запису користувача.
+                        </para>
+                        <para>
+                            Список може або містити лише назви атрибутів LDAP, або відокремлені
+двокрапками кортежі з назви атрибута кешу SSSD та назви атрибута LDAP. Якщо
+вказано лише назву атрибута LDAP, атрибут зберігається до кешу
+буквально. Використання нетипової назви атрибута SSSD може бути потрібним
+середовищам, де налаштовано декілька доменів SSSD з різними схемами LDAP.
+                        </para>
+                        <para>
+                            Будь ласка, зауважте, що декілька назв атрибутів зарезервовано SSSD, зокрема
+атрибут «name». SSSD повідомить про помилку, якщо будь-які із зарезервованих
+назв атрибутів використано як назву додаткового атрибута.
+                        </para>
+                        <para>
+                            Приклади:
+                        </para>
+                        <para>
+                            ldap_user_extra_attrs = telephoneNumber
+                        </para>
+                        <para>
+                            Зберегти атрибут «telephoneNumber» з LDAP як «telephoneNumber» до кешу.
+                        </para>
+                        <para>
+                            ldap_user_extra_attrs = phone:telephoneNumber
+                        </para>
+                        <para>
+                            Зберегти атрибут «telephoneNumber» з LDAP як «phone» до кешу.
+                        </para>
+                        <para>
+                            Типове значення: not set
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry condition="with_ssh">
+                    <term>ldap_user_ssh_public_key (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, який містить відкриті ключі SSH користувача.
+                        </para>
+                        <para>
+                            Типове значення: sshPublicKey
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_force_upper_case_realm (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Деякі з серверів каталогів, наприклад Active Directory, можуть надавати
+частину області адреси UPN лише малими літерами (літерами нижнього
+регістру), що може призвести до невдалої спроби розпізнавання. Встановіть
+ненульове значення цього параметра, якщо ви бажаєте використовувати назву
+області у верхньому регістрі.
+                        </para>
+                        <para>
+                            Типове значення: false
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_enumeration_refresh_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає кількість секунд, протягом яких SSSD має очікувати до оновлення
+свого кешу нумерованих записів.
+                        </para>
+                        <para>
+                            Типове значення: 300
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_purge_cache_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає частоту пошуків у кеші неактивних записів (зокрема груп без
+учасників та користувачів, які ніколи не входили до системи) та вилучення
+цих записів з метою економії місця.
+                        </para>
+                        <para>
+                            Встановлення нульового значення цього параметра вимикає дію з очищення
+кешу. Будь ласка, зауважте, що якщо увімкнено нумерацію, дія з очищення є
+необхідною з метою виявлення записів, вилучених із сервера, її не можна
+вимикати. Типово, дія з очищення, якщо увімкнено нумерацію, виконується
+кожні 3 години.
+                        </para>
+                        <para>
+                            Типове значення: 0 (вимкнено)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_fullname (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає повному імені користувача.
+                        </para>
+                        <para>
+                            Типове значення: cn
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_member_of (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP зі списком груп, у яких бере участь користувач.
+                        </para>
+                        <para>
+                            Типове значення: memberOf
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_authorized_service (рядок)</term>
+                    <listitem>
+                        <para>
+                            Якщо access_provider=ldap і ldap_access_order=authorized_service, SSSD
+використовуватиме наявність атрибута authorizedService у записі користувача
+LDAP для визначення прав доступу.
+                        </para>
+                        <para>
+                            Спочатку визначаються явні заборони (!svc). Далі SSSD шукає явні дозволи
+(svc) і нарешті загальні дозволи або allow_all (*).
+                        </para>
+                        <para>
+                            Будь ласка, зауважте, що параметр налаштування ldap_access_order
+<emphasis>має</emphasis> включати <quote>authorized_service</quote>, щоб
+система змогла скористатися параметром ldap_user_authorized_service.
+                        </para>
+                        <para>
+                            Типове значення: authorizedService
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_authorized_host (рядок)</term>
+                    <listitem>
+                        <para>
+                            Якщо access_provider=ldap і ldap_access_order=host, SSSD використовуватиме
+наявність атрибута host у записі користувача LDAP для визначення прав
+доступу.
+                        </para>
+                        <para>
+                            Спочатку визначаються явні заборони (!host). Далі SSSD шукає явні дозволи
+(host) і нарешті загальні дозволи або allow_all (*).
+                        </para>
+                        <para>
+                            Будь ласка, зауважте, що параметр налаштування ldap_access_order
+<emphasis>має</emphasis> включати <quote>host</quote>, щоб можна було
+скористатися параметром ldap_user_authorized_host.
+                        </para>
+                        <para>
+                            Типове значення: host
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_authorized_rhost (рядок)</term>
+                    <listitem>
+                        <para>
+                            Якщо access_provider=ldap і ldap_access_order=rhost, SSSD використовуватиме
+наявність атрибута rhost у записі користувача LDAP для визначення прав
+доступу. Те саме стосується і процесу перевірки вузла.
+                        </para>
+                        <para>
+                            Спочатку визначаються явні заборони (!rhost). Далі SSSD шукає явні дозволи
+(rhost) і нарешті загальні дозволи або allow_all (*).
+                        </para>
+                        <para>
+                            Будь ласка, зауважте, що параметр налаштування ldap_access_order
+<emphasis>має</emphasis> включати <quote>rhost</quote>, щоб можна було
+скористатися параметром ldap_user_authorized_rhost.
+                        </para>
+                        <para>
+                            Типове значення: rhost
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_certificate (рядок)</term>
+                    <listitem>
+                        <para>
+                            Назва атрибута LDAP, що містить сертифікат X509 користувача.
+                        </para>
+                        <para>
+                            Типове значення: userCertificate;binary
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_email (рядок)</term>
+                    <listitem>
+                        <para>
+                            Назва атрибута LDAP, який містить адресу електронної пошти користувача.
+                        </para>
+                        <para>
+                            Зауваження: якщо адреса електронної пошти користувача конфліктує із адресою
+електронної пошти або повним ім'ям іншого користувача, SSSD не зможе
+обслуговувати належним чином записи таких користувачів. Якщо з якоїсь
+причини у декількох користувачів має бути одна адреса електронної пошти,
+встановіть для цього параметра довільну назву атрибута, щоб вимкнути пошук і
+вхід до системи за адресою електронної пошти.
+                        </para>
+                        <para>
+                            Типове значення: mail
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_group_object_class (рядок)</term>
+                    <listitem>
+                        <para>
+                            Клас об’єктів запису групи у LDAP.
+                        </para>
+                        <para>
+                            Типове значення: posixGroup
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_group_name (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає назві групи.
+                        </para>
+                        <para>
+                            Типове значення: cn (rfc2307, rfc2307bis і IPA), sAMAccountName (AD)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_group_gid_number (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає ідентифікатору групи.
+                        </para>
+                        <para>
+                            Типове значення: gidNumber
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_group_member (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, у якому містяться імена учасників групи.
+                        </para>
+                        <para>
+                            Типове значення: memberuid (rfc2307) / member (rfc2307bis)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_group_uuid (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить UUID/GUID об’єкта групи LDAP.
+                        </para>
+                        <para>
+                            Типове значення: не встановлено у загальному випадку, objectGUID для AD і
+ipaUniqueID для IPA
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_group_objectsid (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить objectSID об’єкта групи LDAP. Зазвичай, потрібен
+лише для серверів ActiveDirectory.
+                        </para>
+                        <para>
+                            Типове значення: objectSid для ActiveDirectory, не встановлено для інших
+серверів.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_group_modify_timestamp (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить часову позначку останньої зміни батьківського
+об’єкта.
+                        </para>
+                        <para>
+                            Типове значення: modifyTimestamp
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_group_type (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить ціле значення і позначає тип групи, а також,
+можливо, інші прапорці.
+                        </para>
+                        <para>
+                            Цей атрибут у поточній версії використовується лише засобом надання даних AD
+для визначення, чи є група локальною групою домену і чи має бути її
+відфільтровано у списку надійних (довірених) доменів.
+                        </para>
+                        <para>
+                            Типове значення: groupType у засобі надання даних AD, у інших засобах не
+встановлено
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_group_external_member (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, який посилається на записи учасників групи, які визначено у
+зовнішньому домені. У поточній версії передбачено підтримку лише зовнішніх
+записів учасників IPA.
+                        </para>
+                        <para>
+                            Типове значення: ipaExternalMember у засобі надання даних IPA, у інших
+засобах не визначено.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_group_nesting_level (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Якщо ldap_schema встановлено у значення формату схеми, у якому передбачено
+підтримку вкладеності груп (наприклад RFC2307bis), цей параметр визначає
+кількість рівнів вкладеності, які оброблятимуться SSSD. Значення цього
+параметра буде проігноровано, якщо використано схему RFC2307.
+                        </para>
+                        <para>
+                          Зауваження: за допомогою цього параметра визначається гарантований рівень
+вкладеності груп для обробки під час будь-якого пошуку. Втім, <emphasis>може
+бути</emphasis> повернуто і групи із більшим рівнем вкладеності, якщо під
+час попередніх пошуків відбувалася обробка вищих рівнів вкладеності. Крім
+того, послідовні пошуки інших груп можуть розширити набір результатів
+початкового пошуку, якщо запити щодо пошуку надходять повторно.
+                        </para>
+                        <para>
+                          Якщо значенням ldap_group_nesting_level є 0, вкладені групи взагалі не
+оброблятимуться. Втім, якщо з’єднання встановлено з Active-Directory Server
+2008 та новішими версіями з використанням <quote>id_provider=ad</quote>,
+слід також вимкнути використання груп реєстраційних записів (Token-Groups)
+встановленням для параметра ldap_use_tokengroups значення false з метою
+обмеження вкладеності у групах.
+                        </para>
+                        <para>
+                            Типове значення: 2
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_groups_use_matching_rule_in_chain</term>
+                    <listitem>
+                        <para>
+                            За допомогою цього параметра можна наказати SSSD скористатися перевагами
+специфічної для Active Directory можливості, яка надає змогу пришвидшити дії
+з пошуку груп у мережах зі складною системою груп або системою груп з
+високим рівнем вкладеності.
+                        </para>
+                        <para>
+                            Здебільшого, не варто вмикати цю можливість. Пришвидшення за її допомогою
+можна буде спостерігати лише у дуже складних випадках вкладеності груп.
+                        </para>
+                        <para>
+                            Якщо увімкнено цей параметр, SSSD використовуватиме можливість, якщо під час
+початкового сеансу з’єднання виявить, що на сервері передбачено підтримку
+можливості. Отже, насправді значення «True» означає «визначити автоматично».
+                        </para>
+                        <para>
+                            Зауваження: відомо, що у поточній версії цією можливістю можна скористатися
+лише для Active Directory 2008 R1 та пізніших версій. Докладніше про це
+можна дізнатися з <ulink
+url="http://msdn.microsoft.com/en-us/library/windows/desktop/aa746475%28v=vs.85%29.aspx">документації
+MSDN(TM)</ulink>.
+                        </para>
+                        <para>
+                            Типове значення: False
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_initgroups_use_matching_rule_in_chain</term>
+                    <listitem>
+                        <para>
+                            За допомогою цього параметра можна наказати SSSD скористатися перевагами
+специфічної для Active Directory можливості, яка може пришвидшити дії з
+початковими групами (initgroups). Особливо помітним таке пришвидшення є у
+системах зі складною системою груп або системою груп з високим рівнем
+вкладеності.
+                        </para>
+                        <para>
+                            Якщо увімкнено цей параметр, SSSD використовуватиме можливість, якщо під час
+початкового сеансу з’єднання виявить, що на сервері передбачено підтримку
+можливості. Отже, насправді значення «True» означає «визначити автоматично».
+                        </para>
+                        <para>
+                            Зауваження: відомо, що у поточній версії цією можливістю можна скористатися
+лише для Active Directory 2008 R1 та пізніших версій. Докладніше про це
+можна дізнатися з <ulink
+url="http://msdn.microsoft.com/en-us/library/windows/desktop/aa746475%28v=vs.85%29.aspx">документації
+MSDN(TM)</ulink>.
+                        </para>
+                        <para>
+                            Типове значення: False
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_use_tokengroups</term>
+                    <listitem>
+                        <para>
+                          За допомогою цього параметра можна увімкнути або вимкнути використання
+атрибута Token-Groups під час виконання initgroup для користувачів Active
+Directory Server 2008 та новіших версій.
+                        </para>
+                        <para>
+                            Типове значення: True для AD і IPA, інакше False.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_netgroup_object_class (рядок)</term>
+                    <listitem>
+                        <para>
+                            Клас об’єктів запису мережевої групи (netgroup) у LDAP.
+                        </para>
+                        <para>
+                            У надавачі даних IPA має бути використано ipa_netgroup_object_class.
+                        </para>
+                        <para>
+                            Типове значення: nisNetgroup
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_netgroup_name (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає назві мережевої групи (netgroup).
+                        </para>
+                        <para>
+                            У надавачі даних IPA має бути використано ipa_netgroup_name.
+                        </para>
+                        <para>
+                            Типове значення: cn
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_netgroup_member (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, у якому містяться імена учасників мережевої групи (netgroup).
+                        </para>
+                        <para>
+                            У надавачі даних IPA має бути використано ipa_netgroup_member.
+                        </para>
+                        <para>
+                            Типове значення: memberNisNetgroup
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_netgroup_triple (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить трійки мережевої групи (вузол, користувач, домен).
+                        </para>
+                        <para>
+                            Цим параметром не можна скористатися у надавачі даних IPA.
+                        </para>
+                        <para>
+                            Типове значення: nisNetgroupTriple
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_netgroup_modify_timestamp (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить часову позначку останньої зміни батьківського
+об’єкта.
+                        </para>
+                        <para>
+                            Цим параметром не можна скористатися у надавачі даних IPA.
+                        </para>
+                        <para>
+                            Типове значення: modifyTimestamp
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_host_object_class (рядок)</term>
+                    <listitem>
+                        <para>
+                            Клас об’єктів запису вузла у LDAP.
+                        </para>
+                        <para>
+                            Типове значення: ipService
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_host_name (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає назві вузла.
+                        </para>
+                        <para>
+                            Типове значення: cn
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_host_fqdn (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає повній назві вузла.
+                        </para>
+                        <para>
+                            Типове значення: fqdn
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_host_serverhostname (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає назві вузла.
+                        </para>
+                        <para>
+                            Типове значення: serverHostname
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_host_member_of (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP зі списком груп, у яких бере участь вузол.
+                        </para>
+                        <para>
+                            Типове значення: memberOf
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_host_search_base (рядок)</term>
+                    <listitem>
+                        <para>
+                            Необов’язковий. Використати вказаний рядок як основу пошуку об’єктів вузлів.
+                        </para>
+                        <para>
+                            Ознайомтеся з розділом щодо «ldap_search_base», щоб дізнатися більше про
+налаштування декількох основ пошуку.
+                        </para>
+                        <para>
+                            Типове значення: значення <emphasis>ldap_search_base</emphasis>
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry condition="with_ssh">
+                    <term>ldap_host_ssh_public_key (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, який містить відкриті ключі SSH вузла.
+                        </para>
+                        <para>
+                            Типове значення: sshPublicKey
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_host_uuid (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить UUID/GUID об’єкта вузла LDAP.
+                        </para>
+                        <para>
+                            Типове значення: not set
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_service_object_class (рядок)</term>
+                    <listitem>
+                        <para>
+                            Клас об’єктів запису служби у LDAP.
+                        </para>
+                        <para>
+                            Типове значення: ipService
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_service_name (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить назву атрибутів служби та замінників цих атрибутів.
+                        </para>
+                        <para>
+                            Типове значення: cn
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_service_port (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить номер порту, яким керує ця служба.
+                        </para>
+                        <para>
+                            Типове значення: ipServicePort
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_service_proto (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що містить протоколи, за яким може працювати ця служба.
+                        </para>
+                        <para>
+                            Типове значення: ipServiceProtocol
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_service_search_base (рядок)</term>
+                    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/ldap_search_bases.xml" />
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_search_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає час очікування на дані (у секундах) для виконання пошуків ldap,
+перш ніж пошук буде скасовано з поверненням кешованих даних (і переходом до
+автономного режиму роботи)
+                        </para>
+                        <para>
+                            Зауваження: роботу цього параметра буде змінено у наступних версіях
+SSSD. Ймовірно, його буде колись замінено на послідовність часів очікування
+для окремих типів пошуків.
+                        </para>
+                        <para>
+                            Типове значення: 6
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_enumeration_search_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає час очікування на дані (у секундах) для виконання пошуків номерів
+користувачів та груп у ldap, перш ніж пошук буде скасовано з поверненням
+кешованих даних (і переходом до автономного режиму роботи)
+                        </para>
+                        <para>
+                            Типове значення: 60
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_network_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає час очікування (у секундах), після завершення якого <citerefentry>
+<refentrytitle>poll</refentrytitle> <manvolnum>2</manvolnum>
+</citerefentry>/<citerefentry> <refentrytitle>select</refentrytitle>
+<manvolnum>2</manvolnum> </citerefentry> з наступним <citerefentry>
+<refentrytitle>connect</refentrytitle> <manvolnum>2</manvolnum>
+</citerefentry> повертається до стану бездіяльності.
+                        </para>
+                        <para>
+                            Типове значення: 6
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_opt_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає час очікування (у секундах), після завершення якого виклики до
+синхронних програмних інтерфейсів LDAP буде перервано, якщо не буде отримано
+відповіді. Також керує часом очікування під час обміну даними з KDC у
+випадку прив’язки SASL, часом очікування на дію з прив’язування LDAP,
+розширеної операції зі зміни пароля та дії StartTLS.
+                        </para>
+                        <para>
+                            Типове значення: 6
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_connection_expire_timeout (ціле значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає час очікування (у секундах), протягом якого підтримуватиметься
+з’єднання з сервером LDAP. По завершенню цього часу буде зроблено спробу
+повторно встановити з’єднання. У разі використання паралельно до SASL/GSSAPI
+буде використано перше за часом значення (це значення або значення строку
+дії TGT).
+                        </para>
+                        <para>
+                            Типове значення: 900 (15 хвилин)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_page_size (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначити кількість записів, які слід отримати з LDAP у відповідь на один
+запит. На деяких серверах LDAP визначено обмеження максимальної кількості на
+один запит.
+                        </para>
+                        <para>
+                            Типове значення: 1000
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_disable_paging (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Вимикає контроль сторінок LDAP. Цим параметром слід скористатися, якщо
+сервер LDAP повідомляє про підтримку контролю сторінок LDAP у своєму
+RootDSE, але цю підтримку не увімкнено або вона не працює належним чином.
+                        </para>
+                        <para>
+                            Приклад: сервери OpenLDAP з модулем контролю сторінок, встановленим на
+сервері, але не увімкненим, повідомляють про підтримку у RootDSE, але цією
+підтримкою не можна скористатися.
+                        </para>
+                        <para>
+                            Приклад: 389 DS має ваду, пов’язану з тим, що здатен підтримувати лише один
+процес контролю сторінок для одного з’єднання. У разі значного навантаження
+це може призвести до відмови у виконанні запитів.
+                        </para>
+                        <para>
+                            Типове значення: False
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_disable_range_retrieval (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Вимкнути отримання діапазону Active Directory.
+                        </para>
+                        <para>
+                            У Active Directory за допомогою правила MaxValRange (типове значення 1500
+записів) обмежується кількість записів, які може бути отримано під час
+пошуку. Якщо у певній групі міститься більше записів учасників, до відповіді
+буде включено специфічне для AD розширення діапазону. За допомогою цього
+параметра можна вимкнути обробку розширення діапазону, отже великі групи
+буде представлено як такі, у яких немає учасників.
+                        </para>
+                        <para>
+                            Типове значення: False
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sasl_minssf (ціле значення)</term>
+                    <listitem>
+                        <para>
+                            Під час обміну даними з сервером LDAP за допомогою SASL визначає мінімальний
+рівень захисту, потрібний для встановлення з’єднання. Значення цього
+параметра визначається OpenLDAP.
+                        </para>
+                        <para>
+                            Типове значення: типове для системи значення (зазвичай, визначається у
+ldap.conf)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_deref_threshold (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Вказує кількість учасників групи, записів яких має не вистачати у
+зовнішньому кеші для запуску загального пошуку з розіменуванням. Якщо
+пропущених записів буде менше за вказану кількість, пошук для них
+виконуватиметься окремо.
+                        </para>
+                        <para>
+                            Ви можете повністю вимкнути пошуки з отриманням значення об’єкта
+(розіменуванням), якщо вкажете значення 0.
+                        </para>
+                        <para>
+                            Пошук з розіменуванням — це отримання всіх записів учасників групи за одним
+викликом LDAP. У різних серверах LDAP може бути передбачено різні способи
+розіменування. У поточній версії передбачено підтримку серверів 389/RHDS,
+OpenLDAP та Active Directory.
+                        </para>
+                        <para>
+                            <emphasis>Зауваження:</emphasis> якщо у одній з основ пошуку визначається
+фільтр пошуку, покращення швидкодії фільтрів розіменування буде вимкнено,
+незалежно від використання цього параметра.
+                        </para>
+                        <para>
+                            Типове значення: 10
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_tls_reqcert (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає перелік перевірок, які слід виконати для сертифікатів серверів у
+сеансі TLS, якщо такі перевірки слід виконувати. Може бути визначено одне з
+таких значень:
+                        </para>
+                        <para>
+                            <emphasis>never</emphasis> = клієнт не надсилатиме запиту і не перевірятиме
+жодних сертифікатів сервера.
+                        </para>
+                        <para>
+                            <emphasis>allow</emphasis> = надіслати запит щодо сертифіката сервера. Якщо
+сертифікат не буде надано, продовжити сеанс у звичайному режимі. Якщо буде
+надано помилковий сертифікат, ігнорувати і продовжити сеанс у звичайному
+режимі.
+                        </para>
+                        <para>
+                            <emphasis>try</emphasis> = надіслати запит щодо сертифіката сервера. Якщо
+сертифікат не буде надано, продовжити сеанс у звичайному режимі. Якщо буде
+надано помилковий сертифікат, негайно перервати сеанс.
+                        </para>
+                        <para>
+                            <emphasis>demand</emphasis> = надіслати запит щодо сертифіката сервера. Якщо
+сертифікат не буде надано або буде надано помилковий сертифікат, негайно
+перервати сеанс.
+                        </para>
+                        <para>
+                            <emphasis>hard</emphasis> = те саме, що і <quote>demand</quote>
+                        </para>
+                        <para>
+                            Типове значення: hard
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_tls_cacert (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає файл, який містить сертифікати для всіх служб сертифікації, які
+розпізнаються <command>sssd</command>.
+                        </para>
+                        <para>
+                            Типове значення: використовувати типові параметри OpenLDAP, що зберігаються
+у <filename>/etc/openldap/ldap.conf</filename>
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_tls_cacertdir (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає шлях до каталогу, де у окремих файлах містяться сертифікати служб
+сертифікації (CA). Типовими назвами файлів є хеші сертифікатів з додаванням
+«.0». Для створення відповідних назв можна скористатися
+<command>cacertdir_rehash</command>, якщо ця програма є доступною.
+                        </para>
+                        <para>
+                            Типове значення: використовувати типові параметри OpenLDAP, що зберігаються
+у <filename>/etc/openldap/ldap.conf</filename>
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_tls_cert (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає файл, який містить сертифікат для ключа клієнта.
+                        </para>
+                        <para>
+                            Типове значення: not set
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_tls_key (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає файл, у якому міститься ключ клієнта.
+                        </para>
+                        <para>
+                            Типове значення: not set
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_tls_cipher_suite (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає прийнятні комплекти програм для шифрування. Записи у типовому
+списку слід відокремлювати комами. З форматом можна ознайомитися на сторінці
+довідника до <citerefentry><refentrytitle>ldap.conf</refentrytitle>
+<manvolnum>5</manvolnum></citerefentry>.
+                        </para>
+                        <para>
+                            Типове значення: використовувати типові параметри OpenLDAP, що зберігаються
+у <filename>/etc/openldap/ldap.conf</filename>
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_id_use_start_tls (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, що з’єднання id_provider має також використовувати <systemitem
+class="protocol">tls</systemitem> для захисту каналу.
+                        </para>
+                        <para>
+                            Типове значення: false
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_id_mapping (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, що SSSD має намагатися встановити відповідність ідентифікаторів
+користувача і групи на основі атрибутів ldap_user_objectsid та
+ldap_group_objectsid, замість атрибутів ldap_user_uid_number та
+ldap_group_gid_number.
+                        </para>
+                        <para>
+                            У поточній версії у цій можливості передбачено підтримку лише встановлення
+відповідності objectSID у ActiveDirectory.
+                        </para>
+                        <para>
+                            Типове значення: false
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_min_id, ldap_max_id (ціле число)</term>
+                    <listitem>
+                        <para>
+                            На відміну від прив’язування ідентифікаторів на основі SID, яке
+використовується, якщо параметр ldap_id_mapping має значення true, діапазон
+дозволених ідентифікаторів для ldap_user_uid_number і ldap_group_gid_number
+є необмеженим. У конфігураціях з піддоменами та довіреними доменами це може
+призвести до конфліктів ідентифікаторів. Щоб уникнути конфліктів, можна
+встановити значення ldap_min_id і ldap_max_id для обмеження дозволеного
+діапазону ідентифікаторів, які буде прочитано безпосередньо з сервера. Після
+цього піддомени можуть вибирати інші діапазони для прив’язування
+ідентифікаторів.
+                        </para>
+                        <para>
+                            Типове значення: не встановлено (обидва параметри встановлено у значення 0)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sasl_mech (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає механізм SASL, який слід використовувати. У поточній версії
+перевірено і підтримується лише механізм GSSAPI.
+                        </para>
+                        <para>
+                            Типове значення: not set
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sasl_authid (рядок)</term>
+                    <listitem>
+                        <para>
+                            Specify the SASL authorization id to use.  When GSSAPI is used, this
+represents the Kerberos principal used for authentication to the directory.
+This option can either contain the full principal (for example
+host/myhost@EXAMPLE.COM) or just the principal name (for example
+host/myhost). By default, the value is not set and the following principals
+are used: <programlisting>
+hostname@REALM
+netbiosname$@REALM
+host/hostname@REALM
+*$@REALM
+host/*@REALM
+host/*
+                            </programlisting> If none of them are
+found, the first principal in keytab is returned.
+                        </para>
+                        <para>
+                            Типове значення: вузол/назва_вузла@ОБЛАСТЬ
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sasl_realm (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає область SASL, яку слід використовувати. Якщо не вказано значення,
+типовим значенням цього параметра є значення krb5_realm. Якщо
+ldap_sasl_authid також містить запис області, цей параметр буде
+проігноровано.
+                        </para>
+                        <para>
+                            Типове значення: значення krb5_realm.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sasl_canonicalize (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Якщо встановлено значення true (1), бібліотека LDAP виконувати зворотній
+пошук з метою переведення назв вузлів у канонічну форму під час прив’язки до
+SASL.
+                        </para>
+                        <para>
+                            Типове значення: false;
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_krb5_keytab (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає таблицю ключів, яку слід використовувати разом з SASL/GSSAPI.
+                        </para>
+                        <para>
+                            Типове значення: системна таблиця ключів, зазвичай
+<filename>/etc/krb5.keytab</filename>
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_krb5_init_creds (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, що id_provider має ініціалізувати реєстраційні дані Kerberos
+(TGT). Цю дію буде виконано, лише якщо використовується SASL і вибрано
+механізм GSSAPI.
+                        </para>
+                        <para>
+                            Типове значення: true
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_krb5_ticket_lifetime (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає строк дії (у секундах) TGT, якщо використовується GSSAPI.
+                        </para>
+                        <para>
+                            Типове значення: 86400 (24 години)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_server, krb5_backup_server (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає список IP-адрес або назв вузлів, відокремлених комами, серверів
+Kerberos, з якими SSSD має встановлювати з’єднання. Список має бути
+впорядковано за пріоритетом.  Докладніше про резервування та додаткові
+сервери можна дізнатися з розділу «РЕЗЕРВ». До адрес або назв вузлів може
+бути додано номер порту (перед номером слід вписати двокрапку). Якщо
+параметр матиме порожнє значення, буде увімкнено виявлення служб. Докладніше
+про виявлення служб можна дізнатися з розділу «ПОШУК СЛУЖБ».
+                        </para>
+                        <para>
+                            Під час використання виявлення служб для серверів KDC або kpasswd SSSD
+спочатку намагається знайти записи DNS, у яких визначається протокол
+_udp. Використання протоколу _tcp відбувається, лише якщо таких записів не
+вдасться знайти.
+                        </para>
+                        <para>
+                            У попередніх випусках SSSD цей параметр мав назву «krb5_kdcip». У поточній
+версії передбачено розпізнавання цієї застарілої назви, але користувачам
+варто перейти на використання «krb5_server» у файлах налаштувань.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_realm (рядок)</term>
+                    <listitem>
+                        <para>
+                            Вказати область Kerberos (для розпізнавання за SASL/GSSAPI).
+                        </para>
+                        <para>
+                            Типове значення: типове значення системи,
+див. <filename>/etc/krb5.conf</filename>
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_canonicalize (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, чи слід перетворювати реєстраційний запис вузла у канонічну форму
+під час встановлення з’єднання з сервером LDAP. Цю можливість передбачено з
+версії MIT Kerberos >= 1.7
+                        </para>
+
+                        <para>
+                            Типове значення: false
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_use_kdcinfo (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, чи слід SSSD вказувати бібліотекам Kerberos, яку область і які
+значення KDC слід використовувати. Типово, дію параметра увімкнено. Якщо ви
+вимкнете його, вам слід налаштувати бібліотеку Kerberos за допомогою файла
+налаштувань <citerefentry> <refentrytitle>krb5.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+                        </para>
+                        <para>
+                            Див. сторінку підручника (man) <citerefentry>
+<refentrytitle>sssd_krb5_locator_plugin</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry>, щоб дізнатися більше про додаток
+пошуку.
+                        </para>
+                        <para>
+                            Типове значення: true
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_pwd_policy (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає правил оцінки строку дії пароля на боці клієнта. Можна
+використовувати такі значення:
+                        </para>
+                        <para>
+                            <emphasis>none</emphasis> — не використовувати перевірки на боці клієнта. У
+разі використання цього варіанта перевірку на боці сервера вимкнено не буде.
+                        </para>
+                        <para>
+                            <emphasis>shadow</emphasis> — використовувати атрибути у стилі
+<citerefentry><refentrytitle>shadow</refentrytitle>
+<manvolnum>5</manvolnum></citerefentry> для визначення того, чи чинним є
+пароль.
+                        </para>
+                        <para>
+                            <emphasis>mit_kerberos</emphasis> — використовувати атрибути MIT Kerberos
+для визначення завершення строку дії пароля. У разі зміни пароля
+скористайтеся chpass_provider=krb5 для оновлення цих атрибутів.
+                        </para>
+                        <para>
+                            Типове значення: none
+                        </para>
+                        <para>
+                            <emphasis>Зауваження</emphasis>: якщо правила поводження з паролями
+налаштовано на боці сервера, ці правила мають пріоритет над правилами,
+встановленими за допомогою цього параметра.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_referrals (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, чи має бути увімкнено автоматичне визначення напрямків пошуку.
+                        </para>
+                        <para>
+                            Зауважте, що sssd підтримує визначення напрямків, лише якщо систему зібрано
+з версією OpenLDAP 2.4.13 або новішою версією.
+                        </para>
+                        <para>
+                            Перехід за спрямуваннями може призвести до значних втрат швидкодії у
+середовищах, де такі спрямування використовуються широко. Прикладом такого
+середовища може бути Microsoft Active Directory. Якщо у вашому середовищі
+спрямування не є обов’язковими, встановлення для цього параметра значення
+«false» може значно пришвидшити роботу.
+                        </para>
+                        <para>
+                            Типове значення: true
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_dns_service_name (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає назву служби, яку буде використано у разі вмикання визначення
+служб.
+                        </para>
+                        <para>
+                            Типове значення: ldap
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_chpass_dns_service_name (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає назву служби, яку буде використано для пошуку сервера LDAP, який
+уможливлює зміну паролів, у разі вмикання визначення служб.
+                        </para>
+                        <para>
+                            Типове значення: не встановлено, тобто пошук служб вимкнено
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_chpass_update_last_change (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, чи слід оновлювати атрибут ldap_user_shadow_last_change даними
+щодо кількості днів з часу виконання дії зі зміни пароля.
+                        </para>
+                        <para>
+                            Типове значення: False
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_access_filter (рядок)</term>
+                    <listitem>
+                        <para>
+                            Якщо використовується access_provider = ldap та ldap_access_order = filter
+(типова поведінка), цей параметр є обов’язковим. Він вказує критерії
+фільтрування LDAP, яким має задовольняти запис користувача для надання
+доступу до цього вузла. Якщо визначено access_provider = ldap та
+ldap_access_order = filter, а цей параметр не встановлено, доступ буде
+заборонено всім користувачам. Щоб змінити таку типову поведінку системи,
+скористайтеся параметром access_provider = permit. Будь ласка, зауважте, що
+цей фільтр застосовуватиметься лише до запису користувача LDAP, отже
+фільтрування, засноване на вкладених групах може не працювати (наприклад,
+атрибут memberOf для записів AD вказує лише на безпосередні батьківські
+записи). Якщо вам потрібне фільтрування, засноване на вкладених групах, будь
+ласка, скористайтеся параметром <citerefentry>
+<refentrytitle>sssd-simple</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>.
+                        </para>
+                        <para>
+                            Приклад:
+                        </para>
+                        <programlisting>
+access_provider = ldap
+ldap_access_filter = (employeeType=admin)
+                        </programlisting>
+                        <para>
+                            У прикладі доступ до цього вузла обмежено користувачами, чий атрибут
+employeeType встановлено у значення «admin».
+                        </para>
+                        <para>
+                            Автономне кешування для цієї можливості обмежено визначенням того, чи було
+надано користувачеві під час попередньої спроби увійти до системи з мережі
+права доступу. Якщо під час останньої спроби увійти такі права було надано,
+система продовжуватиме надавати права доступу у автономному режимі. Якщо ж
+таких прав не було надано, у автономному режимі їх також не буде надано.
+                        </para>
+                        <para>
+                            Типове значення: порожній рядок
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_account_expire_policy (рядок)</term>
+                    <listitem>
+                        <para>
+                            За допомогою цього параметра може бути увімкнено визначення атрибутів
+керування доступом на боці клієнта.
+                        </para>
+                        <para>
+                            Будь ласка, зауважте, що завжди варто використовувати керування доступом на
+боці сервера, тобто сервер LDAP має відмовляти у запитах щодо прив’язування
+з відповідним кодом помилки, навіть якщо вказано правильний пароль.
+                        </para>
+                        <para>
+                            Можна використовувати такі значення:
+                        </para>
+                        <para>
+                            <emphasis>shadow</emphasis>: це значення ldap_user_shadow_expire допомагає
+визначити, чи завершено строк дії облікового запису.
+                        </para>
+                        <para>
+                            <emphasis>ad</emphasis>: скористатися значенням 32-бітового поля
+ldap_user_ad_user_account_control і дозволити доступ, якщо другий біт має
+нульове значення. Якщо атрибут не буде знайдено, доступ буде
+дозволено. Також буде перевірено, чи не вичерпано строк дії облікового
+запису.
+                        </para>
+                        <para>
+                            <emphasis>rhds</emphasis>, <emphasis>ipa</emphasis>,
+<emphasis>389ds</emphasis>: використовувати для перевірки доступу значення
+ldap_ns_account_lock.
+                        </para>
+                        <para>
+                            <emphasis>nds</emphasis>: для перевірки доступу використовувати значення
+ldap_user_nds_login_allowed_time_map, ldap_user_nds_login_disabled і
+ldap_user_nds_login_expiration_time. Якщо не буде виявлено жодного з цих
+атрибутів, надати доступ.
+                            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/experimental.xml" />
+                        </para>
+                        <para>
+                            Будь ласка, зауважте, що параметр налаштування ldap_access_order
+<emphasis>має</emphasis> включати <quote>expire</quote>, щоб можна було
+користуватися параметром ldap_account_expire_policy.
+                        </para>
+                        <para>
+                            Типове значення: порожній рядок
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_access_order (рядок)</term>
+                    <listitem>
+                        <para>
+                            Список відокремлених комами параметрів керування доступом. Можливі значення
+списку:
+                        </para>
+                        <para>
+                            <emphasis>filter</emphasis>: використовувати ldap_access_filter
+                        </para>
+                        <para>
+                            <emphasis>lockout</emphasis>: використовувати блокування облікових
+записів. Якщо встановлено, цей параметр забороняє доступ, якщо існує атрибут
+ldap «pwdAccountLockedTime» і його значенням є «000001010000Z». Будь ласка,
+ознайомтеся із документацією до параметра ldap_pwdlockout_dn. Зауважте, що
+для працездатності цієї можливості слід встановити «access_provider = ldap».
+                        </para>
+                        <para>
+                            <emphasis> Будь ласка, зауважте, що цей параметр має нижчий пріоритет за
+параметр «ppolicy», його може бути вилучено у наступних випусках.
+</emphasis>
+                        </para>
+                        <para>
+                            <emphasis>ppolicy</emphasis>: використовувати блокування облікових
+записів. Якщо встановлено, забороняє доступ у випадку наявності атрибута
+ldap «pwdAccountLockedTime» рівного «000001010000Z» або такого, що
+відповідає моменту часу у минулому. Значення атрибута «pwdAccountLockedTime»
+має завершуватися на «Z», що позначає часовий пояс UTC. Підтримки інших
+часових поясів у поточній версії не передбачено, їхнє використання
+призводитиме до появи повідомлення про заборону доступу, коли користувачі
+намагатимуться увійти до системи. Докладніший опис можна знайти у розділі
+щодо параметра ldap_pwdlockout_dn. Будь ласка, зауважте, що для
+працездатності цього параметра слід встановити значення «access_provider =
+ldap».
+                        </para>
+
+                        <para>
+                            <emphasis>expire</emphasis>: використовувати ldap_account_expire_policy
+                        </para>
+                        <para>
+                            <emphasis>pwd_expire_policy_reject, pwd_expire_policy_warn,
+pwd_expire_policy_renew: </emphasis> Ці параметри корисні, якщо користувачам
+потрібні попередження щодо скорого завершення строку дії пароля, і у
+випадках, коли розпізнавання засновано на відмінних від паролів методах,
+наприклад на ключах SSH.
+                       </para>
+                       <para>
+                            Відмінність між цими параметрами полягає у дії, яку буде виконано, якщо
+строк дії пароля вичерпано: pwd_expire_policy_reject — користувачеві буде
+заборонено вхід до системи, pwd_expire_policy_warn — користувач ще зможе
+увійти до системи, pwd_expire_policy_renew — система попросить користувача
+негайно змінити пароль.
+                        </para>
+                        <para>
+                            Зауважте, що якщо строк дії пароля вичерпано, запит із явним повідомленням
+від SSSD не надходитиме.
+                        </para>
+                        <para>
+                            Будь ласка, зауважте, що для того, щоб цим можна було скористатися, слід
+встановити «access_provider = ldap». Крім того, слід встановити для
+параметра «ldap_pwd_policy» відповідні правила поводження із паролями.
+                        </para>
+                        <para>
+                            <emphasis>authorized_service</emphasis>: використовувати для визначення
+можливості доступу атрибут authorizedService
+                        </para>
+                        <para>
+                            <emphasis>host</emphasis>: за допомогою цього атрибута вузла можна визначити
+права доступу
+                        </para>
+                        <para>
+                            <emphasis>rhost</emphasis>: використовувати атрибут rhost для визначення
+того, чи матиме віддалений вузол доступ
+                        </para>
+                        <para>
+                            Будь ласка, зауважте, що значення поля rhost у pam встановлюється
+програмою. Варто перевірити, що програма надсилає pam, перш ніж вмикати цей
+варіант керування доступом.
+                        </para>
+                        <para>
+                            Типове значення: filter
+                        </para>
+                        <para>
+                             Зауважте, що програма повідомить про помилку, якщо одне значення було
+використано декілька разів.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_pwdlockout_dn (рядок)</term>
+                    <listitem>
+                        <para>
+                           За допомогою цього параметра визначається DN запису правил поводження із
+паролями на сервері LDAP. Будь ласка, зауважте, що те, що цього параметра не
+буде у sssd.conf, у випадку увімкненого блокування облікових записів
+призведе до заборони доступу, оскільки атрибути ppolicy на сервері LDAP не
+можна буде перевірити належним чином.
+                        </para>
+                        <para>
+                          Приклад: cn=ppolicy,ou=policies,dc=example,dc=com
+                        </para>
+                        <para>
+                          Типове значення: cn=ppolicy,ou=policies,$ldap_search_base
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_deref (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає спосіб виконання розіменовування псевдонімів під час виконання
+пошуку. Можливі такі варіанти:
+                        </para>
+                        <para>
+                            <emphasis>never</emphasis>: ніколи не виконувати розіменування псевдонімів.
+                        </para>
+                        <para>
+                            <emphasis>searching</emphasis>: розіменування псевдонімів відбувається у
+межах основного об’єкта, а не на основі визначення місця основного об’єкта
+пошуку.
+                        </para>
+                        <para>
+                            <emphasis>finding</emphasis>: розіменування псевдонімів відбувається лише
+під час визначення місця основного об’єкта пошуку.
+                        </para>
+                        <para>
+                            <emphasis>always</emphasis>: розіменування псевдонімів відбувається як під
+час пошуку, так і під час визначення місця основного об’єкта пошуку.
+                        </para>
+                        <para>
+                            Типове значення: не встановлено (обробка бібліотеками LDAP клієнта за
+сценарієм <emphasis>never</emphasis>)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_rfc2307_fallback_to_local_users (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Надає змогу зберігати локальних користувачів як учасників групи LDAP для
+серверів, у яких використовується схема RFC2307.
+                        </para>
+                        <para>
+                            У деяких середовищах, де використовується схема RFC2307, локальних
+користувачів можна зробити учасниками груп LDAP додаванням імен цих
+користувачів до атрибута memberUid. Узгодженість домену може бути
+скомпрометовано, якщо буде виконано подібне додавання учасника, тому SSSD за
+звичайних умов вилучає записи користувачів, яких «не вистачає», з кешованих
+даних щодо участі у групах, щойно nsswitch спробує отримати дані щодо
+користувачів за допомогою виклику getpw*() або initgroups().
+                        </para>
+                        <para>
+                            У разі використання цього параметра програма повертається до перевірки
+посилань на локальних користувачів і кешує їх так, що наступні виклики
+initgroups() розширюватимуть список локальних користувачів додатковими
+групами LDAP.
+                       </para>
+                        <para>
+                            Типове значення: false
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>wildcard_limit (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає верхню межу для кількості записів, які отримуватимуться під час
+пошуку з використанням символів-замінників.
+                        </para>
+                        <para>
+                            У поточній версії пошук із використанням символів-замінників передбачено
+лише для відповідача InfoPipe.
+                        </para>
+                        <para>
+                            Типове значення: 1000 (часто розмір однієї сторінки)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+            </variablelist>
+        </para>
+    </refsect1>
+
+    <refsect1 id='sudo-options' condition="with_sudo">
+        <title>ПАРАМЕТРИ SUDO</title>
+        <para>
+            Докладні настанов щодо налаштовування sudo_provider можна знайти на сторінці
+довідника (man) <citerefentry> <refentrytitle>sssd-sudo</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+        </para>
+
+        <para>
+            <variablelist>
+                <varlistentry>
+                    <term>ldap_sudorule_object_class (рядок)</term>
+                    <listitem>
+                        <para>
+                            Клас об’єктів запису правила sudo у LDAP.
+                        </para>
+                        <para>
+                            Типове значення: sudoRole
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudorule_name (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає назві правила sudo.
+                        </para>
+                        <para>
+                            Типове значення: cn
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudorule_command (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає назві команди.
+                        </para>
+                        <para>
+                            Типове значення: sudoCommand
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudorule_host (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, який відповідає назві вузла (або IP-адресі вузла, IP-мережі
+вузла, мережевій групі вузла)
+                        </para>
+                        <para>
+                            Типове значення: sudoHost
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudorule_user (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає назві імені користувача (або UID, назві групи
+або назві мережевої групи користувача)
+                        </para>
+                        <para>
+                            Типове значення: sudoUser
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudorule_option (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає параметрам sudo.
+                        </para>
+                        <para>
+                            Типове значення: sudoOption
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudorule_runasuser (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає користувачеві, від імені якого можна виконувати
+команди.
+                        </para>
+                        <para>
+                            Типове значення: sudoRunAsUser
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudorule_runasgroup (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає назві групи або GID, від імені якої можна
+виконувати команди.
+                        </para>
+                        <para>
+                            Типове значення: sudoRunAsGroup
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudorule_notbefore (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає даті і часу набуття чинності правилом sudo.
+                        </para>
+                        <para>
+                            Типове значення: sudoNotBefore
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudorule_notafter (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає даті і часу втрати чинності правилом sudo.
+                        </para>
+                        <para>
+                            Типове значення: sudoNotAfter
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudorule_order (рядок)</term>
+                    <listitem>
+                        <para>
+                            Атрибут LDAP, що відповідає порядковому номеру правила.
+                        </para>
+                        <para>
+                            Типове значення: sudoOrder
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudo_full_refresh_interval (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Проміжок часу у секундах між послідовними повними оновленнями правил sudo
+SSSD у автоматичному режимі. Під час таких оновлень буде отримано повний
+набір правил, що зберігаються на сервері.
+                        </para>
+                        <para>
+                            Це значення має перевищувати значення
+<emphasis>ldap_sudo_smart_refresh_interval </emphasis>
+                        </para>
+                        <para>
+                            Типове значення: 21600 (6 годин)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudo_smart_refresh_interval (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Проміжок часу у секундах між послідовними кмітливими оновленнями правил sudo
+SSSD у автоматичному режимі. Під час таких оновлень буде отримано всі дані
+правил, USN яких перевищує найбільше значення USN у кешованих правилах.
+                        </para>
+                        <para>
+                            Якщо підтримки атрибутів USN на сервері не передбачено, буде використано
+дані атрибута modifyTimestamp.
+                        </para>
+                        <para>
+                            Типове значення: 900 (15 хвилин)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudo_use_host_filter (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Якщо визначено значення true, SSSD отримуватиме лише правила, що стосуються
+цього комп’ютера (на основі адрес вузла або мережі у форматах IPv4 і IPv6 та
+назв вузлів).
+                        </para>
+                        <para>
+                            Типове значення: true
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudo_hostnames (рядок)</term>
+                    <listitem>
+                        <para>
+                            Список назв вузлів або повних доменних назв, відокремлених пробілами, для
+фільтрування списку правил.
+                        </para>
+                        <para>
+                            Якщо значення цього параметра є порожнім, SSSD намагатиметься визначити
+назву вузла та повну назву комп’ютера у домені у автоматичному режимі.
+                        </para>
+                        <para>
+                            Якщо для <emphasis>ldap_sudo_use_host_filter</emphasis> встановлено значення
+<emphasis>false</emphasis>, цей параметр ні на що не впливатиме.
+                        </para>
+                        <para>
+                            Типове значення: не вказано
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudo_ip (рядок)</term>
+                    <listitem>
+                        <para>
+                            Список адрес вузлів або мереж у форматах IPv4 і IPv6 для фільтрування списку
+правил.
+                        </para>
+                        <para>
+                            Якщо значення цього параметра є порожнім, SSSD намагатиметься визначити
+адресу у автоматичному режимі.
+                        </para>
+                        <para>
+                            Якщо для <emphasis>ldap_sudo_use_host_filter</emphasis> встановлено значення
+<emphasis>false</emphasis>, цей параметр ні на що не впливатиме.
+                        </para>
+                        <para>
+                            Типове значення: не вказано
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudo_include_netgroups (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Якщо вказано значення true, SSSD отримуватиме всі правила, що містять
+мережеву групу (netgroup) у атрибуті sudoHost.
+                        </para>
+                        <para>
+                            Якщо для <emphasis>ldap_sudo_use_host_filter</emphasis> встановлено значення
+<emphasis>false</emphasis>, цей параметр ні на що не впливатиме.
+                        </para>
+                        <para>
+                            Типове значення: true
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_sudo_include_regexp (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Якщо вказано значення true, SSSD отримуватиме всі правила, що містять шаблон
+заміни у атрибуті sudoHost.
+                        </para>
+                        <para>
+                            Якщо для <emphasis>ldap_sudo_use_host_filter</emphasis> встановлено значення
+<emphasis>false</emphasis>, цей параметр ні на що не впливатиме.
+                        </para>
+                        <para>
+                            Типове значення: true
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+        <para>
+            На цій сторінці довідника наведено дані щодо відповідності назв
+атрибутів. Докладний опис семантики атрибутів, пов’язаних з sudo, можна
+знайти у довідці з <citerefentry>
+<refentrytitle>sudoers.ldap</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>.
+        </para>
+    </refsect1>
+
+    <refsect1 id='autofs-options' condition="with_autofs">
+        <title>ПАРАМЕТРИ AUTOFS</title>
+        <para>
+            Деякі типові значення параметрів, описаних нижче, залежать від бази даних
+LDAP.
+        </para>
+        <para>
+            <variablelist>
+                <varlistentry>
+                    <term>ldap_autofs_map_master_name (рядок)</term>
+                    <listitem>
+                        <para>
+                            Назва основної карти автоматичного монтування у LDAP.
+                        </para>
+                        <para>
+                            Типове значення: auto.master
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist> <variablelist>
+                <varlistentry>
+                    <term>ldap_autofs_map_object_class (рядок)</term>
+                    <listitem>
+                        <para>
+                            Клас об’єктів запису карти автоматичного монтування у LDAP.
+                        </para>
+                        <para>
+                            Типове значення: nisMap (rfc2307, autofs_provider=ad), у інших випадках
+automountMap
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist> <variablelist>
+                <varlistentry>
+                    <term>ldap_autofs_map_name (рядок)</term>
+                    <listitem>
+                        <para>
+                            Назва запису карти автоматичного монтування у LDAP.
+                        </para>
+                        <para>
+                            Типове значення: nisMapName (rfc2307, autofs_provider=ad), у інших випадках
+automountMapName
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist> <variablelist>
+                <varlistentry>
+                    <term>ldap_autofs_entry_object_class (рядок)</term>
+                    <listitem>
+                        <para>
+                            Клас об'єктів автоматичного монтування LDAP. Цей запис зазвичай відповідає
+точні монтування.
+                        </para>
+                        <para>
+                            Типове значення: nisObject (rfc2307, autofs_provider=ad), у інших випадках
+automount
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist> <variablelist>
+                <varlistentry>
+                    <term>ldap_autofs_entry_key (рядок)</term>
+                    <listitem>
+                        <para>
+                            Ключ запису автоматичного монтування LDAP. Цей запис зазвичай відповідає
+точні монтування.
+                        </para>
+                        <para>
+                            Типове значення: cn (rfc2307, autofs_provider=ad), у інших випадках
+automountKey
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+<variablelist>
+                <varlistentry>
+                    <term>ldap_autofs_entry_value (рядок)</term>
+                    <listitem>
+                        <para>
+                            Ключ запису автоматичного монтування LDAP. Цей запис зазвичай відповідає
+точні монтування.
+                        </para>
+                        <para>
+                            Типове значення: nisMapEntry (rfc2307, autofs_provider=ad), у інших випадках
+automountInformation
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+        <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/autofs_restart.xml" />
+    </refsect1>
+
+    <refsect1 id='advanced-options'>
+        <title>ДОДАТКОВІ ПАРАМЕТРИ</title>
+        <para>
+            Підтримку цих параметрів передбачено доменами LDAP, але користуватися ними
+слід обережно. Будь ласка, використовуйте їх у налаштуваннях, лише якщо вам
+відомі наслідки ваших дій. <variablelist>
+                <varlistentry>
+                    <term>ldap_netgroup_search_base (рядок)</term>
+                    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/ldap_search_bases.xml" />
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_user_search_base (рядок)</term>
+                    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/ldap_search_bases.xml" />
+                </varlistentry>
+
+                <varlistentry>
+                    <term>ldap_group_search_base (рядок)</term>
+                    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/ldap_search_bases.xml" />
+                </varlistentry>
+            </variablelist>
+<variablelist>
+                <note>
+                    <para>
+                        Якщо увімкнено параметр <quote>ldap_use_tokengroups</quote>, пошуки в Active
+Directory не буде обмежено — він повертатиме усі дані щодо участі у групах,
+навіть без прив'язки до GID. Рекомендуємо вимкнути цю можливість, якщо назви
+груп показуються неправильно.
+                    </para>
+                </note>
+                <varlistentry condition="with_sudo">
+                    <term>ldap_sudo_search_base (рядок)</term>
+                    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/ldap_search_bases.xml" />
+                </varlistentry>
+
+                <varlistentry condition="with_autofs">
+                    <term>ldap_autofs_search_base (рядок)</term>
+                    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/ldap_search_bases.xml" />
+                </varlistentry>
+
+            </variablelist>
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/failover.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/service_discovery.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/ldap_id_mapping.xml" />
+
+    <refsect1 id='example'>
+        <title>ПРИКЛАД</title>
+        <para>
+            У наведеному нижче прикладі припускається, що SSSD налаштовано належним
+чином, а LDAP встановлено на один з доменів з розділу
+<replaceable>[domains]</replaceable>.
+        </para>
+        <para>
+<programlisting>
+[domain/LDAP]
+id_provider = ldap
+auth_provider = ldap
+ldap_uri = ldap://ldap.mydomain.org
+ldap_search_base = dc=mydomain,dc=org
+ldap_tls_reqcert = demand
+cache_credentials = true
+</programlisting>
+        </para>
+    </refsect1>
+    <refsect1 id='ldap_access_filter_example'>
+        <title>ПРИКЛАД ФІЛЬТРА ДОСТУПУ LDAP</title>
+        <para>
+            У наведеному нижче прикладі припускається, що SSSD налаштовано належним
+чином і використано ldap_access_order=lockout.
+        </para>
+        <para>
+<programlisting>
+[domain/LDAP]
+id_provider = ldap
+auth_provider = ldap
+access_provider = ldap
+ldap_access_order = lockout
+ldap_pwdlockout_dn = cn=ppolicy,ou=policies,dc=mydomain,dc=org
+ldap_uri = ldap://ldap.mydomain.org
+ldap_search_base = dc=mydomain,dc=org
+ldap_tls_reqcert = demand
+cache_credentials = true
+</programlisting>
+        </para>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>ЗАУВАЖЕННЯ</title>
+        <para>
+            Описи деяких з параметрів налаштування на цій сторінці підручника засновано
+на даних сторінки підручника (man) <citerefentry>
+<refentrytitle>ldap.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> з пакунка OpenLDAP 2.4.
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

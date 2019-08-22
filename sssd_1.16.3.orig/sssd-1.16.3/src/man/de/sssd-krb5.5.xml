@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD-Handbuchseiten</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-krb5</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Dateiformate und Konventionen</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-krb5</refname>
+        <refpurpose>SSSD Kerberos-Anbieter</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>BESCHREIBUNG</title>
+        <para>
+            Diese Handbuchseite beschreibt die Konfiguration des
+Authentifizierungs-Backends Kerberos 5 für <citerefentry>
+<refentrytitle>sssd</refentrytitle> <manvolnum>8</manvolnum>
+</citerefentry>. Eine ausführliche Syntax-Referenz finden Sie im Abschnitt
+»DATEIFORMAT« der Handbuchseite <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+        </para>
+        <para>
+            Das Authentifizierungs-Backend Kerberos 5 enthält Authentifizierungs- und
+Chpass-Anbieter. Es muss mit einem Identitätsanbieter verbunden werden,
+damit es sauber läuft (zum Beispiel »id_provider = ldap«). Einige vom
+Kerberos-5-Authentifizierungs-Backend benötigten Informationen wie der
+»Kerberos Principal Name« (UPN) des Benutzers müssen durch den
+Identitätsanbieter bereitgestellt werden. Die Konfiguration des
+Identitätsanbieters sollte einen Eintrag haben, der den UPN
+angibt. Einzelheiten, wie dies konfiguriert wird, finden Sie in der
+Handbuchseite des entsprechenden Identitätsanbieters.
+        </para>
+        <para>
+            Dieses Backend stellt ebenso eine Zugriffssteuerung bereit, die auf der
+Datei .k5login im Home-Verzeichnis des Benutzers basiert. Weitere
+Einzelheiten finden Sie unter <citerefentry>
+<refentrytitle>.k5login</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>. Bitte beachten Sie, dass eine leere .k5login-Datei jegliche
+Zugriffe durch diesen Benutzer verbietet. Verwenden Sie »access_provider =
+krb5« in Ihrer SSSD-Konfiguration, um diese Funktionalität zu aktivieren.
+        </para>
+        <para>
+            Im Fall, dass UPN nicht im Identitäts-Backend verfügbar ist, wird
+<command>sssd</command> mittels des Formats
+<replaceable>Benutzername</replaceable>@<replaceable>Krb5_Realm</replaceable>
+einen UPN konstruieren.
+        </para>
+
+    </refsect1>
+
+    <refsect1 id='configuration-options'>
+        <title>KONFIGURATIONSOPTIONEN</title>
+        <para>
+            Falls das Authentifizierungsmodul Krb5 in einer SSSD-Domain benutzt wird,
+müssen die folgenden Optionen verwendet werden. Einzelheiten über die
+Konfiguration einer SSSD-Domain finden Sie im Abschnitt »DOMAIN-ABSCHNITTE«
+der Handbuchseite <citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>. <variablelist>
+                <varlistentry>
+                    <term>krb5_server, krb5_backup_server (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            gibt eine durch Kommata getrennte Liste von IP-Adressen oder Rechnernamen
+der Kerberos-Server in der Reihenfolge an, in der sich SSSD mit ihnen
+verbinden soll. Weitere Informationen über Ausfallsicherung und Redundanz
+finden Sie im Abschnitt »AUSFALLSICHERUNG«. An die Adressen oder
+Rechnernamen kann eine optionale Portnummer (der ein Doppelpunkt
+vorangestellt ist) angehängt werden. Falls dies leer gelassen wurde, wird
+die Dienstsuche aktiviert. Weitere Informationen finden Sie im Abschnitt
+»DIENSTSUCHE«.
+                        </para>
+                        <para>
+                            Wenn die Dienstsuche für Schlüsselverwaltungszentralen- (KDC) oder
+Kpasswd-Server benutzt wird, durchsucht SSSD zuerst die DNS-Einträge,
+die_udp als Protokoll angeben. Falls keine gefunden werden, weicht es auf
+_tcp aus.
+                        </para>
+                        <para>
+                            Diese Option hieß in früheren Veröffentlichungen von SSSD
+»krb5_kdcip«. Obwohl der alte Name einstweilen noch in Erinnerung ist, wird
+Anwendern geraten, ihre Konfigurationsdateien auf die Verwendung von
+»krb5_server« zu migrieren.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_realm (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            der Name des Kerberos-Realms. Diese Option wird benötigt und muss angegeben
+werden.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_kpasswd, krb5_backup_kpasswd (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            Falls der Dienst zum Ändern von Passwörtern auf der
+Schlüsselverwaltungszentrale (KDC) nicht läuft, können hier alternative
+Server definiert werden. An die Adressen oder Rechnernamen kann eine
+optionale Portnummer (der ein Doppelpunkt vorangestellt ist) angehängt
+werden.
+                        </para>
+                        <para>
+                            Weitere Informationen über Ausfallsicherung und Redundanz finden Sie im
+Abschnitt »AUSFALLSICHERUNG«. HINWEIS: Selbst wenn es keine weiteren
+»kpasswd«-Server mehr auszuprobieren gibt, wird das Backend nicht offline
+gehen, da eine Authentifizierung gegen die Schlüsselverwaltungszentrale
+(KDC) immer noch möglich ist.
+                        </para>
+                        <para>
+                            Voreinstellung: KDC benutzen
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_ccachedir (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            Das Verzeichnis zum Ablegen von Anmeldedaten-Zwischenspeichern. Alle
+Ersetzungssequenzen von krb5_ccname_template können hier auch verwendet
+werden, außer %d und %P. Das Verzeichnis wird als privat angelegt und ist
+Eigentum des Benutzers. Die Zugriffsrechte werden auf 0700 gesetzt.
+                        </para>
+                        <para>
+                            Voreinstellung: /tmp
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_ccname_template (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            Der Ort für die Zwischenspeicherung der Anmeldedaten des Benutzers. Drei
+Zwischenspeichertypen werden derzeit unterstützt: <quote>FILE</quote>,
+<quote>DIR</quote> und <quote>KEYRING:persistent</quote>. Der
+Zwischenspeicher kann entweder als <replaceable>TYP:REST</replaceable> oder
+als absoluter Pfad angegeben werden, wobei Letzteres den Typ
+<quote>FILE</quote> beinhaltet. In der Schablone werden die folgenden
+Sequenzen ersetzt: <variablelist>
+                                <varlistentry>
+                                    <term>%u</term>
+                                    <listitem><para>Anmeldename</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%U</term>
+                                    <listitem><para>Anmelde-UID</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%p</term>
+                                    <listitem><para>Principal-Name</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%r</term>
+                                    <listitem><para>Realm-Name</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%h</term>
+                                    <listitem><para>Home-Verzeichnis</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%d</term>
+                                    <listitem><para>Wert von krb5_ccachedir
+                                              </para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%P</term>
+                                    <listitem><para>die Prozess-ID des SSSD-Clients</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%%</term>
+                                    <listitem><para>ein buchstäbliches »%«</para>
+                                    </listitem>
+                                </varlistentry>
+                            </variablelist> Falls die
+Vorlage mit »XXXXXX« endet, wird mkstemp(3) verwendet, um auf sichere Weise
+einen eindeutigen Dateinamen zu erzeugen.
+                        </para>
+                        <para>
+                            Wenn der KEYRING-Typ verwendet wird, ist
+<quote>KEYRING:persistent:%U</quote> der einzige unterstützte
+Mechanismus. Hierfür wird der Schlüsselbund des Linux-Kernels zum Speichern
+der Anmeldedaten getrennt nach Benutzer-IDs verwendet. Dies wird auch
+empfohlen, da es die sicherste und vorausberechenbarste Methode ist.
+                        </para>
+                        <para>
+                            Der Vorgabewert für den Anmeldedaten-Zwischenspeicher wird aus dem im
+Abschnitt [libdefaults] der Datei krb5.conf enthaltenen Profil der
+systemweiten Konfiguration bezogen. Der Name der Option ist
+default_ccache_name. Im Abschnitt PARAMETER EXPANSION der Handbuchseite zu
+krb5.conf(5) finden Sie zusätzliche Informationen zu dem in krb5.conf
+definierten Format.
+                        </para>
+                        <para>
+                          NOTE: Please be aware that libkrb5 ccache expansion template from
+<citerefentry> <refentrytitle>krb5.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> uses different expansion sequences
+than SSSD.
+                        </para>
+                        <para>
+                            Voreinstellung: (aus libkrb5)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_auth_timeout (Ganzzahl)</term>
+                    <listitem>
+                        <para>
+                            Zeitüberschreitung in Sekunden, nach der eine Online-Anfrage zur
+Authentifizierung oder Passwortänderung gescheitert ist. Falls möglich, wird
+die Authentifizierung offline fortgesetzt.
+                        </para>
+                        <para>
+                            Voreinstellung: 6
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_validate (Boolesch)</term>
+                    <listitem>
+                        <para>
+                            prüft mit Hilfe von »krb5_keytab«, ob das erhaltene TGT keine Täuschung
+ist. Die Einträge der Keytab werden der Reihe nach kontrolliert und der
+erste Eintrag mit einem passenden Realm wird für die Überprüfung
+benutzt. Falls keine Einträge dem Realm entsprechen, wird der letzte Eintrag
+der Keytab verwendet. Dieser Prozess kann zur Überprüfung von Umgebungen
+mittels Realm-übergreifendem Vertrauen benutzt werden, indem der
+dazugehörige Keytab-Eintrag als letzter oder einziger Eintrag in der
+Keytab-Datei abgelegt wird.
+                        </para>
+                        <para>
+                            Voreinstellung: »false«
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_keytab (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            der Speicherort der Keytab, der bei der Überprüfung von Berechtigungen
+benutzt wird, die von Schlüsselverwaltungszentralen (KDCs) stammen.
+                        </para>
+                        <para>
+                            Voreinstellung: /etc/krb5.keytab
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_store_password_if_offline (Boolesch)</term>
+                    <listitem>
+                        <para>
+                            speichert das Passwort des Benutzers, falls der Anbieter offline ist, und
+benutzt es zur Abfrage des TGTs, wenn der Anbieter wieder online geht.
+                        </para>
+                        <para>
+                            HINWEIS: Diese Funktionalität ist nur auf Linux verfügbar. Passwörter, die
+auf diese Weise gespeichert wurden, werden im Klartext im Schlüsselbund des
+Kernels aufbewahrt. Darauf kann unter Umständen (mit Mühe) durch den
+Benutzer Root zugegriffen werden.
+                        </para>
+                        <para>
+                            Voreinstellung: »false«
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_renewable_lifetime (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            fordert ein erneuerbares Ticket mit einer Gesamtlebensdauer an. Es wird als
+Ganzzahl, der direkt eine Zeiteinheit folgt, angegeben:
+                        </para>
+                        <para>
+                            <emphasis>s</emphasis> für Sekunden
+                        </para>
+                        <para>
+                            <emphasis>m</emphasis> für Minuten
+                        </para>
+                        <para>
+                            <emphasis>h</emphasis> für Stunden
+                        </para>
+                        <para>
+                            <emphasis>d</emphasis> für Tage
+                        </para>
+                        <para>
+                            Falls keine Einheit angegeben ist, wird <emphasis>s</emphasis> angenommen.
+                        </para>
+                        <para>
+                            HINWEIS: Es ist nicht möglich, Einheiten zu mixen. Um die erneuerbare
+Lebensdauer auf eineinhalb Stunden zu setzen, verwenden Sie »90m« statt
+»1h30m«.
+                        </para>
+                        <para>
+                            Voreinstellung: nicht gesetzt, d.h. das TGT ist nicht erneuerbar.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_lifetime (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            Anforderungsticket mit einer Lebensdauer, angegeben als Ganzzahl, der direkt
+eine Zeiteinheit folgt:
+                        </para>
+                        <para>
+                            <emphasis>s</emphasis> für Sekunden
+                        </para>
+                        <para>
+                            <emphasis>m</emphasis> für Minuten
+                        </para>
+                        <para>
+                            <emphasis>h</emphasis> für Stunden
+                        </para>
+                        <para>
+                            <emphasis>d</emphasis> für Tage
+                        </para>
+                        <para>
+                            Falls keine Einheit angegeben ist, wird <emphasis>s</emphasis> angenommen.
+                        </para>
+                        <para>
+                            HINWEIS: Es ist nicht möglich, Einheiten zu mixen. Um die Lebensdauer auf
+eineinhalb Stunden zu setzen, verwenden Sie »90m« statt »1h30m«.
+                        </para>
+                        <para>
+                            Voreinstellung: nicht gesetzt, d.h. die Standardlebenszeit des Tickets auf
+der Schlüsselverwaltungszentrale (KDC)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_renew_interval (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            die Zeit in Sekunden zwischen zwei Prüfungen, ob das TGT erneuert werden
+soll. TGTs werden erneuert, wenn ungefähr die Hälfte ihrer Lebensdauer
+überschritten ist. Sie wird als Ganzzahl, der unmittelbar eine Zeiteinheit
+folgt, angegeben:
+                        </para>
+                        <para>
+                            <emphasis>s</emphasis> für Sekunden
+                        </para>
+                        <para>
+                            <emphasis>m</emphasis> für Minuten
+                        </para>
+                        <para>
+                            <emphasis>h</emphasis> für Stunden
+                        </para>
+                        <para>
+                            <emphasis>d</emphasis> für Tage
+                        </para>
+                        <para>
+                            Falls keine Einheit angegeben ist, wird <emphasis>s</emphasis> angenommen.
+                        </para>
+                        <para>
+                            HINWEIS: Es ist nicht möglich, Einheiten zu mixen. Um die erneuerbare
+Lebensdauer auf eineinhalb Stunden zu setzen, verwenden Sie »90m« statt
+»1h30m«.
+                        </para>
+                        <para>
+                             Falls diese Option nicht oder auf 0 gesetzt ist, wird die automatische
+Erneuerung deaktiviert.
+                        </para>
+                        <para>
+                            Voreinstellung: nicht gesetzt
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_use_fast (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            Schaltet das flexible Authentifizierungs-Sicherheits-Tunneln (FAST) für die
+Vorauthentifizierung von Kerberos ein. Die folgenden Optionen werden
+unterstützt:
+                        </para>
+                        <para>
+                            <emphasis>never</emphasis>: FAST wird nie benutzt. Dies ist so, als ob diese
+Einstellung gar nicht gemacht würde.
+                        </para>
+                        <para>
+                            <emphasis>try</emphasis>: Es wird versucht, FAST zu benutzen. Falls der
+Server kein FAST unterstützt, fährt die Authentifizierung ohne fort.
+                        </para>
+                        <para>
+                            <emphasis>demand</emphasis>: Fragt nach, ob FAST benutzt werden soll. Die
+Authentifizierung schlägt fehl, falls der Server kein FAST erfordert.
+                        </para>
+                        <para>
+                            Voreinstellung: nicht gesetzt, d.h. FAST wird nicht benutzt
+                        </para>
+                        <para>
+                            HINWEIS: Zur Benutzung von FAST ist eine Keytab erforderlich.
+                        </para>
+                        <para>
+                            HINWEIS: SSSD unterstützt FAST nur mit MIT-Kerberos-Version 1.8 und
+neuer. Falls SSSD mit einer älteren Version von MIT-Kerberos benutzt wird,
+ist die Verwendung dieser Option ein Konfigurationsfehler.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_fast_principal (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            gibt den Server-Principal zur Benutzung von FAST an.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_canonicalize (Boolesch)</term>
+                    <listitem>
+                        <para>
+                            gibt an, ob der Rechner und User-Principal in die kanonische Form gebracht
+werden sollen. Diese Funktionalität ist mit MIT-Kerberos 1.7 und neueren
+Versionen verfügbar.
+                        </para>
+
+                        <para>
+                            Voreinstellung: »false«
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_use_kdcinfo (Boolesch)</term>
+                    <listitem>
+                        <para>
+                            gibt an, ob SSSD die Kerberos-Bibliotheken anweisen soll, welcher Realm und
+welche Schlüsselverwaltungszentralen (KDCs) benutzt werden sollen. Diese
+Option ist standardmäßig eingeschaltet. Falls Sie sie ausschalten, müssen
+Sie die Kerberos-Bibliothek mittels der Konfigurationsdatei
+<citerefentry><refentrytitle>krb5.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> einrichten.
+                        </para>
+                        <para>
+                            Weitere Informationen über die Locator-Erweiterung finden Sie auf der
+Handbuchseite <citerefentry>
+<refentrytitle>sssd_krb5_locator_plugin</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry>.
+                        </para>
+                        <para>
+                            Voreinstellung: »true«
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_use_enterprise_principal (Boolesch)</term>
+                    <listitem>
+                        <para>
+                            gibt an, ob der User Principal als Enterprise Principal betrachtet werden
+soll. Weitere Informationen über Enterprise Principals finden Sie in
+Abschnitt 5 von RFC 6806.
+                        </para>
+
+                        <para>
+                            Voreinstellung: falsch (AD-Anbieter: wahr)
+                        </para>
+                        <para>
+                            The IPA provider will set to option to 'true' if it detects that the server
+is capable of handling enterprise principals and the option is not set
+explicitly in the config file.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_map_user (string)</term>
+                    <listitem>
+                        <para>
+                             The list of mappings is given as a comma-separated list of pairs
+<quote>username:primary</quote> where <quote>username</quote> is a UNIX user
+name and <quote>primary</quote> is a user part of a kerberos principal. This
+mapping is used when user is authenticating using <quote>auth_provider =
+krb5</quote>.
+                        </para>
+
+                        <para>
+                             Beispiel: <programlisting>
+krb5_realm = REALM
+krb5_map_user = joe:juser,dick:richard
+</programlisting>
+                        </para>
+                        <para>
+                             <quote>joe</quote> and <quote>dick</quote> are UNIX user names and
+<quote>juser</quote> and <quote>richard</quote> are primaries of kerberos
+principals. For user <quote>joe</quote> resp.  <quote>dick</quote> SSSD will
+try to kinit as <quote>juser@REALM</quote> resp.
+<quote>richard@REALM</quote>.
+                        </para>
+
+                        <para>
+                            Voreinstellung: nicht gesetzt
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+            </variablelist>
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/failover.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/service_discovery.xml" />
+
+    <refsect1 id='example'>
+        <title>BEISPIEL</title>
+        <para>
+            Das folgende Beispiel geht davon aus, dass SSSD korrekt konfiguriert wurde
+und FOO eine der Domains im Abschnitt <replaceable>[sssd]</replaceable>
+ist. Dieses Beispiel zeigt nur die Authentifizierung mit Kerberos, sie
+umfasst keine Identitätsanbieter.
+        </para>
+        <para>
+<programlisting>
+[domain/FOO]
+auth_provider = krb5
+krb5_server = 192.168.1.1
+krb5_realm = EXAMPLE.COM
+</programlisting>
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

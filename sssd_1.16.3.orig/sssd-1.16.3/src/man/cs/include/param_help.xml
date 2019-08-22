@@ -1,0 +1,10 @@
+<varlistentry>
+    <term>
+        <option>-?</option>,<option>--help</option>
+    </term>
+    <listitem>
+        <para>
+            Zobraz nápovědu a ukonči program.
+        </para>
+    </listitem>
+</varlistentry>

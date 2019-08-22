@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_usermod</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_usermod</refname>
+        <refpurpose>зміна облікового запису користувача</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_usermod</command> <arg choice='opt'>
+<replaceable>параметри</replaceable> </arg> <arg
+choice='plain'><replaceable>ІМ’Я_КОРИСТУВАЧА</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            <command>sss_usermod</command> змінює параметри облікового запису
+<replaceable>ІМ’Я_КОРИСТУВАЧА</replaceable> відповідно до значень, вказаних
+у командному рядку.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>ПАРАМЕТРИ</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-c</option>,<option>--gecos</option>
+<replaceable>КОМЕНТАР</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Будь-який рядок тексту, що описує користувача. Часто використовується для
+зберігання паспортного імені користувача.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-h</option>,<option>--home</option>
+<replaceable>ДОМАШНІЙ_КАТАЛОГ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Домашній каталог облікового запису користувача.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--shell</option>
+<replaceable>ОБОЛОНКА</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Оболонка для входу користувача до системи.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-a</option>,<option>--append-group</option>
+<replaceable>ГРУПИ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Додати запис користувача до груп, вказаних за допомогою параметра
+<replaceable>ГРУПИ</replaceable>. Параметр <replaceable>ГРУПИ</replaceable>
+є списком груп, відокремлених комами.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-r</option>,<option>--remove-group</option>
+<replaceable>ГРУПИ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Вилучає запис користувача з груп, вказаних за допомогою параметра
+<replaceable>ГРУПИ</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-l</option>,<option>--lock</option>
+                </term>
+                <listitem>
+                    <para>
+                        Заблокувати обліковий запис користувача. Заблокований користувач не зможе
+входити до системи.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-u</option>,<option>--unlock</option>
+                </term>
+                <listitem>
+                    <para>
+                        Розблокувати обліковий запис користувача.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-Z</option>,<option>--selinux-user</option>
+<replaceable>КОРИСТУВАЧ_SELINUX</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Ім’я користувача SELinux, що відповідає імені для входу до системи.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--addattr</option> <replaceable>ПАРА_АТРИБУТ-ЗНАЧЕННЯ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Додати пару атрибут-значення. Форматування: атрибут=значення.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--setattr</option> <replaceable>ПАРА_АТРИБУТ-ЗНАЧЕННЯ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Встановити для вказаного за назвою атрибута значення. Форматування:
+атрибут=значення. Для атрибутів з декількома значеннями команда призведе до
+заміни поточних значень.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--delattr</option> <replaceable>ПАРА_АТРИБУТ-ЗНАЧЕННЯ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Вилучити пару атрибут-значення. Форматування: атрибут=значення.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/local.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

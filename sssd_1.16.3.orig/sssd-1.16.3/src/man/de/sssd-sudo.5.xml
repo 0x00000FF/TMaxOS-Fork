@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD-Handbuchseiten</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-sudo</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Dateiformate und Konventionen</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-sudo</refname>
+        <refpurpose>Sudo mit dem SSSD-Backend konfigurieren</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>BESCHREIBUNG</title>
+        <para>
+            Diese Handbuchseite beschreibt, wie <citerefentry>
+<refentrytitle>sudo</refentrytitle> <manvolnum>8</manvolnum> </citerefentry>
+konfiguriert wird, damit es zusammen mit <citerefentry>
+<refentrytitle>sssd</refentrytitle> <manvolnum>8</manvolnum> </citerefentry>
+funktioniert und wie SSSD Sudo-Regeln zwischenspeichert.
+        </para>
+    </refsect1>
+
+    <refsect1 id='sudo'>
+        <title>Sudo so konfigurieren, dass es mit SSSD zusammenarbeitet</title>
+        <para>
+            Um SSSD als eine Quelle von Sudo-Regeln zu aktivieren, fügen Sie dem Eintrag
+<emphasis>sudoers</emphasis> in <citerefentry>
+<refentrytitle>nsswitch.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> <emphasis>sss</emphasis> hinzu.
+        </para>
+        <para>
+            Um zum Beispiel Sudo so zu konfigurieren, dass es zuerst die Regeln in der
+Standarddatei <citerefentry> <refentrytitle>sudoers</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> nachschlägt (diese sollten Regeln
+umfassen, die für lokale Benutzer gelten) und dann die in SSSD, sollte die
+Datei »nsswitch.conf« die folgende Zeile enthalten:
+        </para>
+        <para>
+<programlisting>
+sudoers: files sss
+</programlisting>
+        </para>
+        <para>
+            Weitere Informationen über die Konfiguration der Suchreihenfolge der
+»sudoers« aus der Datei »nsswitch.conf« sowie das LDAP-Schema, das zum
+Speichern von Sudo-Regeln im Verzeichnis benutzt wird, können Sie unter
+<citerefentry> <refentrytitle>sudoers.ldap</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> finden.
+        </para>
+        <para>
+            <emphasis>Hinweis</emphasis>: Um Netzgruppen oder IPA-Hostgruppen in
+sudo-Regeln verwenden zu können, muss <citerefentry>
+<refentrytitle>nisdomainname</refentrytitle> <manvolnum>1</manvolnum>
+</citerefentry> korrekt auf den entsprechenden NIS-Domainnamen gesetzt
+werden. Dieser entspricht dem IPA-Domainnamen, wenn Hostgruppen verwendet
+werden.
+        </para>
+    </refsect1>
+
+    <refsect1 id='sssd'>
+        <title>SSSD zum Abrufen von Sudo-Regeln konfigurieren</title>
+        <para>
+            Alle auf der SSSD-Seite erforderliche Konfiguration ist die Erweiterung der
+Liste der <emphasis>Dienste</emphasis> mit "sudo" im Abschnitt [sssd] der
+Handbuchseite zu <citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>. Um LDAP-Suchvorgänge zu
+beschleunigen, können Sie auch die Suchbasis für sudo-Regeln mit der Option
+<emphasis>ldap_sudo_search_base</emphasis> festlegen.
+        </para>
+        <para>
+            Das folgende Beispiel zeigt, wie SSSD konfiguriert wird, damit es die
+Sudo-Regeln von einem LDAP-Server herunterlädt.
+        </para>
+        <para>
+<programlisting>
+[sssd]
+config_file_version = 2
+services = nss, pam, sudo
+domains = EXAMPLE
+
+[domain/EXAMPLE]
+id_provider = ldap
+sudo_provider = ldap
+ldap_uri = ldap://example.com
+ldap_sudo_search_base = ou=sudoers,dc=example,dc=com
+</programlisting> <phrase
+condition="have_systemd"> It's important to note that on platforms where
+systemd is supported there's no need to add the "sudo" provider to the list
+of services, as it became optional. However, sssd-sudo.socket must be
+enabled instead.  </phrase>
+        </para>
+        <para>
+            When SSSD is configured to use IPA as the ID provider, the sudo provider is
+automatically enabled. The sudo search base is configured to use the IPA
+native LDAP tree (cn=sudo,$SUFFIX).  If any other search base is defined in
+sssd.conf, this value will be used instead. The compat tree
+(ou=sudoers,$SUFFIX) is no longer required for IPA sudo functionality.
+        </para>
+    </refsect1>
+
+    <refsect1 id='cache'>
+        <title>Der Zwischenspeichermechanismus für Sudo-Regeln</title>
+        <para>
+            Die größte Herausforderung bei der Entwicklung von Sudo-Unterstützung in
+SSSD war es, sicherzustellen, dass beim Ausführen von Sudo mit SSSD die
+Datenquelle dieselbe Benutzererfahrung bereitstellt und so schnell wie Sudo
+ist, aber weiterhin so viele aktuelle Regelsätze wie möglich
+bereitstellt. Um diesen Anforderungen zu genügen, verwendet SSSD drei Arten
+von Aktualisierungen. Sie werden als vollständiges Aktualisieren, kluges
+Aktualisieren und Regelaktualisierung bezeichnet.
+        </para>
+        <para>
+            Das <emphasis>kluge Aktualisieren</emphasis> lädt periodisch Regeln
+herunter, die neu sind oder seit der letzten Aktualisierung geändert
+wurden. Das Hauptziel hierbei ist es, die Datenbank anwachsen zu lassen,
+indem nur kleine Erweiterungen abgerufen werden, die keinen großen
+Netzwerkverkehr erzeugen.
+        </para>
+        <para>
+            Das <emphasis>vollständige Aktualisieren</emphasis> löscht einfach alle im
+Zwischenspeicher abgelegten Regeln und ersetzt sie durch die auf dem Server
+gespeicherten Regeln. Dies wird benutzt, um den Zwischenspeicher dadurch
+konsistent zu halten, dass jede von Server gelöschte Regel entfernt
+wird. Ein vollständiges Aktualisieren kann jedoch eine hohe Last erzeugen
+und sollte daher nur gelegentlich abhängig von der Größe und Stabilität der
+Sudo-Regeln ausgeführt werden.
+        </para>
+        <para>
+            Die <emphasis>Regelaktualisierung</emphasis> stellt sicher, dass dem
+Benutzer nicht mehr Rechte als definiert gewährt werden. Es wird jedesmal
+ausgelöst, wenn der Benutzer Sudo ausführt. Regelaktualisierung wird alle
+Regeln suchen, die für diesen Benutzer gelten, ihren Ablaufzeitpunkt prüfen
+und sie erneut herunterladen, falls sie erloschen sind. Im Fall, dass
+irgendwelche der Regeln auf dem Server fehlen, wird SSSD außer der Reihe ein
+vollständiges Aktualisieren durchführen, da möglicherweise weitere Regeln
+(die für andere Benutzer gelten) gelöscht wurden.
+        </para>
+        <para>
+            SSSD wird, falls aktiviert, nur Regeln speichern, die auf diese Maschine
+angewandt werden können. Das bedeutet, Regeln, die einen der folgenden Werte
+im Attribut <emphasis>sudoHost</emphasis> enthalten:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    Schlüsselwort ALL
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Platzhalter
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Netzgruppe (in der Form »+Netzgruppe«)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    Rechnername oder voll qualifizierter Domain-Namen dieser Maschine
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    eine der IP-Adressen dieser Maschine
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    eine der IP-Adressen des Netzwerks (in der Form »Adresse/Maske«)
+                </para>
+            </listitem>
+        </itemizedlist>
+        <para>
+            Es gibt viele Konfigurationsoptionen, die benutzt werden können, um das
+Verhalten anzupassen. Bitte lesen Sie »ldap_sudo_*« in <citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> und "sudo_*" in <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD マニュアル ページ</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_ssh_knownhostsproxy</refentrytitle>
+        <manvolnum>1</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_ssh_knownhostsproxy</refname>
+        <refpurpose>OpenSSH ホストキーを取得します</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_ssh_knownhostsproxy</command> <arg choice='opt'>
+<replaceable>options</replaceable> </arg> <arg
+choice='plain'><replaceable>HOST</replaceable></arg> <arg
+choice='opt'><replaceable>PROXY_COMMAND</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>概要</title>
+        <para>
+            <command>sss_ssh_knownhostsproxy</command> acquires SSH host public keys for
+host <replaceable>HOST</replaceable>, stores them in a custom OpenSSH
+known_hosts file (see the <quote>SSH_KNOWN_HOSTS FILE FORMAT</quote> section
+of <citerefentry><refentrytitle>sshd</refentrytitle>
+<manvolnum>8</manvolnum></citerefentry> for more information)
+<filename>/var/lib/sss/pubconf/known_hosts</filename> and establishes the
+connection to the host.
+        </para>
+        <para>
+            <replaceable>PROXY_COMMAND</replaceable>
+が指定されていると、ソケットを開く代わりにホストへの接続を作成するために使用されます。
+        </para>
+        <para>
+            <citerefentry><refentrytitle>ssh</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry> は
+<citerefentry><refentrytitle>ssh</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry> 設定に対して以下のディレクティブを使用することにより、ホストキー認証に
+<command>sss_ssh_knownhostsproxy</command> を使用するために設定できます: <programlisting>
+ProxyCommand /usr/bin/sss_ssh_knownhostsproxy -p %p %h
+GlobalKnownHostsFile /var/lib/sss/pubconf/known_hosts
+</programlisting>
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>オプション</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-p</option>,<option>--port</option> <replaceable>PORT</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        ホストに接続するためにポート <replaceable>PORT</replaceable> を使用します。初期値ではポート 22 が使用されます。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-d</option>,<option>--domain</option>
+<replaceable>DOMAIN</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        SSSD ドメイン <replaceable>DOMAIN</replaceable> においてホスト公開鍵を検索します。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-k</option>,<option>--pubkeys</option>
+                </term>
+                <listitem>
+                    <para>
+                        Print the host ssh public keys for host <replaceable>HOST</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <refsect1 id='exit_status'>
+        <title>終了コード</title>
+        <para>
+            In case of success, an exit value of 0 is returned. Otherwise, 1 is
+returned.
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

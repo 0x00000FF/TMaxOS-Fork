@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pages de manuel de SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd_krb5_locator_plugin</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd_krb5_locator_plugin</refname>
+        <refpurpose>Greffon de localisation Kerberos</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPTION</title>
+        <para>
+            Le greffon de localisation Kerberos
+<command>sssd_krb5_locator_plugin</command> est utilisé par le fournisseur
+Kerberos de <citerefentry><refentrytitle>sssd</refentrytitle>
+<manvolnum>8</manvolnum></citerefentry> pour indiquer aux bibliothèques
+Kerberos quel domaine et quel KDC à utiliser.  En général, cela se fait en
+<citerefentry><refentrytitle>krb5.conf</refentrytitle>
+<manvolnum>5</manvolnum></citerefentry> qui est toujours lu par les
+bibliothèques de Kerberos. Pour simplifier la configuration, le Domaine et
+le KDC peuvent être définis dans
+<citerefentry><refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum></citerefentry> comme indiqué dans
+<citerefentry><refentrytitle>sssd-krb5.conf</refentrytitle>
+<manvolnum>5</manvolnum></citerefentry>
+        </para>
+        <para>
+            <citerefentry><refentrytitle>SSSD</refentrytitle>
+<manvolnum>8</manvolnum></citerefentry> met le nom de domaine et le nom ou
+adresse IP du KDC dans les variables d'environnement SSSD_KRB5_REALM et
+SSSD_KRB5_KDC respectivement.  Lorsque
+<command>sssd_krb5_locator_plugin</command> est appelé par les bibliothèques
+de kerberos, il lit et évalue ces variables et les transmet aux
+bibliothèques.
+        </para>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>NOTES</title>
+        <para>
+            Toutes les versions de Kerberos ne prennent en charge l'utilisation de
+greffons. Si <command>sssd_krb5_locator_plugin</command> n'est pas présent
+sur votre système, il faut modifier /etc/krb5.conf pour s'adapter à la
+configuration de Kerberos.
+        </para>
+        <para>
+            Si la variable d'environnement SSSD_KRB5_LOCATOR_DEBUG a une valeur
+quelconque, des messages de débogage seront envoyés sur la sortie standard
+d'erreur.
+        </para>
+        <para>
+            If the environment variable SSSD_KRB5_LOCATOR_DISABLE is set to any value
+the plugin is disabled and will just return KRB5_PLUGIN_NO_HANDLE to the
+caller.
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

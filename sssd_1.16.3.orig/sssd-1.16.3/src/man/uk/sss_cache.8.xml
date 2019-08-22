@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_cache</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_cache</refname>
+        <refpurpose>виконати спорожнення кешу</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_cache</command> <arg choice='opt'>
+<replaceable>параметри</replaceable> </arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            <command>sss_cache</command> скасовує визначення записів у кеші SSSD. Дані
+записів зі скасованими визначеннями буде перезавантажено з сервера у
+примусовому порядку, щойно відповідний модуль SSSD отримає до них
+доступ. Параметри, які скасовують визначення окремого об'єкта приймають лише
+один аргумент.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>ПАРАМЕТРИ</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-E</option>,<option>--everything</option>
+                </term>
+                <listitem>
+                    <para>
+                        Скасувати чинність усіх кешованих записів.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-u</option>,<option>--user</option> <replaceable>реєстраційні
+дані</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Скасувати визначення вказаного користувача.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-U</option>,<option>--users</option>
+                </term>
+                <listitem>
+                    <para>
+                        Скасувати визначення всіх записів. Цей параметр має вищий пріоритет за
+параметр скасування визначення для будь-якого користувача, якщо такий
+параметр вказано.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-g</option>,<option>--group</option>
+<replaceable>група</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Скасувати визначення вказаної групи.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-G</option>,<option>--groups</option>
+                </term>
+                <listitem>
+                    <para>
+                        Скасувати визначення записів для всіх груп. Цей параметр має вищий пріоритет
+за параметр скасування визначення для будь-якої групи, якщо такий параметр
+вказано.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-n</option>,<option>--netgroup</option> <replaceable>мережева
+група</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Скасувати визначення вказаної мережевої групи.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-N</option>,<option>--netgroups</option>
+                </term>
+                <listitem>
+                    <para>
+                        Скасувати визначення всіх записів мережевих груп. Цей параметр має вищий
+пріоритет за параметр скасування визначення для будь-якої мережевої групи,
+якщо такий параметр вказано.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--service</option>
+<replaceable>служба</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Скасувати визначення вказаної служби.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-S</option>,<option>--services</option>
+                </term>
+                <listitem>
+                    <para>
+                        Скасувати визначення всіх записів служб. Цей параметр має вищий пріоритет за
+параметр скасування визначення для будь-якої служби, якщо такий параметр
+вказано.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry condition="with_autofs">
+                <term>
+                    <option>-a</option>,<option>--autofs-map</option> <replaceable>карта
+autofs</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Скасувати визначення певної карти autofs.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry condition="with_autofs">
+                <term>
+                    <option>-A</option>,<option>--autofs-maps</option>
+                </term>
+                <listitem>
+                    <para>
+                        Скасувати визначення всіх записів карт autofs. Цей параметр має вищий
+пріоритет за параметр скасування визначення для будь-якої карти, якщо такий
+параметр вказано.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry condition="with_ssh">
+                <term>
+                    <option>-h</option>,<option>--ssh-host</option> <replaceable>назва
+вузла</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Скасувати чинність відкритих ключів SSH певного вузла.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry condition="with_ssh">
+                <term>
+                    <option>-H</option>,<option>--ssh-hosts</option>
+                </term>
+                <listitem>
+                    <para>
+                        Скасувати чинність усіх відкритих ключів SSH усіх вузлів. Цей параметр
+перевизначає скасовування чинності ключів SSH певних вузлів, якщо для них
+було використано таке скасовування.
+                    </para>
+                </listitem>
+            </varlistentry>
+           <varlistentry condition="with_sudo">
+                <term>
+                    <option>-r</option>,<option>--sudo-rule</option>
+<replaceable>правило</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Скасувати чинність певного правила sudo.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry condition="with_sudo">
+                <term>
+                    <option>-R</option>,<option>--sudo-rules</option>
+                </term>
+                <listitem>
+                    <para>
+                        Скасувати визначення усіх кешованих правил sudo. Цей параметр має вищий
+пріоритет за параметр скасування визначення для будь-якого правила sudo,
+якщо такий параметр вказано.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-d</option>,<option>--domain</option>
+<replaceable>домен</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Обмежити процедуру скасування визначення лише певним доменом.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

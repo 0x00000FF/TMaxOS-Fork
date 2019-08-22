@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-ifp</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Формати файлів та правила</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-ifp</refname>
+        <refpurpose>Відповідач InfoPipe SSSD</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            На цій сторінці довідника описано налаштування засобу надання відповідей
+InfoPipe для <citerefentry> <refentrytitle>sssd</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry>. Щоб дізнатися більше про синтаксис
+налаштування, зверніться до розділу «ФОРМАТ ФАЙЛІВ» сторінки довідника
+<citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+        </para>
+        <para>
+            Відповідач InfoPipe забезпечує роботу відкритого інтерфейсу D-Bus над
+системним каналом повідомлень. За допомогою цього інтерфейсу користувачі
+можуть надсилати загальносистемним каналом повідомлень запити щодо
+інформації про віддалених користувачів і групи.
+        </para>
+    </refsect1>
+
+    <refsect1 id='configuration-options'>
+        <title>ПАРАМЕТРИ НАЛАШТУВАННЯ</title>
+            <para>
+                Цими параметрами можна скористатися для налаштовування відповідача InfoPipe.
+            </para>
+            <variablelist>
+                <varlistentry>
+                    <term>allowed_uids (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає список значень UID або імен користувачів, відокремлених
+комами. Користувачам з цього списку буде дозволено доступ до відповідача
+InfoPipe. UID за іменами користувачів визначатимуться під час запуску.
+                        </para>
+                        <para>
+                            Типове значення: 0 (доступ до відповідача InfoPipe має лише адміністративний
+користувач (root))
+                        </para>
+                        <para>
+                            Будь ласка, зауважте, що хоча типово використовується UID 0, значення UID
+буде перевизначено на основі цього параметра. Якщо ви хочете надати
+адміністративному користувачеві (root) доступ до відповідача InfoPipe, що
+може бути типовим варіантом, вам слід додати до списку UID з правами доступу
+запис 0.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>user_attributes (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає список атрибутів з «білого» або «чорного» списків, відокремлених
+комами.
+                        </para>
+                        <para>
+                            Типово, відповідач InfoPipe надає дані лише щодо типового набору атрибутів
+POSIX. Цей набір є тим самим, який повертає програма <citerefentry>
+<refentrytitle>getpwnam</refentrytitle> <manvolnum>3</manvolnum>
+</citerefentry>, його елементи: <variablelist>
+                                <varlistentry>
+                                    <term>name</term>
+                                    <listitem><para>реєстраційне ім’я користувача</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>uidNumber</term>
+                                    <listitem><para>ідентифікатор користувача</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>gidNumber</term>
+                                    <listitem><para>ідентифікатор основної групи</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>gecos</term>
+                                    <listitem><para>дані щодо користувача, типово ім’я повністю</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>homeDirectory</term>
+                                    <listitem><para>домашній каталог</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>loginShell</term>
+                                    <listitem><para>командна оболонка користувача</para></listitem>
+                                </varlistentry>
+                            </variablelist>
+                        </para>
+                        <para>
+                            Ви можете додати інший атрибут до цього набору за допомогою параметра
+«+назва_атрибута» або явним чином виключити атрибут за допомогою параметра
+«-назва_атрибута». Наприклад, щоб дозволити «telephoneNumber», але
+заборонити «loginShell», вам слід скористатися такими налаштуваннями:
+<programlisting>
+user_attributes = +telephoneNumber, -loginShell
+                        </programlisting>
+                        </para>
+                        <para>
+                            Типове значення: не встановлено. Дозволено лише типовий набір атрибутів
+POSIX.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>wildcard_limit (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Визначає верхню межу для кількості записів, які отримуватимуться під час
+пошуку з використанням символів-замінників, які перевизначають обмеження,
+яке накладається функцією виклику.
+                        </para>
+                        <para>
+                            Типове значення: 0 (дозволити встановлювати верхнє обмеження функції
+виклику)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+            </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

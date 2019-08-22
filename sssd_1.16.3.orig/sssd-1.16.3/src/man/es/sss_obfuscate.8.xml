@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Páginas de manual de SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_obfuscate</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_obfuscate</refname>
+        <refpurpose>oscurecer un password en texto claro</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_obfuscate</command> <arg choice='opt'>
+<replaceable>options</replaceable> </arg> <arg
+choice='plain'><replaceable>[CONTRASEÑA]</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPCION</title>
+        <para>
+            <command>sss_obfuscate</command> convierte una contraseña dada en un formato
+no legible y la sitúa en la sección apropiada del dominio del fichero de
+configuración SSSD.
+        </para>
+        <para>
+            La contraseña en texto claro es leída desde la entrada estándar e
+introducida interactivamente. La contraseña ofuscada se pone en el parámetro
+<quote>ldap_default_authtok</quote> de un dominio SSSD dado y el parámetro
+<quote>ldap_default_authtok_type</quote> se fija a
+<quote>obfuscated_password</quote>. Vea <citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> para más detalles sobre estos parámetros.
+        </para>
+        <para>
+            Por favor advierta que oscurecer la contraseña <emphasis>no suministra un
+beneficio real de seguridad</emphasis> y es posible para un atacante
+mediante ingeniería inversa volver atrás la contraseña. Se recomienda
+<emphasis>firmemente</emphasis> el uso de mejores mecanismos de
+autenticación como certificados en el lado cliente o GSSAPI.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPCIONES</title>
+        <variablelist remap='IP'>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help_py.xml" />
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--stdin</option>
+                </term>
+                <listitem>
+                    <para>
+                        La contraseña a oscurecer será leída desde la entrada estándar.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-d</option>,<option>--domain</option>
+<replaceable>DOMINIO</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        El dominio SSSD en el que usar la contraseña. El nombre por defecto es
+<quote>default</quote>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-f</option>,<option>--file</option>
+<replaceable>ARCHIVO</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Lee el fichero de configuración especificado por el parámetro posicional.
+                    </para>
+                    <para>
+                        Predeterminado: <filename>/etc/sssd/sssd.conf</filename>
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

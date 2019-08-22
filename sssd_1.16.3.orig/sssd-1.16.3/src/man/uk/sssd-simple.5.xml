@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-simple</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Формати файлів та правила</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-simple</refname>
+        <refpurpose>файл налаштувань інструмента керування доступом «simple» SSSD</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            На цій сторінці довідника описано налаштування простого засобу керування
+доступом для <citerefentry> <refentrytitle>sssd</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry>. Щоб дізнатися більше про синтаксис
+налаштування, зверніться до розділу «ФОРМАТ ФАЙЛА» сторінки довідника
+<citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+        </para>
+        <para>
+            Простий засіб керування доступом надає або забороняє доступ на основі списку
+допуску або заборони, складеного за назвами облікових записів користувачів
+та групами. Використовуються такі правила:
+            <itemizedlist>
+                <listitem>
+                    <para>Якщо всі списки є порожніми, доступ буде надано.</para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Якщо вказано будь-який зі списків, обробка виконуватиметься за послідовністю
+«допуск, потім заборона» (allow,deny). Це означає, що будь-яке з правил
+заборони матиме пріоритет над будь-яким правилом допуску.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Якщо буде вказано один або обидва списки допуску («allow»), всім
+користувачам поза цими списками доступ буде заборонено.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Якщо буде вказано лише списки заборони («deny»), всі користувачам поза цими
+списками доступ буде надано.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </para>
+    </refsect1>
+
+    <refsect1 id='configuration-options'>
+        <title>ПАРАМЕТРИ НАЛАШТУВАННЯ</title>
+        <para>Зверніться до розділу «РОЗДІЛИ ДОМЕНІВ» сторінки довідника (man)
+<citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>, щоб дізнатися більше про
+налаштування домену SSSD. <variablelist>
+                <varlistentry>
+                    <term>simple_allow_users (рядок)</term>
+                    <listitem>
+                        <para>
+                            Відокремлений комами список користувачів, яким дозволено вхід до системи.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>simple_deny_users (рядок)</term>
+                    <listitem>
+                        <para>
+                            Список користувачів, яким явно заборонено доступ; записи відокремлюються
+комами.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>simple_allow_groups (рядок)</term>
+                    <listitem>
+                        <para>
+                            Відокремлений комами список груп, користувачам яких дозволено вхід до
+системи. Стосується лише груп у межах цього домену SSSD. Локальні групи не
+обробляються.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>simple_deny_groups (рядок)</term>
+                    <listitem>
+                        <para>
+                            Відокремлений комами список груп, користувачам яких явно заборонено
+доступ. Стосується лише груп у межах цього домену SSSD. Локальні групи не
+обробляються.
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+        <para>
+            Якщо не вказувати значень для жодного зі списків, вважатиметься, що параметр
+не визначено. Пам’ятайте про це, якщо захочете створити параметри для
+простого надавача автоматизованими скриптами.
+        </para>
+        <para>
+            Будь ласка, зауважте, що визначення обох параметрів, simple_allow_users і
+simple_deny_users, є помилкою у налаштуванні.
+        </para>
+    </refsect1>
+
+    <refsect1 id='example'>
+        <title>ПРИКЛАД</title>
+        <para>
+            У наведеному нижче прикладі припускаємо, що SSSD налаштовано належним чином,
+а example.com є одним з доменів у розділі
+<replaceable>[sssd]</replaceable>. У прикладі продемонстровано лише
+параметри, специфічні для простого засобу доступу.
+        </para>
+        <para>
+<programlisting>
+[domain/example.com]
+access_provider = simple
+simple_allow_users = user1, user2
+</programlisting>
+        </para>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>ЗАУВАЖЕННЯ</title>
+        <para>
+          Повна обробка ієрархії участі у групах виконується до перевірки прав
+доступу, отже, до списку груп доступу може бути включено навіть вкладені
+групи. Будь ласка, зауважте, що на результати може вплинути значення
+параметра «ldap_group_nesting_level». Вам слід встановити для нього достатнє
+значення. Див. <citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>.
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

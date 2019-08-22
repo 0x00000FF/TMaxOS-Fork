@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ "$1" = "-V" ]; then
+    iptables -V
+fi
+
+exit 0

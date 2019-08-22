@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-krb5</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Формати файлів та правила</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-krb5</refname>
+        <refpurpose>Модуль надання даних Kerberos SSSD</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            На цій сторінці довідника описано налаштування засобу розпізнавання Kerberos
+5 для <citerefentry> <refentrytitle>sssd</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry>. Щоб дізнатися більше про синтаксис
+налаштування, зверніться до розділу «ФОРМАТ ФАЙЛА» сторінки довідника
+<citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+        </para>
+        <para>
+            Модуль розпізнавання Kerberos 5 містити засоби розпізнавання та зміни
+паролів. З метою отримання належних результатів його слід використовувати
+разом з інструментом обробки профілів (наприклад, id_provider = ldap). Деякі
+з даних, потрібних для роботи модуля розпізнавання Kerberos 5, має бути
+надано інструментом обробки профілів, серед цих даних Kerberos Principal
+Name (UPN) або реєстраційне ім’я користувача. У налаштуваннях інструменту
+обробки профілів має бути запис з визначенням UPN. Докладні настанови щодо
+визначення такого UPN має бути викладено на сторінці довідника (man)
+відповідного інструменту обробки профілів.
+        </para>
+        <para>
+            У цьому інструменті керування даними також передбачено можливості керування
+доступом, засновані на даних з файла .k5login у домашньому каталозі
+користувача. Докладніші відомості можна отримати з підручника до
+<citerefentry>
+<refentrytitle>.k5login</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>. Зауважте, що якщо файл .k5login виявиться порожнім, доступ
+користувачеві буде заборонено. Щоб задіяти можливість керування доступом,
+додайте рядок «access_provider = krb5» до ваших налаштувань SSSD.
+        </para>
+        <para>
+            У випадку, коли доступу до UPN у модулі профілів не передбачено,
+<command>sssd</command> побудує UPN у форматі
+<replaceable>ім’я_користувача</replaceable>@<replaceable>область_krb5</replaceable>.
+        </para>
+
+    </refsect1>
+
+    <refsect1 id='configuration-options'>
+        <title>ПАРАМЕТРИ НАЛАШТУВАННЯ</title>
+        <para>
+            Якщо у домені SSSD використано auth-module krb5, має бути використано
+вказані нижче параметри. Зверніться до сторінки довідника (man)
+<citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>, розділ «РОЗДІЛИ ДОМЕНІВ», щоб
+дізнатися більше про налаштування домену SSSD. <variablelist>
+                <varlistentry>
+                    <term>krb5_server, krb5_backup_server (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає список IP-адрес або назв вузлів, відокремлених комами, серверів
+Kerberos, з якими SSSD має встановлювати з’єднання. Список має бути
+впорядковано за пріоритетом.  Докладніше про резервування та додаткові
+сервери можна дізнатися з розділу «РЕЗЕРВ». До адрес або назв вузлів може
+бути додано номер порту (перед номером слід вписати двокрапку). Якщо
+параметр матиме порожнє значення, буде увімкнено виявлення служб. Докладніше
+про виявлення служб можна дізнатися з розділу «ПОШУК СЛУЖБ».
+                        </para>
+                        <para>
+                            Під час використання виявлення служб для серверів KDC або kpasswd SSSD
+спочатку намагається знайти записи DNS, у яких визначається протокол
+_udp. Використання протоколу _tcp відбувається, лише якщо таких записів не
+вдасться знайти.
+                        </para>
+                        <para>
+                            У попередніх випусках SSSD цей параметр мав назву «krb5_kdcip». У поточній
+версії передбачено розпізнавання цієї застарілої назви, але користувачам
+варто перейти на використання «krb5_server» у файлах налаштувань.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_realm (рядок)</term>
+                    <listitem>
+                        <para>
+                            Назва області Kerberos. Цей параметр є обов’язковим, його неодмінно слід
+вказати.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_kpasswd, krb5_backup_kpasswd (рядок)</term>
+                    <listitem>
+                        <para>
+                            Якщо службу зміни паролів не запущено на KDC, тут можна визначити
+альтернативні сервери. До адрес або назв вузлів можна додати номер порту
+(перед яким слід вписати двокрапку).
+                        </para>
+                        <para>
+                            Додаткові відомості щодо резервних серверів можна знайти у розділі
+«РЕЗЕРВ». Зауваження: навіть якщо список всіх серверів kpasswd буде
+вичерпано, модуль не перемкнеться у автономний режим роботи, якщо
+розпізнавання за KDC залишатиметься можливим.
+                        </para>
+                        <para>
+                            Типове значення: використання KDC
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_ccachedir (рядок)</term>
+                    <listitem>
+                        <para>
+                            Каталог для зберігання кешу реєстраційних даних. Тут також можна
+використовувати усі замінники з krb5_ccname_template, окрім %d та
+%P. Каталог створюється як конфіденційний, власником є користувач, права
+доступу — 0700.
+                        </para>
+                        <para>
+                            Типове значення: /tmp
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_ccname_template (рядок)</term>
+                    <listitem>
+                        <para>
+                            Розташування кешу з реєстраційними даними користувача У поточній версії
+передбачено підтримку трьох типів кешу реєстраційних даних:
+<quote>FILE</quote>, <quote>DIR</quote> та
+<quote>KEYRING:persistent</quote>. Кеш може бути вказано або у форматі
+<replaceable>ТИП:РЕШТА</replaceable>, або у форматі абсолютного шляху (тоді
+вважається, що типом кешу є <quote>FILE</quote>). У шаблоні передбачено
+можливість використання таких послідовностей-замінників: <variablelist>
+                                <varlistentry>
+                                    <term>%u</term>
+                                    <listitem><para>ім'я користувача</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%U</term>
+                                    <listitem><para>ідентифікатор користувача</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%p</term>
+                                    <listitem><para>назва реєстраційного запису</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%r</term>
+                                    <listitem><para>назва області</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%h</term>
+                                    <listitem><para>домашній каталог</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%d</term>
+                                    <listitem><para>значення krb5_ccachedir
+                                              </para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%P</term>
+                                    <listitem><para>ідентифікатор процесу клієнтської частини SSSD</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%%</term>
+                                    <listitem><para>символ відсотків («%»)</para>
+                                    </listitem>
+                                </varlistentry>
+                            </variablelist> Якщо шаблон завершується послідовністю
+«XXXXXX», для безпечного створення назви файла використовується mkstemp(3).
+                        </para>
+                        <para>
+                            Якщо використовуються типи KEYRING, єдиним підтримуваним механізмом є
+«KEYRING:persistent:%U», тобто використання сховища ключів ядра Linux для
+зберігання реєстраційних даних на основі поділу за UID. Цей варіант є
+рекомендованим, оскільки це найбезпечніший та найпередбачуваніший спосіб.
+                        </para>
+                        <para>
+                            Типове значення назви кешу реєстраційних даних буде запозичено з
+загальносистемного профілю, що зберігається у файлі налаштувань krb5.conf,
+розділ [libdefaults]. Назва параметра — default_ccache_name. Див. розділ
+щодо розгортання параметрів (PARAMETER EXPANSION) у довідці щодо
+krb5.conf(5), щоб отримати додаткові дані щодо формату розгортання,
+використаного у krb5.conf.
+                        </para>
+                        <para>
+                          ЗАУВАЖЕННЯ: майте на увазі, що шаблон розширення ccache libkrb5 з
+<citerefentry> <refentrytitle>krb5.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> використовує інші послідовності
+розширення, що не збігаються із використаними у SSSD.
+                        </para>
+                        <para>
+                            Типове значення: (з libkrb5)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_auth_timeout (ціле число)</term>
+                    <listitem>
+                        <para>
+                            Час очікування, по завершенню якого буде перервано запит щодо розпізнавання
+або зміни пароля у мережі. Якщо це можливо, обробку запиту щодо
+розпізнавання буде продовжено у автономному режимі.
+                        </para>
+                        <para>
+                            Типове значення: 6
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_validate (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Перевірити за допомогою krb5_keytab, чи отриманий TGT не було
+підмінено. Перевірка записів у таблиці ключів виконується послідовно. Для
+перевірки використовується перший запис з відповідним значенням
+області. Якщо не буде знайдено жодного відповідного області запису, буде
+використано останній запис з таблиці ключів. Цим процесом можна скористатися
+для перевірки середовищ за допомогою зв’язків довіри між записами областей:
+достатньо розташувати відповідний запис таблиці ключів на останньому місці
+або зробити його єдиним записом у файлі таблиці ключів.
+                        </para>
+                        <para>
+                            Типове значення: false
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_keytab (рядок)</term>
+                    <listitem>
+                        <para>
+                            Розташування таблиці ключів, якою слід скористатися під час перевірки
+реєстраційних даних, отриманих від KDC.
+                        </para>
+                        <para>
+                            Типове значення: /etc/krb5.keytab
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_store_password_if_offline (булівське значення)</term>
+                    <listitem>
+                        <para>
+                            Зберігати пароль користувача, якщо засіб перевірки перебуває поза мережею, і
+використовувати його для запитів TGT після встановлення з’єднання з засобом
+перевірки.
+                        </para>
+                        <para>
+                            Зауваження: ця можливість у поточній версії доступна лише на платформі
+Linux. Паролі зберігатимуться у форматі звичайного тексту (без шифрування) у
+сховищі ключів ядра, потенційно до них може отримати доступ адміністративний
+користувач (root), але йому для цього слід буде подолати деякі перешкоди.
+                        </para>
+                        <para>
+                            Типове значення: false
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_renewable_lifetime (рядок)</term>
+                    <listitem>
+                        <para>
+                            Надіслати запит щодо поновлюваного квитка з загальним строком дії, вказаним
+за допомогою цілого числа, за яким одразу вказано одиницю часу:
+                        </para>
+                        <para>
+                            <emphasis>s</emphasis> — секунди
+                        </para>
+                        <para>
+                            <emphasis>m</emphasis> — хвилини
+                        </para>
+                        <para>
+                            <emphasis>h</emphasis> — години
+                        </para>
+                        <para>
+                            <emphasis>d</emphasis> — дні.
+                        </para>
+                        <para>
+                            Якщо одиниці часу не буде вказано, вважатиметься, що використано одиницю
+<emphasis>s</emphasis>.
+                        </para>
+                        <para>
+                            Зауваження: не можна використовувати одразу декілька одиниць. Якщо вам
+потрібно встановити строк дії у півтори години, слід вказати «90m», а не
+«1h30m».
+                        </para>
+                        <para>
+                            Типове значення: не встановлено, тобто TGT не є оновлюваним
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_lifetime (рядок)</term>
+                    <listitem>
+                        <para>
+                            Надіслати запит щодо квитка з загальним строком дії, вказаним за допомогою
+цілого числа, за яким одразу вказано одиницю часу:
+                        </para>
+                        <para>
+                            <emphasis>s</emphasis> — секунди
+                        </para>
+                        <para>
+                            <emphasis>m</emphasis> — хвилини
+                        </para>
+                        <para>
+                            <emphasis>h</emphasis> — години
+                        </para>
+                        <para>
+                            <emphasis>d</emphasis> — дні.
+                        </para>
+                        <para>
+                            Якщо одиниці часу не буде вказано, вважатиметься, що використано одиницю
+<emphasis>s</emphasis>.
+                        </para>
+                        <para>
+                            Зауваження: не можна використовувати одразу декілька одиниць. Якщо вам
+потрібно встановити строк дії у півтори години, слід вказати «90m», а не
+«1h30m».
+                        </para>
+                        <para>
+                            Типове значення: не встановлено, тобто типовий строк дії квитка
+визначатиметься у налаштуваннях KDC.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_renew_interval (рядок)</term>
+                    <listitem>
+                        <para>
+                            Час у секундах між двома послідовними перевірками того, чи слід оновлювати
+записи TGT. Записи TGT оновлюються після завершення приблизно половини
+їхнього строку дії, що задається як ціле число з наступним позначенням
+одиниці часу:
+                        </para>
+                        <para>
+                            <emphasis>s</emphasis> — секунди
+                        </para>
+                        <para>
+                            <emphasis>m</emphasis> — хвилини
+                        </para>
+                        <para>
+                            <emphasis>h</emphasis> — години
+                        </para>
+                        <para>
+                            <emphasis>d</emphasis> — дні.
+                        </para>
+                        <para>
+                            Якщо одиниці часу не буде вказано, вважатиметься, що використано одиницю
+<emphasis>s</emphasis>.
+                        </para>
+                        <para>
+                            Зауваження: не можна використовувати одразу декілька одиниць. Якщо вам
+потрібно встановити строк дії у півтори години, слід вказати «90m», а не
+«1h30m».
+                        </para>
+                        <para>
+                             Якщо значення для цього параметра встановлено не буде або буде встановлено
+значення 0, автоматичного оновлення не відбуватиметься.
+                        </para>
+                        <para>
+                            Типове значення: not set
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_use_fast (рядок)</term>
+                    <listitem>
+                        <para>
+                            Вмикає безпечне тунелювання для гнучкого розпізнавання (flexible
+authentication secure tunneling або FAST) для попереднього розпізнавання у
+Kerberos. Передбачено такі варіанти:
+                        </para>
+                        <para>
+                            <emphasis>never</emphasis> використовувати FAST, рівнозначний варіанту, за
+якого значення цього параметра взагалі не задається.
+                        </para>
+                        <para>
+                            <emphasis>try</emphasis> — використовувати FAST. Якщо на сервері не
+передбачено підтримки FAST, продовжити розпізнавання без FAST.
+                        </para>
+                        <para>
+                            <emphasis>demand</emphasis> — використовувати FAST. Якщо на сервері не
+передбачено підтримки FAST, спроба розпізнавання зазнає невдачі.
+                        </para>
+                        <para>
+                            Типове значення: не встановлено, тобто FAST не використовується.
+                        </para>
+                        <para>
+                            Зауваження: будь ласка, зауважте, що для використання FAST потрібна таблиця
+ключів.
+                        </para>
+                        <para>
+                            Зауваження: у SSSD передбачено підтримку FAST лише у разі використання MIT
+Kerberos версії 1.8 або новішої. Якщо SSSD буде використано зі старішою
+версією MIT Kerberos і цим параметром, буде повідомлено про помилку у
+налаштуваннях.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_fast_principal (рядок)</term>
+                    <listitem>
+                        <para>
+                            Визначає реєстраційний запис сервера, який слід використовувати для FAST.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_canonicalize (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, чи слід перетворювати реєстраційний запис вузла і користувача у
+канонічну форму. Цю можливість передбачено з версії MIT Kerberos 1.7.
+                        </para>
+
+                        <para>
+                            Типове значення: false
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_use_kdcinfo (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, чи слід SSSD вказувати бібліотекам Kerberos, яку область і які
+значення KDC слід використовувати. Типово, дію параметра увімкнено. Якщо ви
+вимкнете його, вам слід налаштувати бібліотеку Kerberos за допомогою файла
+налаштувань <citerefentry> <refentrytitle>krb5.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+                        </para>
+                        <para>
+                            Див. сторінку підручника (man) <citerefentry>
+<refentrytitle>sssd_krb5_locator_plugin</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry>, щоб дізнатися більше про додаток
+пошуку.
+                        </para>
+                        <para>
+                            Типове значення: true
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_use_enterprise_principal (булеве значення)</term>
+                    <listitem>
+                        <para>
+                            Визначає, чи слід вважати реєстраційні дані користувача даними промислового
+рівня. Див. розділ 5 RFC 6806, щоб дізнатися більше про промислові
+реєстраційні дані.
+                        </para>
+
+                        <para>
+                            Типове значення: false (надається AD: true)
+                        </para>
+                        <para>
+                            Засіб надання даних IPA встановить для цього параметра значення «true», якщо
+виявить, що сервер здатен обробляти реєстраційні дані промислового класу, і
+параметр на встановлено явним чином у файлі налаштувань.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_map_user (рядок)</term>
+                    <listitem>
+                        <para>
+                             Список прив’язок визначається як список пар «користувач:основа», де
+«користувач» — ім’я користувача UNIX, а «основа» — частина щодо користувача
+у реєстраційному записі kerberos. Ця прив’язка використовується, якщо
+користувач проходить розпізнавання із використанням «auth_provider = krb5».
+                        </para>
+
+                        <para>
+                             приклад: <programlisting>
+krb5_realm = REALM
+krb5_map_user = joe:juser,dick:richard
+</programlisting>
+                        </para>
+                        <para>
+                             <quote>joe</quote> і <quote>dick</quote> — імена користувачів UNIX, а
+<quote>juser</quote> і <quote>richard</quote> основні частини реєстраційних
+записів kerberos. Для користувачів <quote>joe</quote> та, відповідно,
+<quote>dick</quote> SSSD намагатиметься виконати ініціалізацію kinit як
+<quote>juser@REALM</quote> і, відповідно,  <quote>richard@REALM</quote>.
+                        </para>
+
+                        <para>
+                            Типове значення: not set
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+            </variablelist>
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/failover.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/service_discovery.xml" />
+
+    <refsect1 id='example'>
+        <title>ПРИКЛАД</title>
+        <para>
+            У наведеному нижче прикладі припускається, що SSSD налаштовано належним
+чином, а FOO є одним з доменів у розділі
+<replaceable>[sssd]</replaceable>. У прикладі продемонстровано лише
+налаштування розпізнавання аз допомогою Kerberos, там не вказано інструменту
+обробки профілів.
+        </para>
+        <para>
+<programlisting>
+[domain/FOO]
+auth_provider = krb5
+krb5_server = 192.168.1.1
+krb5_realm = EXAMPLE.COM
+</programlisting>
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pàgines del manual de l'SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_usermod</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_usermod</refname>
+        <refpurpose>modifica el compte d'un usuari</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_usermod</command> <arg choice='opt'>
+<replaceable>OPCIONS</replaceable></arg> <arg choice='plain'>
+<replaceable>USUARI</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPCIÓ</title>
+        <para>
+            <command>sss_usermod</command> modifica el compte especificat amb
+<replaceable>USUARI</replaceable> per reflectir els canvis que
+s'especifiquen a la línia d'ordres.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPCIONS</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-c</option>,<option>--gecos</option>
+<replaceable>COMMENTARI</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Qualsevol cadena de text amb la descripció de l'usuari. Sovint s'utilitza
+com a camp per al nom complet de l'usuari.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-h</option>,<option>--home</option>
+<replaceable>DIRECTORI_INICIAL</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        El directori inicial del compte de l'usuari.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--shell</option>
+<replaceable>SHELL</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        El shell d'inici de sessió de l'usuari.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-a</option>,<option>--append-group</option>
+<replaceable>GRUPS</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Annexa aquest usuari als grups que s'especifiquen amb el paràmetre dels
+<replaceable>GRUPS</replaceable>. El paràmetre dels
+<replaceable>GRUPS</replaceable> és una llista delimitada per comes dels
+noms dels grups.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-r</option>,<option>--remove-group</option>
+<replaceable>GRUPS</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Remove this user from groups specified by the
+<replaceable>GROUPS</replaceable> parameter.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-l</option>,<option>--lock</option>
+                </term>
+                <listitem>
+                    <para>
+                        Bloqueja el compte de l'usuari. L'usuari no podrà iniciar la sessió.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-u</option>,<option>--unlock</option>
+                </term>
+                <listitem>
+                    <para>
+                        Desbloqueja el compte de l'usuari.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-Z</option>,<option>--selinux-user</option>
+<replaceable>SELINUX_USER</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        L'usuari de SELinux per a l'inici de sessió de l'usuari.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--addattr</option> <replaceable>NOM_ATRIBUT_VALOR</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Afegeix una parella atribut/valor. El format és nomatribut=valor.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--setattr</option> <replaceable>NOM_ATRIBUT_VALOR</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Estableix un atribut a la parella nom/valor. El format és
+nomatribut=valor. Per als atributs amb múltiples valors, l'ordre substitueix
+els valors ja presents
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--delattr</option> <replaceable>NOM_ATRIBUT_VALOR</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Elimina una parella atribut/valor. El format és nomatribut=valor.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/local.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

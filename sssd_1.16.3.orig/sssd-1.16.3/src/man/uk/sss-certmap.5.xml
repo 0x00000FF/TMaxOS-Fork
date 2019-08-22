@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss-certmap</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Формати файлів та правила</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss-certmap</refname>
+        <refpurpose>Правила встановлення відповідності і прив'язування сертифікатів SSSD</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            На цій сторінці підручника описано правила, якими можна скористатися у SSSD
+та інших компонентах для встановлення відповідності сертифікатів X.509 та
+прив'язування їх до облікових записів.
+        </para>
+        <para>
+            У кожного правила чотири компоненти — <quote>пріоритетність</quote>,
+<quote>правило встановлення відповідності</quote>, <quote>правило
+прив'язки</quote> і <quote>список доменів</quote>. Усі компоненти є
+необов'язковими. Якщо не вказано <quote>пріоритетність</quote>, буде додано
+правило із найнижчою пріоритетністю. Типове <quote>правило встановлення
+відповідності</quote> встановлює відповідність сертифікатів із використанням
+ключів digitalSignature і розширеним використанням ключів clientAuth. Якщо
+<quote>правило прив'язки</quote> є порожнім, сертифікати шукатимуться у
+атрибуті userCertificate у форматі закодованих двійкових даних DER. Якщо не
+буде вказано доменів, пошук відбуватиметься у локальному домені.
+        </para>
+    </refsect1>
+
+    <refsect1 id='components'>
+        <title>КОМПОНЕНТИ ПРАВИЛ</title>
+    <refsect2 id='priority'>
+        <title>ПРІОРИТЕТНІСТЬ</title>
+        <para>
+            The rules are processed by priority while the number '0' (zero)  indicates
+the highest priority. The higher the number the lower is the priority. A
+missing value indicates the lowest priority. The rules processing is stopped
+when a matched rule is found and no further rules are checked.
+        </para>
+        <para>
+            На внутрішньому рівні пріоритетність визначається 32-бітовим цілим числом
+без знаку. Використання значення пріоритетності, що перевищує 4294967295,
+призводитиме до виведення повідомлення про помилку.
+        </para>
+    </refsect2>
+    <refsect2 id='match'>
+        <title>ПРАВИЛО ВІДПОВІДНОСТІ</title>
+        <para>
+            Правило встановлення відповідності використовується для вибору сертифіката,
+до якого слід застосовувати правило прив'язки. У цьому використовується
+система, подібна до використаної у параметрі
+<quote>pkinit_cert_match</quote> Kerberos MIT. Правило складається з
+ключового слова між символами «&lt;» і «&gt;», яке визначає певну частину
+сертифіката, і взірцем, який має бути знайдено, для встановлення
+відповідності правила. Декілька пар ключове слово-взірець можна сполучати за
+допомогою логічних операторів «&amp;&amp;» (та) або «&#124;&#124;» (або).
+        </para>
+        <para>
+            Доступні варіанти: <variablelist>
+                <varlistentry>
+                    <term>&lt;SUBJECT&gt;формальний-вираз</term>
+                    <listitem>
+                    <para>
+                        За допомогою цього компонент можна встановлювати відповідність частини або
+усього запису призначення. Для встановлення відповідності використовується
+синтаксис розширених формальних виразів POSIX. Докладніший опис синтаксису
+можна знайти на сторінці підручника regex(7).
+                    </para>
+                    <para>
+                        Для встановлення відповідності запис призначення, що зберігається у
+сертифікаті у форматі кодованого DER ASN.1, буде перетворено на текстовий
+рядок відповідно до RFC 4514. Це означає, що першою у рядку буде
+найспецифічніша компонента. Будь ласка, зауважте, що у RFC 4514 описано не
+усі можливі назви атрибутів. Включеними вважаються такі назви: «CN», «L»,
+«ST», «O», «OU», «C», «STREET», «DC» і «UID». Назви інших атрибутів може
+бути показано у різний спосіб на різних платформах і у різних
+інструментах. Щоб уникнути двозначностей, не варто використовувати ці
+атрибути і вживати їх у відповідних формальних виразах.
+                    </para>
+                    <para>
+                        Приклад: &lt;SUBJECT&gt;.*,DC=MY,DC=DOMAIN
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;ISSUER&gt;формальний-вираз</term>
+                    <listitem>
+                    <para>
+                        За допомогою цього компонент можна встановлювати відповідність частини або
+усього запису видавця. Цього запису стосуються усі коментарі щодо
+&lt;SUBJECT&gt;.
+                    </para>
+                    <para>
+                        Приклад: &lt;ISSUER&gt;^CN=My-CA,DC=MY,DC=DOMAIN$
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;KU&gt;використання-ключа</term>
+                    <listitem>
+                    <para>
+                        За допомогою цього параметра можна визначити значення використання ключа,
+які повинен містити сертифікат. У списку значень, відокремлених комами,
+можна використовувати такі значення:
+                        <itemizedlist>
+                            <listitem><para>digitalSignature</para></listitem>
+                            <listitem><para>nonRepudiation</para></listitem>
+                            <listitem><para>keyEncipherment</para></listitem>
+                            <listitem><para>dataEncipherment</para></listitem>
+                            <listitem><para>keyAgreement</para></listitem>
+                            <listitem><para>keyCertSign</para></listitem>
+                            <listitem><para>cRLSign</para></listitem>
+                            <listitem><para>encipherOnly</para></listitem>
+                            <listitem><para>decipherOnly</para></listitem>
+                        </itemizedlist>
+                    </para>
+                    <para>
+                        Для спеціальних випадків можна також використати числове значення у
+діапазоні 32-бітових цілих чисел без знаку.
+                    </para>
+                    <para>
+                        Приклад: &lt;KU&gt;digitalSignature,keyEncipherment
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;EKU&gt;розширене-використання-ключа</term>
+                    <listitem>
+                    <para>
+                        За допомогою цього параметра можна визначити значення розширеного
+використання ключа, які повинен містити сертифікат. У списку значень,
+відокремлених комами, можна використовувати такі значення:
+                        <itemizedlist>
+                            <listitem><para>serverAuth</para></listitem>
+                            <listitem><para>clientAuth</para></listitem>
+                            <listitem><para>codeSigning</para></listitem>
+                            <listitem><para>emailProtection</para></listitem>
+                            <listitem><para>timeStamping</para></listitem>
+                            <listitem><para>OCSPSigning</para></listitem>
+                            <listitem><para>KPClientAuth</para></listitem>
+                            <listitem><para>pkinit</para></listitem>
+                            <listitem><para>msScLogin</para></listitem>
+                        </itemizedlist>
+                    </para>
+                    <para>
+                        Розширені використання ключа, які не потрапили до вказаного вище списку,
+можна визначити за допомогою їхнього OID у точково-десятковому позначенні.
+                    </para>
+                    <para>
+                        Приклад: &lt;EKU&gt;clientAuth,1.3.6.1.5.2.3.4
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;SAN&gt;формальний-вираз</term>
+                    <listitem>
+                    <para>
+                        Для сумісності із використанням Kerberos MIT цей параметр встановлюватиме
+відповідність реєстраційних даних Kerberos у PKINIT або AD NT Principal SAN
+так, як це робить &lt;SAN:Principal&gt;.
+                    </para>
+                    <para>
+                        Приклад: &lt;SAN&gt;.*@MY\.REALM
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;SAN:Principal&gt;формальний-вираз</term>
+                    <listitem>
+                    <para>
+                        Встановити відповідність реєстраційних даних Kerberos у PKINIT або AD NT
+Principal SAN.
+                    </para>
+                    <para>
+                        Приклад: &lt;SAN:Principal&gt;.*@MY\.REALM
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;SAN:ntPrincipalName&gt;формальний-вираз</term>
+                    <listitem>
+                    <para>
+                        Встановити відповідність реєстраційних даних Kerberos з AD NT Principal SAN.
+                    </para>
+                    <para>
+                        Приклад: &lt;SAN:ntPrincipalName&gt;.*@MY.AD.REALM
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;SAN:pkinit&gt;формальний-вираз</term>
+                    <listitem>
+                    <para>
+                        Встановити відповідність реєстраційних даних Kerberos з SAN PKINIT.
+                    </para>
+                    <para>
+                        Приклад: &lt;SAN:ntPrincipalName&gt;.*@MY\.PKINIT\.REALM
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;SAN:dotted-decimal-oid&gt;формальний-вираз</term>
+                    <listitem>
+                    <para>
+                        Отримати значення компонента SAN otherName, яке задано OID у
+крапково-десятковому позначенні, обробити його як рядок і спробувати
+встановити відповідність формальному виразу.
+                    </para>
+                    <para>
+                        Приклад: &lt;SAN:1.2.3.4&gt;test
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;SAN:otherName&gt;base64-string</term>
+                    <listitem>
+                    <para>
+                        Виконати спробу встановлення двійкової відповідності блоку у кодуванні
+base64 із усіма компонентами SAN otherName. За допомогою цього параметра
+можна встановлювати відповідність із нетиповими компонентами otherName із
+особливими кодуваннями, які не можна обробляти як рядки.
+                    </para>
+                    <para>
+                        Приклад: &lt;SAN:otherName&gt;MTIz
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;SAN:rfc822Name&gt;формальний-вираз</term>
+                    <listitem>
+                    <para>
+                        Встановити відповідність значення SAN rfc822Name.
+                    </para>
+                    <para>
+                        Приклад: &lt;SAN:rfc822Name&gt;.*@email\.domain
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;SAN:dNSName&gt;формальний-вираз</term>
+                    <listitem>
+                    <para>
+                        Встановити відповідність значення SAN dNSName.
+                    </para>
+                    <para>
+                        Приклад: &lt;SAN:dNSName&gt;.*\.my\.dns\.domain
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;SAN:x400Address&gt;рядок-base64</term>
+                    <listitem>
+                    <para>
+                        Встановити двійкову відповідність значення SAN x400Address.
+                    </para>
+                    <para>
+                        Приклад: &lt;SAN:x400Address&gt;MTIz
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;SAN:directoryName&gt;формальний-вираз</term>
+                    <listitem>
+                    <para>
+                        Встановити відповідність значення SAN directoryName. Цього параметра
+стосуються ті самі коментарі, які було вказано для параметрів &lt;ISSUER&gt;
+та &lt;SUBJECT&gt;.
+                    </para>
+                    <para>
+                        Приклад: &lt;SAN:directoryName&gt;.*,DC=com
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;SAN:ediPartyName&gt;рядок-base64</term>
+                    <listitem>
+                    <para>
+                        Встановити двійкову відповідність значення SAN ediPartyName.
+                    </para>
+                    <para>
+                        Приклад: &lt;SAN:ediPartyName&gt;MTIz
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;SAN:uniformResourceIdentifier&gt;формальний-вираз</term>
+                    <listitem>
+                    <para>
+                        Встановити відповідність значення SAN uniformResourceIdentifier.
+                    </para>
+                    <para>
+                        Приклад: &lt;SAN:uniformResourceIdentifier&gt;URN:.*
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;SAN:iPAddress&gt;формальний-вираз</term>
+                    <listitem>
+                    <para>
+                        Встановити відповідність значення SAN iPAddress.
+                    </para>
+                    <para>
+                        Приклад: &lt;SAN:iPAddress&gt;192\.168\..*
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>&lt;SAN:registeredID&gt;формальний-вираз</term>
+                    <listitem>
+                    <para>
+                        Встановити значення SAN registeredID у форматі точково-десяткового рядка.
+                    </para>
+                    <para>
+                        Приклад: &lt;SAN:registeredID&gt;1\.2\.3\..*
+                    </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+    </refsect2>
+    <refsect2 id='map'>
+        <title>ПРАВИЛО ПРИВʼЯЗУВАННЯ</title>
+        <para>
+            Правило прив'язки використовується для пов'язування сертифіката із одним або
+декількома обліковими записами. Далі, смарткарткою із сертифікатом та
+відповідним закритим ключем можна скористатися для розпізнавання за одним з
+цих облікових записів.
+        </para>
+        <para>
+            У поточній версії SSSD на базовому рівні підтримує пошук даних користувачів
+лише у LDAP (винятком є лише засіб надання проксі, який у цьому контексті є
+недоречним). Через це правило прив'язки засновано на синтаксисі фільтрування
+пошуку LDAP з шаблонами для додавання вмісту сертифікатів до
+фільтра. Очікується, що цей фільтр міститиме лише специфічні дані, потрібні
+для прив'язки, яку функція виклику вбудовуватиме до іншого фільтра для
+виконання справжнього пошуку. Через це рядок фільтрування має починатися із
+завершуватися «(» і «)», відповідно.
+        </para>
+        <para>
+            Загалом, рекомендується використовувати атрибути з сертифіката і додати їх
+до спеціальних атрибутів об'єкта користувача LDAP. Наприклад, можна
+скористатися атрибутом «altSecurityIdentities» у AD або атрибутом
+«ipaCertMapData» для IPA.
+        </para>
+        <para>
+            Бажаним шляхом є читання із сертифіката специфічних для користувача даних,
+наприклад адреси електронної пошти, і пошук цих даних на сервері
+LDAP. Причиною є те, що специфічні для користувача дані у LDAP можу бути з
+різних причин змінено, що розірве прив'язку. З іншого боку, якщо
+скористатися бажаним шляхом, розірвати прив'язку буде важко.
+        </para>
+        <para>
+            Шаблони для додавання даних сертифікатів до фільтра пошуку засновано на
+рядках форматування у стилі Python. Воли складаються з ключового слова у
+фігурних дужках із додатковим підкомпонентом-специфікатором, відокремленим
+«.», або додатковим параметром перетворення-форматування, відокремленим
+«!». Дозволені значення: <variablelist>
+                <varlistentry>
+                    <term>{issuer_dn[!((ad|ad_x500)|ad_ldap|nss_x500|(nss|nss_ldap))]}</term>
+                    <listitem>
+                    <para>
+                        Цей шаблон додасть повний DN видавця, перетворений на рядок відповідно до
+RFC 4514. Якщо використано упорядковування X.500 (найспецифічніший RDN
+стоїть останнім), буде використано параметр із префіксом «_x500».
+                    </para>
+                    <para>
+                        У варіантах перетворення, назви яких починаються з «ad_»,
+використовуватимуться назви атрибутів, які використовуються AD, наприклад
+«S», замість «ST».
+                    </para>
+                    <para>
+                        У варіантах перетворення, назви яких починаються з «nss_»,
+використовуватимуться назви атрибутів, які використовуються NSS.
+                    </para>
+                    <para>
+                        Типовим варіантом перетворення є «nss», тобто назви атрибутів відповідно до
+NSS і упорядковування за LDAP/RFC 4514.
+                    </para>
+                    <para>
+                        Приклад:
+(ipacertmapdata=X509:&lt;I&gt;{issuer_dn!ad}&lt;S&gt;{subject_dn!ad})
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>{subject_dn[!((ad|ad_x500)|ad_ldap|nss_x500|(nss|nss_ldap))]}</term>
+                    <listitem>
+                    <para>
+                        Цей шаблон додасть повний DN призначення, перетворений на рядок відповідно
+до RFC 4514. Якщо використано упорядковування X.500 (найспецифічніший RDN
+стоїть останнім), буде використано параметр із префіксом «_x500».
+                    </para>
+                    <para>
+                        У варіантах перетворення, назви яких починаються з «ad_»,
+використовуватимуться назви атрибутів, які використовуються AD, наприклад
+«S», замість «ST».
+                    </para>
+                    <para>
+                        У варіантах перетворення, назви яких починаються з «nss_»,
+використовуватимуться назви атрибутів, які використовуються NSS.
+                    </para>
+                    <para>
+                        Типовим варіантом перетворення є «nss», тобто назви атрибутів відповідно до
+NSS і упорядковування за LDAP/RFC 4514.
+                    </para>
+                    <para>
+                        Приклад:
+(ipacertmapdata=X509:&lt;I&gt;{issuer_dn!nss_x500}&lt;S&gt;{subject_dn!nss_x500})
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>{cert[!(bin|base64)]}</term>
+                    <listitem>
+                    <para>
+                        Цей шаблон додасть увесь сертифікат у кодуванні DER як рядок до фільтра
+пошуку. Залежно від параметра перетворення, двійковий сертифікат або буде
+преетворено на екрановану послідовність шістнадцяткових чисел у форматі
+«\xx», або на код base64. Типовим варіантом є екранована шістнадцяткова
+послідовність, її може бути, наприклад, використано з атрибутом LDAP
+«userCertificate;binary».
+                    </para>
+                    <para>
+                        Приклад: (userCertificate;binary={cert!bin})
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>{subject_principal[.short_name]}</term>
+                    <listitem>
+                    <para>
+                        Цей шаблон додасть реєстраційні дані Kerberos, які буде взято або з SAN,
+який використовується pkinit, або з реєстраційних даних AD. Компонент
+«short_name» відповідає першій частині реєстраційного запису до символу «@».
+                    </para>
+                    <para>
+                        Приклад:
+(|(userPrincipal={subject_principal})(samAccountName={subject_principal.short_name}))
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>{subject_pkinit_principal[.short_name]}</term>
+                    <listitem>
+                    <para>
+                        Цей шаблон додасть реєстраційні дані Kerberos, які буде передано SAN, що
+використовується pkinit. Компонент «short_name» відповідає першій частині
+реєстраційного запису до символу «@».
+                    </para>
+                    <para>
+                        Приклад:
+(|(userPrincipal={subject_pkinit_principal})(uid={subject_pkinit_principal.short_name}))
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>{subject_nt_principal[.short_name]}</term>
+                    <listitem>
+                    <para>
+                        Цей шаблон додасть реєстраційні дані Kerberos, які буде передано SAN, що
+використовується AD. Компонент «short_name» відповідає першій частині
+реєстраційного запису до символу «@».
+                    </para>
+                    <para>
+                        Приклад:
+(|(userPrincipal={subject_principal})(samAccountName={subject_principal.short_name}))
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>{subject_rfc822_name[.short_name]}</term>
+                    <listitem>
+                    <para>
+                        Цей шаблон додасть рядок, який зберігається у компоненті rfc822Name SAN,
+типово, адресу електронної пошти. Компонент «short_name» відповідає першій
+частині адреси до символу «@».
+                    </para>
+                    <para>
+                        Приклад:
+(|(mail={subject_rfc822_name})(uid={subject_rfc822_name.short_name}))
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>{subject_dns_name[.short_name]}</term>
+                    <listitem>
+                    <para>
+                        Цей шаблон додасть рядок, який зберігається у компоненті dNSName SAN,
+типово, повну назву вузла. Компонент «short_name» відповідає першій частині
+назви до першого символу «.».
+                    </para>
+                    <para>
+                        Приклад: (|(fqdn={subject_dns_name})(host={subject_dns_name.short_name}))
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>{subject_uri}</term>
+                    <listitem>
+                    <para>
+                        Цей шаблон додає рядок, який зберігається у компоненті
+uniformResourceIdentifier SAN.
+                    </para>
+                    <para>
+                        Приклад: (uri={subject_uri})
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>{subject_ip_address}</term>
+                    <listitem>
+                    <para>
+                        Цей шаблон додає рядок, який зберігається у компоненті iPAddress SAN.
+                    </para>
+                    <para>
+                        Приклад: (ip={subject_ip_address})
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>{subject_x400_address}</term>
+                    <listitem>
+                    <para>
+                        Цей шаблон додає значення, яке зберігається у компоненті x400Address SAN як
+послідовність екранованих шістнадцяткових чисел.
+                    </para>
+                    <para>
+                        Приклад: (attr:binary={subject_x400_address})
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>{subject_directory_name[!((ad|ad_x500)|ad_ldap|nss_x500|(nss|nss_ldap))]}</term>
+                    <listitem>
+                    <para>
+                        Цей шаблон додасть рядок DN значення, яке зберігається у компоненті
+directoryName SAN.
+                    </para>
+                    <para>
+                        Приклад: (orig_dn={subject_directory_name})
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>{subject_ediparty_name}</term>
+                    <listitem>
+                    <para>
+                        Цей шаблон додає значення, яке зберігається у компоненті ediPartyName SAN як
+послідовність екранованих шістнадцяткових чисел.
+                    </para>
+                    <para>
+                        Приклад: (attr:binary={subject_ediparty_name})
+                    </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>{subject_registered_id}</term>
+                    <listitem>
+                    <para>
+                        Цей шаблон додає OID, який зберігається у компоненті registeredID SAN у
+форматі точково-десяткового рядка.
+                    </para>
+                    <para>
+                        Приклад: (oid={subject_registered_id})
+                    </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+    </refsect2>
+    <refsect2 id='domains'>
+        <title>СПИСОК ДОМЕНІВ</title>
+        <para>
+            Якщо список доменів не є порожнім, записи користувачів, прив'язані до
+заданого сертифіката, шукаються не лише у локальному домені, а і у доменах
+зі списку, якщо вони відомі SSSD. Домени, які не відомі SSSD, буде
+проігноровано.
+        </para>
+    </refsect2>
+    </refsect1>
+</refentry>
+</reference>

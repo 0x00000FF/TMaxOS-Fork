@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_obfuscate</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_obfuscate</refname>
+        <refpurpose>заплутування пароля у форматі звичайного тексту</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_obfuscate</command> <arg choice='opt'>
+<replaceable>параметри</replaceable> </arg> <arg
+choice='plain'><replaceable>[ПАРОЛЬ]</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            <command>sss_obfuscate</command> перетворює вказаний пароль на пароль у
+форматі зручному для читання і розташовує його у розділі відповідного домену
+файла налаштувань SSSD.
+        </para>
+        <para>
+            Пароль у форматі звичайного тексту буде прочитано зі стандартного джерела
+вхідних даних або введено інтерактивно. Заплутану версію пароля буде
+збережено у параметрі з назвою «ldap_default_authtok» вказаного домену SSSD,
+параметру «ldap_default_authtok_type» буде надано значення
+«obfuscated_password». Докладніший опис цих параметрів можна знайти на
+сторінці підручника (man) <citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+        </para>
+        <para>
+            Будь ласка, зауважте, що заплутування паролів <emphasis>не є справжнім
+захистом</emphasis>, оскільки зловмисник може визначити алгоритм
+заплутування за кодом програми. <emphasis>Наполегливо</emphasis> радимо вам
+скористатися кращими механізмами захисту даних розпізнавання, зокрема
+клієнтськими сертифікатами або GSSAPI.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>ПАРАМЕТРИ</title>
+        <variablelist remap='IP'>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help_py.xml" />
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--stdin</option>
+                </term>
+                <listitem>
+                    <para>
+                        Пароль для заплутування буде прочитано зі стандартного джерела вхідних
+даних.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-d</option>,<option>--domain</option>
+<replaceable>ДОМЕН</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Домен SSSD, для якого буде використано пароль. Типовою назвою є
+<quote>default</quote>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-f</option>,<option>--file</option> <replaceable>ФАЙЛ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Прочитати дані з файла налаштувань, вказаного позиційним параметром.
+                    </para>
+                    <para>
+                        Типове значення: <filename>/etc/sssd/sssd.conf</filename>
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

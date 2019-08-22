@@ -1,0 +1,64 @@
+<varlistentry>
+<term>override_homedir (chaîne)</term>
+<listitem>
+    <para>
+        Réécrit le répertoire personnel de l'utilisateur. Il est possible de fournir
+une valeur absolue ou un patron. Dans le cas d'un patron, les séquences
+suivantes sont substituées :<variablelist>
+            <varlistentry>
+                <term>%u</term>
+                <listitem><para>identifiant de connexion</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%U</term>
+                <listitem><para>numéro d'UID</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%d</term>
+                <listitem><para>nom de domaine</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%f</term>
+                <listitem><para>nom d'utilisateur pleinement qualifié (utilisateur@domaine)</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%l</term>
+                <listitem><para>The first letter of the login name.</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%P</term>
+                <listitem><para>UPN - Nom de principal d'utilisateur (User principal name, nom@ROYAUME)</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%o</term>
+                <listitem><para>
+                    Le répertoire utilisateur original provenant du fournisseur d'identité.
+                    </para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%H</term>
+                <listitem><para>
+                    La valeur de l'option de configuration
+<emphasis>homedir_substring</emphasis>.
+                    </para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%%</term>
+                <listitem><para>un « % » littéral</para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </para>
+    <para>
+        Cette option peut aussi être définie pour chaque domaine.
+    </para>
+    <para>
+        exemple : <programlisting>
+override_homedir = /home/%u
+        </programlisting>
+    </para>
+    <para>
+        Par défaut : Indéfini (SSSD utilisera la valeur récupérée de LDAP)
+    </para>
+</listitem>
+</varlistentry>

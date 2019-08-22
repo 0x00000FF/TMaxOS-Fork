@@ -1,0 +1,17 @@
+Internationalization
+--------------------
+gettext files are placed in locales/po/. To update the main .pot file, do:
+$ pygettext -d ufw -p locales/po -S GNU src/ufw src/[a-z]*.py
+
+and adjust locales/po/ufw.pot accordingly.
+
+Translations are handled in Launchpad. Please see:
+https://translations.launchpad.net/ufw/
+
+Testing locales can be done like so (typically in a chroot or VM):
+$ make mo
+$ sudo ./tests/check-locales -d locales/mo -l es # a specify locale
+$ sudo ./tests/check-locales -d locales/mo       # all locales
+
+
+Copyright 2008-2012 Canonical Ltd.

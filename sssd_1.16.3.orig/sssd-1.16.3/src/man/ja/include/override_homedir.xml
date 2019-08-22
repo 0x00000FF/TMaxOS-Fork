@@ -1,0 +1,62 @@
+<varlistentry>
+<term>override_homedir (文字列)</term>
+<listitem>
+    <para>
+        ユーザーのホームディレクトリーを上書きします。絶対パスまたはテンプレートを提供できます。テンプレートでは、以下のシーケンスが置換されます:
+<variablelist>
+            <varlistentry>
+                <term>%u</term>
+                <listitem><para>ログイン名</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%U</term>
+                <listitem><para>UID 番号</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%d</term>
+                <listitem><para>ドメイン名</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%f</term>
+                <listitem><para>完全修飾ユーザー名 (user@domain)</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%l</term>
+                <listitem><para>The first letter of the login name.</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%P</term>
+                <listitem><para>UPN - User Principal Name (name@REALM)</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%o</term>
+                <listitem><para>
+                    The original home directory retrieved from the identity provider.
+                    </para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%H</term>
+                <listitem><para>
+                    The value of configure option <emphasis>homedir_substring</emphasis>.
+                    </para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%%</term>
+                <listitem><para>文字 '%'</para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </para>
+    <para>
+        このオプションはドメインごとに設定できます。
+    </para>
+    <para>
+        例: <programlisting>
+override_homedir = /home/%u
+        </programlisting>
+    </para>
+    <para>
+        初期値: 設定なし (SSSD は LDAP から取得された値を使用します)
+    </para>
+</listitem>
+</varlistentry>

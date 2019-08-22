@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_useradd</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_useradd</refname>
+        <refpurpose>створення нового запису користувача</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_useradd</command> <arg choice='opt'>
+<replaceable>параметри</replaceable> </arg> <arg
+choice='plain'><replaceable>НАЗВА_ОБЛІКОВОГО_ЗАПИСУ</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            <command>sss_useradd</command> створює обліковий запис користувача на основі
+значень, вказаних у командному рядку та типових значень системи.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>ПАРАМЕТРИ</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-u</option>,<option>--uid</option> <replaceable>ідентифікатор
+користувача</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Встановити для параметра ідентифікатора користувача (UID) значення
+<replaceable>UID</replaceable>. Якщо таке значення не буде вказано, програма
+вибере його автоматично.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-c</option>,<option>--gecos</option>
+<replaceable>КОМЕНТАР</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Будь-який рядок тексту, що описує користувача. Часто використовується для
+зберігання паспортного імені користувача.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-h</option>,<option>--home</option>
+<replaceable>ДОМАШНІЙ_КАТАЛОГ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Домашній каталог облікового запису користувача. Типовою назвою такого
+каталогу є назва, що утворюється додаванням
+<replaceable>ІМЕНІ_КОРИСТУВАЧА</replaceable> до запису
+<filename>/home</filename>. Рядок, який буде додано перед
+<replaceable>ІМЕНЕМ_КОРИСТУВАЧА</replaceable>, можна визначити за допомогою
+параметра «user_defaults/baseDirectory» у sssd.conf.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--shell</option>
+<replaceable>ОБОЛОНКА</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Командна оболонка реєстрації користувача. У поточній версії типовою
+оболонкою є <filename>/bin/bash</filename>. Типову оболонку можна змінити за
+допомогою параметра «user_defaults/defaultShell» у sssd.conf.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-G</option>,<option>--groups</option>
+<replaceable>ГРУПИ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Список груп, учасником яких є користувач.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-m</option>,<option>--create-home</option>
+                </term>
+                <listitem>
+                    <para>
+                        Створити домашній каталог користувача, якщо такого ще не існує. До такого
+домашнього каталогу буде скопійовано файли і каталоги з каркасного каталогу
+(який можна визначити за допомогою параметра -k або запису у файлі
+налаштувань).
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-M</option>,<option>--no-create-home</option>
+                </term>
+                <listitem>
+                    <para>
+                        Не створювати домашнього каталогу користувача. Має пріоритет над іншими
+параметрами налаштування.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-k</option>,<option>--skel</option>
+<replaceable>КАТАЛОГ_SKEL</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Каркасний каталог, який містить файли і каталоги, які буде скопійовано до
+домашнього каталогу користувача, коли такий домашній каталог створюється
+командою <command>sss_useradd</command>.
+                    </para>
+                    <para>
+                        Спеціальні файли (блокові пристрої, символьні пристрої, іменовані канали та
+сокети UNIX) скопійовано не буде.
+                    </para>
+                    <para>
+                        Цей параметр набуде чинності, лише якщо вказано параметр <option>-m</option>
+(або <option>--create-home</option>) або для створення домашніх каталогів
+вказано TRUE у налаштуваннях.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-Z</option>,<option>--selinux-user</option>
+<replaceable>КОРИСТУВАЧ_SELINUX</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Користувач SELinux, що відповідає користувачеві, який увійшов до
+системи. Якщо не вказано, буде використано типового користувача системи.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/local.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

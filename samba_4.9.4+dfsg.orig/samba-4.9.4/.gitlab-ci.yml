@@ -1,0 +1,87 @@
+# see https://docs.gitlab.com/ce/ci/yaml/README.html for all available options
+
+image: registry.gitlab.com/samba-team/samba:latest
+
+variables:
+  GIT_STRATEGY: fetch
+  GIT_DEPTH: "3"
+
+before_script:
+  - echo "Build starting (preparing swap)..."
+  - if [ $(df -m / --output=avail | tail -n1) -gt 10240 ]; then
+      sudo dd if=/dev/zero of=/samba-swap bs=1M count=6144;
+      sudo mkswap /samba-swap;
+      sudo swapon /samba-swap;
+    fi
+
+after_script:
+  - tar -xf logs.tar.gz system-info.txt -O
+
+.shared_template: &shared_template
+  stage: build
+  tags:
+    - docker
+    - shared
+
+build_samba_none_env:
+  <<: *shared_template
+  script:
+    # this one takes about 1 hours to finish
+    - python script/autobuild.py samba-none-env    --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+
+build_samba_nopython:
+  <<: *shared_template
+  script:
+    - python script/autobuild.py samba-nopython   --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+
+build_samba_systemkrb5:
+  <<: *shared_template
+  script:
+    - python script/autobuild.py samba-systemkrb5 --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+
+build_samba_xc:
+  <<: *shared_template
+  script:
+    - python script/autobuild.py samba-xc         --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+
+build_samba_o3:
+  <<: *shared_template
+  script:
+    - python script/autobuild.py samba-o3         --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+
+build_samba_ad_dc_2:
+  <<: *shared_template
+  script:
+    # this one takes about 1 hours to finish
+    - python script/autobuild.py samba-ad-dc-2     --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+
+build_samba_libs:
+  <<: *shared_template
+  script:
+    - python script/autobuild.py samba-libs       --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+
+build_samba_static:
+  <<: *shared_template
+  script:
+    - python script/autobuild.py samba-static     --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+
+build_ctdb:
+  <<: *shared_template
+  script:
+    - python script/autobuild.py samba-ctdb       --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+
+build_samba_ctdb:
+  <<: *shared_template
+  script:
+    - python script/autobuild.py ctdb             --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+
+build_others:
+  <<: *shared_template
+  script:
+    - python script/autobuild.py ldb              --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+    - python script/autobuild.py pidl             --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+    - python script/autobuild.py replace          --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+    - python script/autobuild.py talloc           --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+    - python script/autobuild.py tdb              --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+    - python script/autobuild.py tevent           --verbose --nocleanup --keeplogs --tail --testbase /tmp/samba-testbase
+

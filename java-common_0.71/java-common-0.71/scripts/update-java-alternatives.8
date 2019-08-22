@@ -1,0 +1,54 @@
+.TH UPDATE-JAVA-ALTERNATIVES "8" "May 2006" 
+.SH NAME
+update-java-alternatives \- update alternatives for jre/sdk installations
+.SH SYNOPSIS
+.B update-java-alternatives [--jre] [--plugin] [-v|--verbose]
+      \-l|--list [<jname>]
+      \-s|--set <jname>
+      \-a|--auto
+      \-h|\-?|--help
+.SH DESCRIPTION
+update-java-alternatives updates all alternatives belonging to one runtime
+or development kit for the Java language.  A package does provide these
+information of it's alternatives in /usr/lib/jvm/.<jname>.jinfo.
+.SH OPTIONS
+.TP
+\fB\-l|\-\-list [<jname>]\fR
+List all installed packages (or just <jname>) providing information to set
+a bunch of java alternatives. Verbose output shows each alternative
+provided by the packages.
+.TP
+\fB\-a|\-\-auto\fR
+Switch all alternatives of registered jre/sdk installations to automatic mode.
+.TP
+\fB\-s|\-\-set <jname>\fR
+Set all alternatives of the registered jre/sdk installation to the program
+path provided by the <jname> installation.
+.TP
+\fB\-\-jre\fR
+Limit the actions to alternatives belong to a runtime environment,
+not a development kit.
+.TP
+\fB\-\-jre\-headless\fR
+Limit the actions to alternatives belong to the headless part of a runtime environment.
+.TP
+\fB\-\-plugin\fR
+Limit the actions to alternatives providing browser plugins.
+.TP
+\fB\-h|\-\-help\fR
+Display a help message.
+.TP
+\fB\-v|\-\-verbose\fR
+Verbose output.
+
+.SH FILES
+.TP
+.I /usr/lib/jvm/.*.jinfo
+A text file describing a jre/sdk installation. Consists of some
+variables of the form <var>=<value> and a list of alternatives of the form
+jre|jdk <name> <path>.
+
+.PP
+.SH AUTHOR
+update-java-alternatives and this manual page was written by Matthias
+Klose <doko@ubuntu.com>.

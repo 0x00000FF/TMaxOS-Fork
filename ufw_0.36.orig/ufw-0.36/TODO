@@ -1,0 +1,14 @@
+TODO
+----
+DBus support so frontend can send messages to ufw which can then be protected
+via policy kit
+
+Provide a very simple GUI, possibly with NetworkManager integration. This GUI
+would not replace gufw, which aims to expose the full functionality of ufw.
+
+MAC address filtering (ie ebtables)
+
+nftables backend (first create compatibility backend and transition upgrades
+to that. When nftables backend is complete, new installs can use it)
+
+Copyright 2008-2015 Canonical Ltd.

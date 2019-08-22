@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD-Handbuchseiten</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_groupshow</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_groupshow</refname>
+        <refpurpose>gibt die Eigenschaften einer Gruppe aus.</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_groupshow</command> <arg choice='opt'>
+<replaceable>Optionen</replaceable> </arg> <arg
+choice='plain'><replaceable>GRUPPE</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>BESCHREIBUNG</title>
+        <para>
+            <command>sss_groupshow</command> zeigt Informationen über eine Gruppe namens
+<replaceable>GRUPPE</replaceable> an. Die Informationen umfassen die
+Gruppen-ID-Nummer, Mitglieder der Gruppe, sowie die übergeordnete Gruppe.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPTIONEN</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-R</option>,<option>--recursive</option>
+                </term>
+                <listitem>
+                    <para>
+                        gibtt auch indirekte Gruppenmitglieder in einer baumartigen Hierarchie
+aus. Beachten Sie, dass dies auch die Ausgabe der übergeordneten Gruppen
+beeinflusst – ohne <option>R</option> werden nur die unmittelbar
+übergeordneten Gruppen ausgegeben.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/local.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

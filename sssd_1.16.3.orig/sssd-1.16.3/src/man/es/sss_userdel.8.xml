@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Páginas de manual de SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_userdel</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_userdel</refname>
+        <refpurpose>eliminar una cuenta de usuario</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_userdel</command> <arg choice='opt'>
+<replaceable>options</replaceable> </arg> <arg
+choice='plain'><replaceable>LOGIN</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPCION</title>
+        <para>
+            <command>sss_userdel</command> borra del sistema un usuario identificado por
+su nombre de acceso <replaceable>LOGIN</replaceable>.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPCIONES</title>
+        <variablelist remap='IP'>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+            <varlistentry>
+                <term>
+                    <option>-r</option>,<option>--remove</option>
+                </term>
+                <listitem>
+                    <para>
+                        Los ficheros en el directorio home del usuario serán borrados así como el
+directorio home mismo y el buzón de correo del usuario. Reescribe la
+configuración.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-R</option>,<option>--no-remove</option>
+                </term>
+                <listitem>
+                    <para>
+                        Los ficheros en el directorio home del usuario NO serán borrados así como el
+directorio home mismo y el buzón de correo del usuario. Reescribe la
+configuración.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-f</option>,<option>--force</option>
+                </term>
+                <listitem>
+                    <para>
+                        Esta opción fuerza a <command>sss_userdel</command> a borrar el directorio
+home del usuario y el buzón de correo, aunque no sea propiedad del usuario
+especificado.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-k</option>,<option>--kick</option>
+                </term>
+                <listitem>
+                    <para>
+                        Antes de realmente eliminar al usuario, terminar todos sus procesos.
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/local.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

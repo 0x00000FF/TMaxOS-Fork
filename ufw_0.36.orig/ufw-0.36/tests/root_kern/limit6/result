@@ -1,0 +1,245 @@
+Setting IPV6 to yes
+0: disable
+
+
+1: enable
+
+
+TESTING RGS (limit to/from)
+2: limit 22/tcp
+WARN: Checks disabled
+Rule added
+Rule added (v6)
+
+
+3: limit from any port 24 proto udp
+WARN: Checks disabled
+Rule added
+Rule added (v6)
+
+
+4: limit in on eth1 to any port 23
+WARN: Checks disabled
+Rule added
+Rule added (v6)
+
+
+5: status
+WARN: Checks disabled
+Status: active
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     LIMIT       Anywhere
+Anywhere                   LIMIT       24/udp
+23 on eth1                 LIMIT       Anywhere
+22/tcp                     LIMIT       Anywhere (v6)
+Anywhere (v6)              LIMIT       24/udp
+23 on eth1                 LIMIT       Anywhere (v6)
+
+
+
+### tuple ### limit tcp 22 0.0.0.0/0 any 0.0.0.0/0 in
+-A ufw-user-input -p tcp --dport 22 -m conntrack --ctstate NEW -m recent --set
+-A ufw-user-input -p tcp --dport 22 -m conntrack --ctstate NEW -m recent --update --seconds 30 --hitcount 6 -j ufw-user-limit
+--
+### tuple ### limit udp any 0.0.0.0/0 24 0.0.0.0/0 in
+-A ufw-user-input -p udp --sport 24 -m conntrack --ctstate NEW -m recent --set
+-A ufw-user-input -p udp --sport 24 -m conntrack --ctstate NEW -m recent --update --seconds 30 --hitcount 6 -j ufw-user-limit
+--
+### tuple ### limit any 23 0.0.0.0/0 any 0.0.0.0/0 in_eth1
+-A ufw-user-input -i eth1 -p tcp --dport 23 -m conntrack --ctstate NEW -m recent --set
+-A ufw-user-input -i eth1 -p tcp --dport 23 -m conntrack --ctstate NEW -m recent --update --seconds 30 --hitcount 6 -j ufw-user-limit
+### tuple ### limit tcp 22 ::/0 any ::/0 in
+-A ufw6-user-input -p tcp --dport 22 -m conntrack --ctstate NEW -m recent --set
+-A ufw6-user-input -p tcp --dport 22 -m conntrack --ctstate NEW -m recent --update --seconds 30 --hitcount 6 -j ufw6-user-limit
+--
+### tuple ### limit udp any ::/0 24 ::/0 in
+-A ufw6-user-input -p udp --sport 24 -m conntrack --ctstate NEW -m recent --set
+-A ufw6-user-input -p udp --sport 24 -m conntrack --ctstate NEW -m recent --update --seconds 30 --hitcount 6 -j ufw6-user-limit
+--
+### tuple ### limit any 23 ::/0 any ::/0 in_eth1
+-A ufw6-user-input -i eth1 -p tcp --dport 23 -m conntrack --ctstate NEW -m recent --set
+-A ufw6-user-input -i eth1 -p tcp --dport 23 -m conntrack --ctstate NEW -m recent --update --seconds 30 --hitcount 6 -j ufw6-user-limit
+TESTING ARGS (delete allow/deny to/from)
+6: delete limit 22/tcp
+WARN: Checks disabled
+Rule deleted
+Rule deleted (v6)
+
+
+7: delete limit from any port 24 proto udp
+WARN: Checks disabled
+Rule deleted
+Rule deleted (v6)
+
+
+8: delete limit in on eth1 to any port 23
+WARN: Checks disabled
+Rule deleted
+Rule deleted (v6)
+
+
+9: status
+WARN: Checks disabled
+Status: active
+
+
+Testing status numbered
+Setting IPV6 to yes
+10: disable
+
+
+11: enable
+
+
+12: limit 22/tcp
+WARN: Checks disabled
+Rule added
+Rule added (v6)
+
+
+13: limit from any port 24 proto udp
+WARN: Checks disabled
+Rule added
+Rule added (v6)
+
+
+14: limit in on eth1 to any port 23
+WARN: Checks disabled
+Rule added
+Rule added (v6)
+
+
+15: status numbered
+WARN: Checks disabled
+Status: active
+
+     To                         Action      From
+     --                         ------      ----
+[ 1] 22/tcp                     LIMIT IN    Anywhere
+[ 2] Anywhere                   LIMIT IN    24/udp
+[ 3] 23 on eth1                 LIMIT IN    Anywhere
+[ 4] 22/tcp                     LIMIT IN    Anywhere (v6)
+[ 5] Anywhere (v6)              LIMIT IN    24/udp
+[ 6] 23 on eth1                 LIMIT IN    Anywhere (v6)
+
+
+
+16: delete limit 22/tcp
+WARN: Checks disabled
+Rule deleted
+Rule deleted (v6)
+
+
+17: delete limit from any port 24 proto udp
+WARN: Checks disabled
+Rule deleted
+Rule deleted (v6)
+
+
+18: delete limit in on eth1 to any port 23
+WARN: Checks disabled
+Rule deleted
+Rule deleted (v6)
+
+
+19: status numbered
+WARN: Checks disabled
+Status: active
+
+
+Verify secondary limit chains
+20: logging off
+
+
+21: disable
+
+
+22: enable
+
+
+23: ip6tables -L ufw6-user-limit -n | egrep -q '0 references'
+
+
+24: ip6tables -L ufw6-user-limit-accept -n | egrep -q '0 references'
+
+
+25: logging on
+
+
+26: disable
+
+
+27: enable
+
+
+28: ip6tables -L ufw6-user-limit -n | egrep -q '0 references'
+
+
+29: ip6tables -L ufw6-user-limit-accept -n | egrep -q '0 references'
+
+
+30: logging low
+
+
+31: disable
+
+
+32: enable
+
+
+33: ip6tables -L ufw6-user-limit -n | egrep -q '0 references'
+
+
+34: ip6tables -L ufw6-user-limit-accept -n | egrep -q '0 references'
+
+
+35: logging medium
+
+
+36: disable
+
+
+37: enable
+
+
+38: ip6tables -L ufw6-user-limit -n | egrep -q '0 references'
+
+
+39: ip6tables -L ufw6-user-limit-accept -n | egrep -q '0 references'
+
+
+40: logging high
+
+
+41: disable
+
+
+42: enable
+
+
+43: ip6tables -L ufw6-user-limit -n | egrep -q '0 references'
+
+
+44: ip6tables -L ufw6-user-limit-accept -n | egrep -q '0 references'
+
+
+45: logging full
+
+
+46: disable
+
+
+47: enable
+
+
+48: ip6tables -L ufw6-user-limit -n | egrep -q '0 references'
+
+
+49: ip6tables -L ufw6-user-limit-accept -n | egrep -q '0 references'
+
+
+50: disable
+
+

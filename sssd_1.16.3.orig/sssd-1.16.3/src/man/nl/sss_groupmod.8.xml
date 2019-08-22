@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD handleiding</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_groupmod</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_groupmod</refname>
+        <refpurpose>muteer een groep</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_groupmod</command> <arg choice='opt'>
+<replaceable>opties</replaceable> </arg> <arg
+choice='plain'><replaceable>GROEP</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>OMSCHRIJVING</title>
+        <para>
+            <command>sss_groupmod</command> muteert de groep en maakt de aanpassingen
+die via de opdrachtregel ingegeven zijn.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPTIES</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-a</option>,<option>--append-group</option>
+<replaceable>GROEPEN</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Voeg deze groep toe aan de groepen opgegeven met de
+<replaceable>GROEPEN</replaceable> parameter.  De
+<replaceable>GROEPEN</replaceable> parameter is een kommagescheiden lijst
+van groepnamen.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-r</option>,<option>--remove-group</option>
+<replaceable>GROEPEN</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Verwijder deze groep uit de groepen opgegeven in de
+<replaceable>GROEPEN</replaceable> parameter.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/local.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD マニュアル ページ</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-simple</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">ファイル形式および変換</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-simple</refname>
+        <refpurpose>SSSD の 'simple' アクセス制御プロバイダーの設定ファイルです。</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>概要</title>
+        <para>
+            このマニュアルは <citerefentry> <refentrytitle>sssd</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry> に対して簡単なアクセス制御の設定を説明しています。詳細は
+<citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> マニュアルページの <quote>ファイル形式</quote>
+セクションを参照してください。
+        </para>
+        <para>
+            シンプルアクセスプロバイダーは、ユーザー名またはグループ名のアクセスまたは拒否の一覧に基づいてアクセスを許可または拒否します。以下の例を適用します:
+            <itemizedlist>
+                <listitem>
+                    <para>すべての一覧が空白ならば、アクセスが認められます</para>
+                </listitem>
+                <listitem>
+                    <para>
+                        何らかの一覧が提供されていると、許可（allow）、拒否（deny）の順に評価されます。拒否ルールに一致するすべてのものは、許可ルールに一致するすべてのものを更新することを意味します。
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        "allow" 一覧が提供されていると、すべてのユーザーはこの一覧に表れなければ拒否されます。
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        "deny" 一覧のみが提供されていると、ユーザーがこの一覧に表れない限り、すべてのユーザーがアクセスを許可されます。
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </para>
+    </refsect1>
+
+    <refsect1 id='configuration-options'>
+        <title>設定オプション</title>
+        <para>SSSD ドメインの設定に関する詳細は <citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> マニュアルページの <quote>ドメインセクション</quote>
+のセクションを参照してください。  <variablelist>
+                <varlistentry>
+                    <term>simple_allow_users (文字列)</term>
+                    <listitem>
+                        <para>
+                            ログインが許可されたユーザーのカンマ区切り一覧です。
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>simple_deny_users (文字列)</term>
+                    <listitem>
+                        <para>
+                            アクセスが明示的に拒否されたユーザーのカンマ区切り一覧です。
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>simple_allow_groups (文字列)</term>
+                    <listitem>
+                        <para>
+                            ログインが許可されたグループのカンマ区切り一覧です。この SSSD ドメインの中のグループのみに適用されます。ローカルグループは評価されません。
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>simple_deny_groups (文字列)</term>
+                    <listitem>
+                        <para>
+                            アクセスが明示的に拒否されたグループのカンマ区切り一覧です。この SSSD ドメインの中のグループのみに適用されます。ローカルグループは評価されません。
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+        <para>
+            Specifying no values for any of the lists is equivalent to skipping it
+entirely. Beware of this while generating parameters for the simple provider
+using automated scripts.
+        </para>
+        <para>
+            simple_allow_users と simple_deny_users がどちらも定義されると、設定エラーになることに注意してください。
+        </para>
+    </refsect1>
+
+    <refsect1 id='example'>
+        <title>例</title>
+        <para>
+            以下の例は、SSSD が正しく設定され、example.com が <replaceable>[sssd]</replaceable>
+セクションにあるドメインの 1 つであると仮定します。この例はアクセスプロバイダー固有の簡単なオプションのみを示します。
+        </para>
+        <para>
+<programlisting>
+[domain/example.com]
+access_provider = simple
+simple_allow_users = user1, user2
+</programlisting>
+        </para>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>注記</title>
+        <para>
+          The complete group membership hierarchy is resolved before the access check,
+thus even nested groups can be included in the access lists.  Please be
+aware that the <quote>ldap_group_nesting_level</quote> option may impact the
+results and should be set to a sufficient value.  (<citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>) option.
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

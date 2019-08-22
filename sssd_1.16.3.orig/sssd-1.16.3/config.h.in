@@ -1,0 +1,752 @@
+/* config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Absolute path to the build directory */
+#undef ABS_BUILD_DIR
+
+/* Absolute path to the source directory */
+#undef ABS_SRC_DIR
+
+/* Define if building universal (internal helper macro) */
+#undef AC_APPLE_UNIVERSAL_BUILD
+
+/* whether to build unconditionally enable files domain */
+#undef ADD_FILES_DOMAIN
+
+/* "The default enforcing level for AD GPO access-control" */
+#undef AD_GPO_ACCESS_MODE_DEFAULT
+
+/* Path to the 3rd party modules */
+#undef APP_MODULES_PATH
+
+/* whether to build with AUTOFS support */
+#undef BUILD_AUTOFS
+
+/* whether to build with InfoPipe support */
+#undef BUILD_IFP
+
+/* whether to build with KCM server support */
+#undef BUILD_KCM
+
+/* whether to build SSSD implementation of libwbclient */
+#undef BUILD_LIBWBCLIENT
+
+/* whether to build with NFSv4 IDMAP support */
+#undef BUILD_NFS_IDMAP
+
+/* whether to build with samba support */
+#undef BUILD_SAMBA
+
+/* whether to build with SECRETS support */
+#undef BUILD_SECRETS
+
+/* whether to build with SSH support */
+#undef BUILD_SSH
+
+/* whether to build with SUDO support */
+#undef BUILD_SUDO
+
+/* Path to the SSSD data provider plugins */
+#undef DATA_PROVIDER_PLUGINS_PATH
+
+/* Path to the SSSD databases */
+#undef DB_PATH
+
+/* The default value of krb5_ccachedir */
+#undef DEFAULT_CCACHE_DIR
+
+/* The default value of krb5_ccname_template */
+#undef DEFAULT_CCNAME_TEMPLATE
+
+/* Define to 1 if translation of program messages to the user's native
+   language is requested. */
+#undef ENABLE_NLS
+
+/* Where to store GPO policy files */
+#undef GPO_CACHE_PATH
+
+/* Define to 1 if you have the <ares.h> header file. */
+#undef HAVE_ARES_H
+
+/* whether platform is big endian */
+#undef HAVE_BIG_ENDIAN
+
+/* Define to 1 if you have the <byteswap.h> header file. */
+#undef HAVE_BYTESWAP_H
+
+/* Define to 1 if you have the MacOS X function CFLocaleCopyCurrent in the
+   CoreFoundation framework. */
+#undef HAVE_CFLOCALECOPYCURRENT
+
+/* Define to 1 if you have the MacOS X function CFPreferencesCopyAppValue in
+   the CoreFoundation framework. */
+#undef HAVE_CFPREFERENCESCOPYAPPVALUE
+
+/* Define to 1 if you have the <check.h> header file. */
+#undef HAVE_CHECK_H
+
+/* Build with cifs idmap plugin */
+#undef HAVE_CIFS_IDMAP_PLUGIN
+
+/* Define to 1 if the system has the type `DBusBasicValue'. */
+#undef HAVE_DBUSBASICVALUE
+
+/* Define if dbus_watch_get_unix_fd exists */
+#undef HAVE_DBUS_WATCH_GET_UNIX_FD
+
+/* Define if the GNU dcgettext() function is already present or preinstalled.
+   */
+#undef HAVE_DCGETTEXT
+
+/* Define to 1 if you have the declaration of `cygwin_conv_path', and to 0 if
+   you don't. */
+#undef HAVE_DECL_CYGWIN_CONV_PATH
+
+/* Define if you have the GNU dld library. */
+#undef HAVE_DLD
+
+/* Define to 1 if you have the `dlerror' function. */
+#undef HAVE_DLERROR
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Define if you have the _dyld_func_lookup function. */
+#undef HAVE_DYLD
+
+/* Define to 1 if you have the <endian.h> header file. */
+#undef HAVE_ENDIAN_H
+
+/* Define to 1 if the system has the type `errno_t'. */
+#undef HAVE_ERRNO_T
+
+/* whether compiler supports __attribute__((destructor)) */
+#undef HAVE_FUNCTION_ATTRIBUTE_DESTRUCTOR
+
+/* whether compiler supports __attribute__((format)) */
+#undef HAVE_FUNCTION_ATTRIBUTE_FORMAT
+
+/* whether compiler supports __attribute__((warn_unused_result)) */
+#undef HAVE_FUNCTION_ATTRIBUTE_WARN_UNUSED_RESULT
+
+/* Define to 1 if you have the `futimens' function. */
+#undef HAVE_FUTIMENS
+
+/* Build with gdm-pam-extensions support */
+#undef HAVE_GDM_PAM_EXTENSIONS
+
+/* Define to 1 if you have the `getpgrp' function. */
+#undef HAVE_GETPGRP
+
+/* Define if the GNU gettext() function is already present or preinstalled. */
+#undef HAVE_GETTEXT
+
+/* Using glib2 for unicode */
+#undef HAVE_GLIB2
+
+/* Define if g_utf8_validate exists */
+#undef HAVE_G_UTF8_VALIDATE
+
+/* Define to 1 if you have the <http_parser.h> header file. */
+#undef HAVE_HTTP_PARSER_H
+
+/* Define if you have the iconv() function. */
+#undef HAVE_ICONV
+
+/* Inotify works */
+#undef HAVE_INOTIFY
+
+/* Define to 1 if the system has the type `intptr_t'. */
+#undef HAVE_INTPTR_T
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <jansson.h> header file. */
+#undef HAVE_JANSSON_H
+
+/* Define to 1 if you have the <keyutils.h> header file. */
+#undef HAVE_KEYUTILS_H
+
+/* Define to 1 if you have the `krb5_cc_cache_match' function. */
+#undef HAVE_KRB5_CC_CACHE_MATCH
+
+/* Define to 1 if you have the `krb5_cc_get_full_name' function. */
+#undef HAVE_KRB5_CC_GET_FULL_NAME
+
+/* Define to 1 if you have the `krb5_find_authdata' function. */
+#undef HAVE_KRB5_FIND_AUTHDATA
+
+/* Define to 1 if you have the `krb5_free_keytab_entry_contents' function. */
+#undef HAVE_KRB5_FREE_KEYTAB_ENTRY_CONTENTS
+
+/* Define to 1 if you have the `krb5_free_unparsed_name' function. */
+#undef HAVE_KRB5_FREE_UNPARSED_NAME
+
+/* Define to 1 if you have the `krb5_get_error_message' function. */
+#undef HAVE_KRB5_GET_ERROR_MESSAGE
+
+/* Define to 1 if you have the `krb5_get_init_creds_opt_alloc' function. */
+#undef HAVE_KRB5_GET_INIT_CREDS_OPT_ALLOC
+
+/* Define to 1 if you have the `krb5_get_init_creds_opt_set_canonicalize'
+   function. */
+#undef HAVE_KRB5_GET_INIT_CREDS_OPT_SET_CANONICALIZE
+
+/* Define to 1 if you have the
+   `krb5_get_init_creds_opt_set_change_password_prompt' function. */
+#undef HAVE_KRB5_GET_INIT_CREDS_OPT_SET_CHANGE_PASSWORD_PROMPT
+
+/* Define to 1 if you have the `krb5_get_init_creds_opt_set_expire_callback'
+   function. */
+#undef HAVE_KRB5_GET_INIT_CREDS_OPT_SET_EXPIRE_CALLBACK
+
+/* Define to 1 if you have the `krb5_get_init_creds_opt_set_fast_ccache_name'
+   function. */
+#undef HAVE_KRB5_GET_INIT_CREDS_OPT_SET_FAST_CCACHE_NAME
+
+/* Define to 1 if you have the `krb5_get_init_creds_opt_set_fast_flags'
+   function. */
+#undef HAVE_KRB5_GET_INIT_CREDS_OPT_SET_FAST_FLAGS
+
+/* Define to 1 if you have the `krb5_get_init_creds_opt_set_responder'
+   function. */
+#undef HAVE_KRB5_GET_INIT_CREDS_OPT_SET_RESPONDER
+
+/* Define to 1 if you have the `krb5_get_time_offsets' function. */
+#undef HAVE_KRB5_GET_TIME_OFFSETS
+
+/* Define to 1 if you have the <krb5.h> header file. */
+#undef HAVE_KRB5_H
+
+/* Define to 1 if you have the <krb5/krb5.h> header file. */
+#undef HAVE_KRB5_KRB5_H
+
+/* Define to 1 if you have the `krb5_kt_free_entry' function. */
+#undef HAVE_KRB5_KT_FREE_ENTRY
+
+/* Define to 1 if you have the `krb5_kt_have_content' function. */
+#undef HAVE_KRB5_KT_HAVE_CONTENT
+
+/* Build with krb5 localauth plugin */
+#undef HAVE_KRB5_LOCALAUTH_PLUGIN
+
+/* Build with krb5 locator plugin */
+#undef HAVE_KRB5_LOCATOR_PLUGIN
+
+/* Define to 1 if you have the `krb5_parse_name_flags' function. */
+#undef HAVE_KRB5_PARSE_NAME_FLAGS
+
+/* Define to 1 if you have the `krb5_principal_get_realm' function. */
+#undef HAVE_KRB5_PRINCIPAL_GET_REALM
+
+/* Define to 1 if you have the `krb5_princ_realm' function. */
+#undef HAVE_KRB5_PRINC_REALM
+
+/* Define to 1 if you have the `krb5_set_trace_callback' function. */
+#undef HAVE_KRB5_SET_TRACE_CALLBACK
+
+/* Define to 1 if the system has the type `krb5_ticket_times'. */
+#undef HAVE_KRB5_TICKET_TIMES
+
+/* Define to 1 if the system has the type `krb5_times'. */
+#undef HAVE_KRB5_TIMES
+
+/* Define to 1 if you have the `krb5_timestamp_to_sfstring' function. */
+#undef HAVE_KRB5_TIMESTAMP_TO_SFSTRING
+
+/* Define to 1 if the system has the type `krb5_trace_info'. */
+#undef HAVE_KRB5_TRACE_INFO
+
+/* Define to 1 if you have the `krb5_unparse_name_flags' function. */
+#undef HAVE_KRB5_UNPARSE_NAME_FLAGS
+
+/* Define if LDAP connection callbacks are available */
+#undef HAVE_LDAP_CONNCB
+
+/* Define to 1 if you have the `ldap_control_create' function. */
+#undef HAVE_LDAP_CONTROL_CREATE
+
+/* Define to 1 if you have the `ldap_create_deref_control_value' function. */
+#undef HAVE_LDAP_CREATE_DEREF_CONTROL_VALUE
+
+/* Define to 1 if you have the `ldap_derefresponse_free' function. */
+#undef HAVE_LDAP_DEREFRESPONSE_FREE
+
+/* Define to 1 if you have the `ldap_init_fd' function. */
+#undef HAVE_LDAP_INIT_FD
+
+/* Define to 1 if you have the `ldap_parse_derefresponse_control' function. */
+#undef HAVE_LDAP_PARSE_DEREFRESPONSE_CONTROL
+
+/* Define to 1 if you have the <ldb.h> header file. */
+#undef HAVE_LDB_H
+
+/* Define to 1 if you have the <ldb_module.h> header file. */
+#undef HAVE_LDB_MODULE_H
+
+/* Build with libcrypt crypto back end */
+#undef HAVE_LIBCRYPTO
+
+/* Build with libcurl support */
+#undef HAVE_LIBCURL
+
+/* Define if you have the libdl library or equivalent. */
+#undef HAVE_LIBDL
+
+/* Define if libdlloader will be built on this platform */
+#undef HAVE_LIBDLLOADER
+
+/* libini_config version 0.6.1 or greater */
+#undef HAVE_LIBINI_CONFIG_V0
+
+/* libini_config version 1.0.0 or greater */
+#undef HAVE_LIBINI_CONFIG_V1
+
+/* libini_config version 1.1.0 or greater */
+#undef HAVE_LIBINI_CONFIG_V1_1
+
+/* libini_config version 1.3.0 or greater */
+#undef HAVE_LIBINI_CONFIG_V1_3
+
+/* Build with libnetlink support */
+#undef HAVE_LIBNL
+
+/* Libnetlink version = 1 */
+#undef HAVE_LIBNL1
+
+/* Libnetlink version = 3 */
+#undef HAVE_LIBNL3
+
+/* Define if libpcre version is less than 7 */
+#undef HAVE_LIBPCRE_LESSER_THAN_7
+
+/* Define if you have the librt library or equivalent. */
+#undef HAVE_LIBRT
+
+/* Using libunistring for unicode */
+#undef HAVE_LIBUNISTRING
+
+/* whether platform is little endian */
+#undef HAVE_LITTLE_ENDIAN
+
+/* Define to 1 if the system has the type `long long'. */
+#undef HAVE_LONG_LONG
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the <netlink.h> header file. */
+#undef HAVE_NETLINK_H
+
+/* Define to 1 if you have the <nfsidmap_plugin.h> header file. */
+#undef HAVE_NFSIDMAP_PLUGIN_H
+
+/* Does libnl have nl_set_passcred? */
+#undef HAVE_NL_SET_PASSCRED
+
+/* Does libnl have nl_socket_add_membership? */
+#undef HAVE_NL_SOCKET_ADD_MEMBERSHIP
+
+/* Does libnl have nl_socket_modify_cb? */
+#undef HAVE_NL_SOCKET_MODIFY_CB
+
+/* Does libnl have nl_socket_set_passcred? */
+#undef HAVE_NL_SOCKET_SET_PASSCRED
+
+/* flush nscd cache after local domain operations */
+#undef HAVE_NSCD
+
+/* Build with NSS crypto back end */
+#undef HAVE_NSS
+
+/* Whether to use the 'realm' directive with nsupdate */
+#undef HAVE_NSUPDATE_REALM
+
+/* Build with the PAC responder */
+#undef HAVE_PAC_RESPONDER
+
+/* Define to 1 if you have the `pam_modutil_getlogin' function. */
+#undef HAVE_PAM_MODUTIL_GETLOGIN
+
+/* Define to 1 if you have the `pam_vsyslog' function. */
+#undef HAVE_PAM_VSYSLOG
+
+/* Define to 1 if you have the <pcre.h> header file. */
+#undef HAVE_PCRE_H
+
+/* Define to 1 if you have the <popt.h> header file. */
+#undef HAVE_POPT_H
+
+/* Define to 1 if you have the `prctl' function. */
+#undef HAVE_PRCTL
+
+/* Pthread mutexes available. */
+#undef HAVE_PTHREAD
+
+/* Build with python2 bindings */
+#undef HAVE_PYTHON2_BINDINGS
+
+/* Build with python3 bindings */
+#undef HAVE_PYTHON3_BINDINGS
+
+/* Does libnl have rtnl_route_get_oif? */
+#undef HAVE_RTNL_ROUTE_GET_OIF
+
+/* Define to 1 if you have the <sasl/sasl.h> header file. */
+#undef HAVE_SASL_SASL_H
+
+/* Define to 1 if you have the <security/openpam.h> header file. */
+#undef HAVE_SECURITY_OPENPAM_H
+
+/* Define to 1 if you have the <security/pam_appl.h> header file. */
+#undef HAVE_SECURITY_PAM_APPL_H
+
+/* Define to 1 if you have the <security/pam_ext.h> header file. */
+#undef HAVE_SECURITY_PAM_EXT_H
+
+/* Define to 1 if you have the <security/pam_misc.h> header file. */
+#undef HAVE_SECURITY_PAM_MISC_H
+
+/* Define to 1 if you have the <security/pam_modules.h> header file. */
+#undef HAVE_SECURITY_PAM_MODULES_H
+
+/* Define to 1 if you have the <security/pam_modutil.h> header file. */
+#undef HAVE_SECURITY_PAM_MODUTIL_H
+
+/* Define to 1 if you have the <security/_pam_macros.h> header file. */
+#undef HAVE_SECURITY__PAM_MACROS_H
+
+/* Build with SELinux support */
+#undef HAVE_SELINUX
+
+/* Define to 1 if you have the <selinux/selinux.h> header file. */
+#undef HAVE_SELINUX_SELINUX_H
+
+/* Build with SELinux support */
+#undef HAVE_SEMANAGE
+
+/* Define to 1 if you have the <semanage/semanage.h> header file. */
+#undef HAVE_SEMANAGE_SEMANAGE_H
+
+/* Whether the service command is available */
+#undef HAVE_SERVICE
+
+/* Define to 1 if you have the <setjmp.h> header file. */
+#undef HAVE_SETJMP_H
+
+/* Define if you have the shl_load function. */
+#undef HAVE_SHL_LOAD
+
+/* Define to 1 if you have the `sigaction' function. */
+#undef HAVE_SIGACTION
+
+/* Define to 1 if you have the `sigblock' function. */
+#undef HAVE_SIGBLOCK
+
+/* Define to 1 if you have the `sigprocmask' function. */
+#undef HAVE_SIGPROCMASK
+
+/* Define to 1 if you have the <stdarg.h> header file. */
+#undef HAVE_STDARG_H
+
+/* Define to 1 if you have the <stddef.h> header file. */
+#undef HAVE_STDDEF_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if `lc_arg' is a member of `struct ldap_conncb'. */
+#undef HAVE_STRUCT_LDAP_CONNCB_LC_ARG
+
+/* Define to 1 if `resource_groups' is a member of `struct PAC_LOGON_INFO'. */
+#undef HAVE_STRUCT_PAC_LOGON_INFO_RESOURCE_GROUPS
+
+/* Define to 1 if `gid' is a member of `struct ucred'. */
+#undef HAVE_STRUCT_UCRED_GID
+
+/* Define to 1 if `pid' is a member of `struct ucred'. */
+#undef HAVE_STRUCT_UCRED_PID
+
+/* Define to 1 if `uid' is a member of `struct ucred'. */
+#undef HAVE_STRUCT_UCRED_UID
+
+/* Build with systemd support */
+#undef HAVE_SYSTEMD
+
+/* Build with $daemon_lib_name support */
+#undef HAVE_SYSTEMD_DAEMON
+
+/* Build with $login_lib_name support */
+#undef HAVE_SYSTEMD_LOGIN
+
+/* Define to 1 if systemtap is enabled */
+#undef HAVE_SYSTEMTAP
+
+/* Define to 1 if you have the <sys/endian.h> header file. */
+#undef HAVE_SYS_ENDIAN_H
+
+/* Define to 1 if you have the <sys/inotify.h> header file. */
+#undef HAVE_SYS_INOTIFY_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <tdb.h> header file. */
+#undef HAVE_TDB_H
+
+/* Build with certificates from test CA */
+#undef HAVE_TEST_CA
+
+/* Define if struct ucred is available */
+#undef HAVE_UCRED
+
+/* Define to 1 if you have the <unicase.h> header file. */
+#undef HAVE_UNICASE_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to 1 if you have the <unistr.h> header file. */
+#undef HAVE_UNISTR_H
+
+/* Define to 1 if you have the `utimensat' function. */
+#undef HAVE_UTIMENSAT
+
+/* Define to 1 if you have the <uuid/uuid.h> header file. */
+#undef HAVE_UUID_UUID_H
+
+/* The path to the ipa-getkeytab utility */
+#undef IPA_GETKEYTAB_PATH
+
+/* KRB5 configuration file */
+#undef KRB5_CONF_PATH
+
+/* Directory used for storing Kerberos replay caches */
+#undef KRB5_RCACHE_DIR
+
+/* Where to store log files for the SSSD */
+#undef LOG_PATH
+
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
+#undef LT_OBJDIR
+
+/* Where to store mmap cache files for the SSSD interconnects */
+#undef MCACHE_PATH
+
+/* The shell used to deny access to users */
+#undef NOLOGIN_SHELL
+
+/* whether to build sssd nss plugin with nonstandard glibc behaviour */
+#undef NONSTANDARD_SSS_NSS_BEHAVIOUR
+
+/* NSCD configuration file */
+#undef NSCD_CONF_PATH
+
+/* The path to nscd, if available */
+#undef NSCD_PATH
+
+/* The path to nsupdate */
+#undef NSUPDATE_PATH
+
+/* Name of package */
+#undef PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Where to store pid files for the SSSD */
+#undef PID_PATH
+
+/* Where to store pipe files for the SSSD interconnects */
+#undef PIPE_PATH
+
+/* Prerelease version number of package */
+#undef PRERELEASE_VERSION
+
+/* Where to store pubconf files for the SSSD */
+#undef PUBCONF_PATH
+
+/* Path to the SSSD Secrets databases */
+#undef SECRETS_DB_PATH
+
+/* The path to service */
+#undef SERVICE_PATH
+
+/* The shell used to record user sessions */
+#undef SESSION_RECORDING_SHELL
+
+/* The size of `char', as computed by sizeof. */
+#undef SIZEOF_CHAR
+
+/* The size of `gid_t', as computed by sizeof. */
+#undef SIZEOF_GID_T
+
+/* The size of `id_t', as computed by sizeof. */
+#undef SIZEOF_ID_T
+
+/* The size of `int', as computed by sizeof. */
+#undef SIZEOF_INT
+
+/* The size of `long', as computed by sizeof. */
+#undef SIZEOF_LONG
+
+/* The size of `long long', as computed by sizeof. */
+#undef SIZEOF_LONG_LONG
+
+/* The size of `off_t', as computed by sizeof. */
+#undef SIZEOF_OFF_T
+
+/* The size of `short', as computed by sizeof. */
+#undef SIZEOF_SHORT
+
+/* The size of `size_t', as computed by sizeof. */
+#undef SIZEOF_SIZE_T
+
+/* The size of `ssize_t', as computed by sizeof. */
+#undef SIZEOF_SSIZE_T
+
+/* The size of `uid_t', as computed by sizeof. */
+#undef SIZEOF_UID_T
+
+/* Detected version of Samba's idmap plugin interface */
+#undef SMB_IDMAP_INTERFACE_VERSION
+
+/* Path to softhsm2 PKCS#11 module */
+#undef SOFTHSM2_PATH
+
+/* "The default user to run SSSD as" */
+#undef SSSD_USER
+
+/* __attribute__((fallthrough)) if supported */
+#undef SSS_ATTRIBUTE_FALLTHROUGH
+
+/* Define to 1 if you want ldb version check. */
+#undef SSS_LDB_VERSION_CHECK
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Directory used for 'make check' temporary files */
+#undef TEST_DIR
+
+/* Define if the keyring should be used */
+#undef USE_KEYRING
+
+/* Enable extensions on AIX 3, Interix.  */
+#ifndef _ALL_SOURCE
+# undef _ALL_SOURCE
+#endif
+/* Enable GNU extensions on systems that have them.  */
+#ifndef _GNU_SOURCE
+# undef _GNU_SOURCE
+#endif
+/* Enable threading extensions on Solaris.  */
+#ifndef _POSIX_PTHREAD_SEMANTICS
+# undef _POSIX_PTHREAD_SEMANTICS
+#endif
+/* Enable extensions on HP NonStop.  */
+#ifndef _TANDEM_SOURCE
+# undef _TANDEM_SOURCE
+#endif
+/* Enable general extensions on Solaris.  */
+#ifndef __EXTENSIONS__
+# undef __EXTENSIONS__
+#endif
+
+
+/* Version number of package */
+#undef VERSION
+
+/* journald is available */
+#undef WITH_JOURNALD
+
+/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
+   significant byte first (like Motorola and SPARC, unlike Intel). */
+#if defined AC_APPLE_UNIVERSAL_BUILD
+# if defined __BIG_ENDIAN__
+#  define WORDS_BIGENDIAN 1
+# endif
+#else
+# ifndef WORDS_BIGENDIAN
+#  undef WORDS_BIGENDIAN
+# endif
+#endif
+
+/* Define to 1 if on MINIX. */
+#undef _MINIX
+
+/* Define to 2 if the system does not provide POSIX.1 features except with
+   this defined. */
+#undef _POSIX_1_SOURCE
+
+/* Define to 1 if you need to in order for `stat' and other things to work. */
+#undef _POSIX_SOURCE
+
+/* Define to `short' if <sys/types.h> does not define. */
+#undef int16_t
+
+/* Define to `long' if <sys/types.h> does not define. */
+#undef int32_t
+
+/* Define to `long long' if <sys/types.h> does not define. */
+#undef int64_t
+
+/* Define to `char' if <sys/types.h> does not define. */
+#undef int8_t
+
+/* Define to `long long' if <stdint.h> does not define. */
+#undef intptr_t
+
+/* Define to `unsigned long long' if <sys/types.h> does not define. */
+#undef ptrdiff_t
+
+/* Define to `unsigned int' if <sys/types.h> does not define. */
+#undef size_t
+
+/* Define to `int' if <sys/types.h> does not define. */
+#undef ssize_t
+
+/* Define to `unsigned short' if <sys/types.h> does not define. */
+#undef uint16_t
+
+/* Define to `unsigned long' if <sys/types.h> does not define. */
+#undef uint32_t
+
+/* Define to `unsigned long long' if <sys/types.h> does not define. */
+#undef uint64_t
+
+/* Define to `unsigned char' if <sys/types.h> does not define. */
+#undef uint8_t
+
+/* Define to `unsigned int' if <sys/types.h> does not define. */
+#undef uint_t
+
+/* Define to `unsigned long long' if <sys/types.h> does not define. */
+#undef uintptr_t

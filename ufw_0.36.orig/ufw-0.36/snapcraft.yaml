@@ -1,0 +1,50 @@
+name: ufw
+version: 0.36
+summary: ufw (Uncomplicated Firewall)
+description: ufw as a snap
+confinement: strict
+grade: stable
+passthrough:
+  license: GPL-3.0 AND GPL-2.0+
+
+apps:
+  srv:
+    command: bin/srv
+    daemon: oneshot
+    plugs: [ firewall-control ]
+  ufw:
+    command: bin/cli
+    completer: ufw.completer.bash
+    plugs: [ firewall-control ]
+  init:
+    command: bin/init
+    plugs: [ firewall-control ]
+  ipset:
+    command: sbin/ipset
+    plugs: [ firewall-control ]
+  conntrack:
+    command: usr/sbin/conntrack
+    plugs: [ firewall-control ]
+  doc:
+    command: bin/doc
+
+parts:
+  wrapper:
+    plugin: dump
+    source: snap-files/
+    stage-packages:
+    - conntrack
+    - ipset
+  make-project:
+    plugin: make
+    source: .
+    make-parameters:
+    - SNAP=yes
+    build-packages:
+    - iptables
+    - netbase
+    - procps
+    - sed
+    - bsdmainutils
+    - man-db
+    - git

@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_override</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_override</refname>
+        <refpurpose>створити локальні перевизначення атрибутів користувача і групи</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_override</command> <arg
+choice='plain'><replaceable>КОМАНДА</replaceable></arg> <arg choice='opt'>
+<replaceable>параметри</replaceable> </arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            <command>sss_override</command> надає змогу створювати перегляди на боці
+клієнта і змінювати вибрані значення для певного користувача і груп. Ці
+зміни буде застосовано лише на локальному комп'ютері.
+        </para>
+        <para>
+            Дані перевизначень зберігаються у кеші SSSD. Якщо кеш вилучено, усі локальні
+перевизначення буде втрачено. Будь ласка, зауважте, що після першого
+створення перевизначення за допомогою команди <emphasis>user-add</emphasis>,
+<emphasis>group-add</emphasis>, <emphasis>user-import</emphasis> або
+<emphasis>group-import</emphasis> SSSD слід перезапустити, щоб зміни набули
+чинності. Якщо потрібен перезапуск, <emphasis>sss_override</emphasis> виведе
+відповідне повідомлення.
+        </para>
+    </refsect1>
+
+    <refsect1 id='commands'>
+        <title>ДОСТУПНІ КОМАНДИ</title>
+        <para>
+            Аргумент <emphasis>НАЗВА</emphasis> в усіх командах є назвою початкового
+об'єкта. Не можна перевизначити <emphasis>uid</emphasis> або
+<emphasis>gid</emphasis> на 0.
+        </para>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>user-add</option> <emphasis>НАЗВА</emphasis>
+<optional><option>-n,--name</option> НАЗВА</optional>
+<optional><option>-u,--uid</option> UID</optional>
+<optional><option>-g,--gid</option> GID</optional>
+<optional><option>-h,--home</option> ДОМІВКА</optional>
+<optional><option>-s,--shell</option> ОБОЛОНКА</optional>
+<optional><option>-c,--gecos</option> GECOS</optional>
+<optional><option>-x,--certificate</option> СЕРТИФІКАТ У КОДУВАННІ
+BASE64</optional>
+                </term>
+                <listitem>
+                    <para>
+                        Перевизначити атрибути запису користувача. Будь ласка, зверніть увагу, що
+виклик цієї команди замінить усі попередні перевизначення для вказаного за
+назвою облікового запису користувача.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>user-del</option> <emphasis>НАЗВА</emphasis>
+                </term>
+                <listitem>
+                    <para>
+                        Вилучити перевизначення користувача. Втім, слід мати на увазі, що
+перевизначені атрибути може бути повернено з кешу у пам'яті. Будь ласка,
+ознайомтеся із документацією до параметра SSSD
+<emphasis>memcache_timeout</emphasis>, щоб дізнатися більше.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>user-find</option> <optional><option>-d,--domain</option>
+ДОМЕН</optional>
+                </term>
+                <listitem>
+                    <para>
+                        Вивести список усіх користувачів, для яких встановлено перевизначення. Якщо
+встановлено параметр <emphasis>ДОМЕН</emphasis>, буде показано лише
+користувачів з відповідного домену.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>user-show</option> <emphasis>НАЗВА</emphasis>
+                </term>
+                <listitem>
+                    <para>
+                        Показати перевизначення користувача.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>user-import</option> <emphasis>ФАЙЛ</emphasis>
+                </term>
+                <listitem>
+                    <para>
+                        Імпортувати перевизначення користувачів з файла
+<emphasis>ФАЙЛ</emphasis>. Формат даних у файлі має бути таким самим, як у
+стандартному файлі passwd. Приклад:
+                    </para>
+                    <para>
+                        початкова_назва:назва:uid:gid:gecos:домівка:оболонка:сертифікат_у_кодуванні_base64
+                    </para>
+                    <para>
+                        де «початкова_назва» — початкова назва запису користувача, чиї атрибути має
+бути перевизначено. Решта полів відповідає новим значенням. Ви можете
+пропустити значення, не заповнюючи відповідного поля.
+                    </para>
+                    <para>
+                        Приклади:
+                    </para>
+                    <para>
+                        ckent:superman::::::
+                    </para>
+                    <para>
+                        ckent@krypton.com::501:501:Superman:/home/earth:/bin/bash:
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>user-export</option> <emphasis>ФАЙЛ</emphasis>
+                </term>
+                <listitem>
+                    <para>
+                        Експортувати усі перевизначені атрибути і зберегти їх у файлі
+<emphasis>ФАЙЛ</emphasis>. Див. <emphasis>user-import</emphasis>, щоб
+дізнатися більше про формат даних.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>group-add</option> <emphasis>НАЗВА</emphasis>
+<optional><option>-n,--name</option> НАЗВА</optional>
+<optional><option>-g,--gid</option> GID</optional>
+                </term>
+                <listitem>
+                    <para>
+                        Перевизначити атрибути запису групи. Будь ласка, зверніть увагу, що виклик
+цієї команди замінить усі попередні перевизначення для вказаної за назвою
+групи.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>group-del</option> <emphasis>НАЗВА</emphasis>
+                </term>
+                <listitem>
+                    <para>
+                        Вилучити перевизначення групи. Втім, слід мати на увазі, що перевизначені
+атрибути може бути повернено з кешу у пам'яті. Будь ласка, ознайомтеся із
+документацією до параметра SSSD <emphasis>memcache_timeout</emphasis>, щоб
+дізнатися більше.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>group-find</option> <optional><option>-d,--domain</option>
+ДОМЕН</optional>
+                </term>
+                <listitem>
+                    <para>
+                        Вивести список усіх груп, для яких встановлено перевизначення. Якщо
+встановлено параметр <emphasis>ДОМЕН</emphasis>, буде показано лише групи з
+відповідного домену.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>group-show</option> <emphasis>НАЗВА</emphasis>
+                </term>
+                <listitem>
+                    <para>
+                        Показати перевизначення групи.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>group-import</option> <emphasis>ФАЙЛ</emphasis>
+                </term>
+                <listitem>
+                    <para>
+                        Імпортувати перевизначення груп з файла <emphasis>ФАЙЛ</emphasis>. Формат
+даних у файлі має бути таким самим, як у стандартному файлі group. Приклад:
+                    </para>
+                    <para>
+                        початкова_назва:назва:gid
+                    </para>
+                    <para>
+                        де «початкова_назва» — початкова назва групи, чиї атрибути має бути
+перевизначено. Решта полів відповідає новим значенням. Ви можете пропустити
+значення, не заповнюючи відповідного поля.
+                    </para>
+                    <para>
+                        Приклади:
+                    </para>
+                    <para>
+                        admins:administrators:
+                    </para>
+                    <para>
+                        Domain Users:Users:501
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>group-export</option> <emphasis>ФАЙЛ</emphasis>
+                </term>
+                <listitem>
+                    <para>
+                        Експортувати усі перевизначені атрибути і зберегти їх у файлі
+<emphasis>ФАЙЛ</emphasis>. Див. <emphasis>group-import</emphasis>, щоб
+дізнатися більше про формат даних.
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>ЗАГАЛЬНІ ПАРАМЕТРИ</title>
+        <para>
+            Ці параметри можна використовувати з усіма командами.
+        </para>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>--debug</option> <replaceable>РІВЕНЬ</replaceable>
+                </term>
+                <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/debug_levels_tools.xml" />
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

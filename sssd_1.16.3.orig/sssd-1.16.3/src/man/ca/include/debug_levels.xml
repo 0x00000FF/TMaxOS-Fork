@@ -1,0 +1,92 @@
+<listitem>
+    <para>
+        L'SSSD admet dues representacions per a l'especificació del nivell de
+depuració. La més senzilla és especificar un número del 0-9, que representa
+el que permet cada nivell i tots els missatges de depuració de nivell
+baix. L'opció més exhaustiva és especificar una màscara de bits en
+hexadecimal per activar o desactivar els nivells específics (per exemple, si
+voleu suprimir un nivell).
+    </para>
+    <para>
+        Si us plau, tingueu en compte que cadascun dels serveis de l'SSSD registra
+el seu fitxer propi de registre. També tingueu en compte que l'habilitació
+del <quote>debug_level</quote> a la secció <quote>[sssd]</quote>únicament
+habilita la depuració del mateix procés de l'sssd, no per al procés del
+contestador o del proveïdor. El paràmetre <quote>debug_level</quote> s'ha
+d'afegir en totes les seccions que vulgueu que generin registres.
+    </para>
+    <para>
+        A més de canviar el nivell del registre al fitxer de configuració amb el
+paràmetre <quote>debug_level</quote>, que és permanent, però requereix que
+es reiniciï l'SSSD, també és possible canviar el nivell de depuració al vol
+amb l'eina <citerefentry> <refentrytitle>sss_debuglevel</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry>.
+    </para>
+    <para>
+        Els nivells de depuració que s'admeten actualment:
+    </para>
+    <para>
+         <emphasis>0</emphasis>, <emphasis>0x0010</emphasis>: Fallides
+fatals. Qualsevol cosa que impedeixi la posada en marxa de l'SSSD o provoqui
+el seu cessament.
+    </para>
+    <para>
+         <emphasis>1</emphasis>, <emphasis>0x0020</emphasis>: Critical failures. An
+error that doesn't kill SSSD, but one that indicates that at least one major
+feature is not going to work properly.
+    </para>
+    <para>
+         <emphasis>2</emphasis>, <emphasis>0x0040</emphasis>: Fallides serioses. Un
+error que anuncia que una petició o una operació en particular ha fallat.
+    </para>
+    <para>
+         <emphasis>3</emphasis>, <emphasis>0x0080</emphasis>: Fallides
+menors. Aquests són els errors que enterboleixen i poden fer fracassar
+l'operació dels 2.
+    </para>
+    <para>
+         <emphasis>4</emphasis>, <emphasis>0x0100</emphasis>: Ajusts de la
+configuració.
+    </para>
+    <para>
+         <emphasis>5</emphasis>, <emphasis>0x0200</emphasis>: Dades de les funcions.
+    </para>
+    <para>
+         <emphasis>6</emphasis>, <emphasis>0x0400</emphasis>: Missatges de traça per
+al funcionament de les funcions.
+    </para>
+    <para>
+         <emphasis>7</emphasis>, <emphasis>0x1000</emphasis>: Missatges de traça per
+a les funcions internes de control.
+    </para>
+    <para>
+         <emphasis>8</emphasis>, <emphasis>0x2000</emphasis>: Contingut de les
+variables de les funcions internes que poden ser interessants.
+    </para>
+    <para>
+         <emphasis>9</emphasis>, <emphasis>0x4000</emphasis>: Informació de traçat
+extremadament de baix nivell.
+    </para>
+    <para>
+        Per registrar els nivells de depuració de la màscara de bits que es
+requereixi, només heu d'afegir els seus números com es mostra en els
+següents exemples:
+    </para>
+    <para>
+        <emphasis>Exemple</emphasis>:  Per registrar les fallides fatals, les
+fallides crítiques, les fallides serioses i les dades de les funcions,
+utilitzeu0x0270.
+    </para>
+    <para>
+        <emphasis>Exemple</emphasis>: Per registrar les fallides fatals, els ajusts
+de la configuració, les dades de les funcions, els missatges de traça per a
+les funcions internes de control, utilitzeu 0x1310.
+    </para>
+    <para>
+        <emphasis>Nota</emphasis>: El format de la màscara de bits dels nivells de
+depuració es va introduir en la versió 1.7.0.
+    </para>
+    <para>
+        <emphasis>Per defecte</emphasis>: 0
+    </para>
+</listitem>

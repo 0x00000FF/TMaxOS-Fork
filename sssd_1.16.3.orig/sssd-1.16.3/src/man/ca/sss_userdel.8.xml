@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pàgines del manual de l'SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_userdel</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_userdel</refname>
+        <refpurpose>suprimeix el compte d'un usuari</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_userdel</command> <arg choice='opt'>
+<replaceable>opcions</replaceable> </arg> <arg
+choice='plain'><replaceable>USUARI</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPCIÓ</title>
+        <para>
+            <command>sss_userdel</command> suprimeix un usuari identificat amb el nom
+d'usuari <replaceable>USUARI</replaceable> del sistema.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPCIONS</title>
+        <variablelist remap='IP'>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+            <varlistentry>
+                <term>
+                    <option>-r</option>,<option>--remove</option>
+                </term>
+                <listitem>
+                    <para>
+                        Els fitxers al directori inicial de l'usuari seran eliminats juntament amb
+el mateix directori inicial i la gestió de cues del correu de
+l'usuari. Substitueix la configuració.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-R</option>,<option>--no-remove</option>
+                </term>
+                <listitem>
+                    <para>
+                        Els fitxers al directori inicial de l'usuari no seran eliminats juntament
+amb el mateix directori inicial i la gestió de cues del correu de
+l'usuari. Substitueix la configuració.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-f</option>,<option>--force</option>
+                </term>
+                <listitem>
+                    <para>
+                        Aquesta opció obliga a <command>sss_userdel</command> a suprimir el
+directori inicial i la gestió de cues del correu de l'usuari, encara que no
+siguin de la propietat de l'usuari especificat.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-k</option>,<option>--kick</option>
+                </term>
+                <listitem>
+                    <para>
+                        Abans d'eliminar realment a l'usuari, acaba tots els seus processos.
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/local.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD-Handbuchseiten</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_obfuscate</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_obfuscate</refname>
+        <refpurpose>verschleiert ein Klartextpasswort</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_obfuscate</command> <arg choice='opt'>
+<replaceable>Optionen</replaceable> </arg> <arg
+choice='plain'><replaceable>[PASSWORT]</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>BESCHREIBUNG</title>
+        <para>
+            <command>sss_obfuscate</command> wandelt ein angegebenes Passwort in ein von
+Menschen nicht lesbares Format um und legt es in einem geeigneten
+Domain-Abschnitt der SSSD-Konfigurationsdatei ab.
+        </para>
+        <para>
+            Das Klartextpasswort wird von der Standardeingabe gelesen oder interaktiv
+eingegeben. Das verschleierte Passwort wird in den Parameter
+»ldap_default_authtok« einer angegebenen SSSD-Domain abgelegt und der
+Parameter »ldap_default_authtok_type« wird auf »obfuscated_password«
+gesetzt. Weitere Einzelheiten über diese Parameter finden Sie unter
+<citerefentry> <refentrytitle>sssd-ldap</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+        </para>
+        <para>
+            Bitte beachten Sie, dass das Verschleiern von Passwörtern <emphasis>keinen
+wirklichen Sicherheitsgewinn</emphasis> bietet, da es einem Angreifer immer
+noch möglich ist, das Passwort wieder herzuleiten. Es wird
+<emphasis>dringend</emphasis> geraten, bessere Authentifizierungsmechanismen
+wie Client-seitige Zertifikate oder GSSAPI zu verwenden.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPTIONEN</title>
+        <variablelist remap='IP'>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help_py.xml" />
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--stdin</option>
+                </term>
+                <listitem>
+                    <para>
+                        Das Passwort, das verschleiert werden soll, wird von der Standardeingabe
+gelesen.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-d</option>,<option>--domain</option>
+<replaceable>DOMAIN</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        die SSSD-Domain, in der das Passwort benutzt wird. Der Standardname ist
+»default«.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-f</option>,<option>--file</option> <replaceable>DATEI</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        liest die durch den Positionsparameter angegebene Konfigurationsdatei.
+                    </para>
+                    <para>
+                        Voreinstellung: <filename>/etc/sssd/sssd.conf</filename>
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

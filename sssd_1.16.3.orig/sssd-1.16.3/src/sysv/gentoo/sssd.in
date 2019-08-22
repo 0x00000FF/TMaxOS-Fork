@@ -1,0 +1,18 @@
+#!/sbin/runscript
+
+depend(){
+    need localmount netmount clock
+    use syslog xdm
+}
+
+start(){
+    ebegin "Starting sssd"
+    start-stop-daemon --start --exec @sbindir@/sssd -- -Df ${SSSD_OPTIONS}
+    eend ${?}
+}
+
+stop(){
+    ebegin "Stopping sssd"
+    start-stop-daemon --stop --pidfile @localstatedir@/run/sssd.pid
+    eend ${?}
+}

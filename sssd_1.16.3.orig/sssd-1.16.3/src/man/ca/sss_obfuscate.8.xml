@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pàgines del manual de l'SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_obfuscate</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_obfuscate</refname>
+        <refpurpose>ofusca una contrasenya en text clar</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_obfuscate</command> <arg choice='opt'>
+<replaceable>opcions</replaceable> </arg> <arg
+choice='plain'><replaceable>[PASSWORD]</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPCIÓ</title>
+        <para>
+            <command>sss_obfuscate</command> converteix una contrasenya especificada a
+un format illegible per als humans i la posa a la secció del domini adequat
+del fitxer de configuració de l'SSSD.
+        </para>
+        <para>
+            La contrasenya en text clar es llegeix de l'entrada estàndard o s'introdueix
+de forma interactiva. La contrasenya ofuscada es fica al paràmetre
+<quote>ldap_default_authtok</quote> del domini SSSD indicat, i el paràmetre
+<quote>ldap_default_authtok_type</quote> s'estableix a
+<quote>obfuscated_password</quote>. Consulteu <citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> per a més detalls sobre aquests paràmetres.
+        </para>
+        <para>
+            Tingueu en compte que ofuscar les contrasenyes <emphasis>no proporciona cap
+benefici real de seguretat</emphasis>, ja que un atacant encara podria
+extreure la contrasenya amb enginyeria inversa. Es recomana
+<emphasis>aferrissadament</emphasis> l'ús de mecanismes d'autenticació
+millors com els certificats al cantó del client o el GSSAPI.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPCIONS</title>
+        <variablelist remap='IP'>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help_py.xml" />
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--stdin</option>
+                </term>
+                <listitem>
+                    <para>
+                        La contrasenya per ofuscar es llegirà de l'entrada estàndard.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-d</option>,<option>--domain</option>
+<replaceable>DOMINI</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        El domini SSSD on s'utilitza la contrasenya. El nom per defecte és
+<quote>default</quote>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-f</option>,<option>--file</option>
+<replaceable>FITXER</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Llegeix el fitxer de configuració que s'especifica amb el paràmetre
+posicional.
+                    </para>
+                    <para>
+                        Per defecte: <filename>/etc/sssd/sssd.conf</filename>
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

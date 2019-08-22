@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd_krb5_locator_plugin</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd_krb5_locator_plugin</refname>
+        <refpurpose>Додаток локатора Kerberos</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            Додаток пошуку Kerberos <command>sssd_krb5_locator_plugin</command>
+використовується засобом обробки Kerberos <citerefentry>
+<refentrytitle>sssd</refentrytitle> <manvolnum>8</manvolnum> </citerefentry>
+для сповіщення бібліотек Kerberos яку область і KDC слід
+використовувати. Типово, таке сповіщення виконується за допомогою
+<citerefentry> <refentrytitle>krb5.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>, файла, читання якого завжди
+виконується бібліотеками Kerberos. Щоб спростити налаштування, область та
+KDC можна визначити у <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> у спосіб, описаний на сторінці довідки <citerefentry>
+<refentrytitle>sssd-krb5</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>
+        </para>
+        <para>
+            <citerefentry> <refentrytitle>sssd</refentrytitle> <manvolnum>8</manvolnum>
+</citerefentry> зберігає область і назву або IP-адресу KDC у змінних
+середовища SSSD_KRB5_REALM і SSSD_KRB5_KDC, відповідно. Якщо програма
+<command>sssd_krb5_locator_plugin</command> викликається бібліотеками
+kerberos, ця програма читає і визначає ці змінні і повертає їхні значення
+бібліотекам.
+        </para>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>ЗАУВАЖЕННЯ</title>
+        <para>
+            Підтримку використання додатків передбачено не у всіх реалізаціях
+Kerberos. Якщо у вашій системі немає
+<command>sssd_krb5_locator_plugin</command>, вам слід внести зміни до
+/etc/krb5.conf, які відповідатимуть вашій версії Kerberos.
+        </para>
+        <para>
+            Якщо встановлено будь-яке значення змінної середовища
+SSSD_KRB5_LOCATOR_DEBUG, діагностичні повідомлення надсилатимуться до
+stderr.
+        </para>
+        <para>
+            Якщо встановлено будь-яке значення для змінної середовища
+SSSD_KRB5_LOCATOR_DISABLE, додаток буде вимкнено і поверне функції виклику
+лише KRB5_PLUGIN_NO_HANDLE.
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

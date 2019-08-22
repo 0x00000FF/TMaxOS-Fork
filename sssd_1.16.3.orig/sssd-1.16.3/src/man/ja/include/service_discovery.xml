@@ -1,0 +1,37 @@
+<refsect1 id='service_discovery'>
+    <title>サービス探索</title>
+    <para>
+        The service discovery feature allows back ends to automatically find the
+appropriate servers to connect to using a special DNS query. This feature is
+not supported for backup servers.
+    </para>
+    <refsect2 id='configuration'>
+        <title>設定</title>
+        <para>
+            何もサーバーが指定されていなければ、バックエンドがサーバーを見つけようとするために、サービス探索を自動的に使用します。オプションとして、サーバーの一覧に特別なキーワード
+<quote>_srv_</quote>
+を挿入することにより、ユーザーが固定サーバーアドレスおよびサービス探索のどちらも使用することを選択できます。これは設定の順番が維持されます。たとえば、ユーザーができる限りサービス探索を使用し、DNS
+を使用してサーバーを探索できないときに特定のサーバーにフォールバックしたい場合、この機能は有用です。
+        </para>
+    </refsect2>
+    <refsect2 id='domain_name'>
+        <title>ドメイン名</title>
+        <para>
+            詳細は <citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> マニュアルページにある
+<quote>dns_discovery_domain</quote> パラメーターを参照してください。
+        </para>
+    </refsect2>
+    <refsect2 id='search_protocol'>
+        <title>プロトコル</title>
+        <para>
+            問い合わせは通常プロトコルとして _tcp を指定します。その他はそれぞれのオプションの説明にドキュメント化されています。
+        </para>
+    </refsect2>
+    <refsect2 id='reference'>
+        <title>関連項目</title>
+        <para>
+            サービス検索メカニズムに関する詳細は RFC 2782 を参照してください。
+        </para>
+    </refsect2>
+</refsect1>

@@ -1,0 +1,18 @@
+<refsect1 id='local'>
+    <title>DIE LOKALE DOMAIN</title>
+    <para>
+        Für korrektes Funktionieren muss eine Domain mit »id_provider=local«
+erstellt sein und SSSD muss laufen.
+    </para>
+    <para>
+        Möglicherweise möchte der Administrator in Fällen, in denen
+Gruppenverschachtelung (siehe <citerefentry>
+<refentrytitle>sss_groupadd</refentrytitle> <manvolnum>8</manvolnum>
+</citerefentry>) benötigt wird, lokale Benutzer anstelle traditioneller
+UNIX-Benutzer verwenden. Die lokalen Benutzer sind auch für das Testen und
+Entwickeln von SSSD nützlich, ohne dass ein vollständiger ferner Server
+bereitgestellt werden muss. Die <command>sss_user*</command>- und
+<command>sss_group*</command>-Werkzeuge benutzen einen lokalen LDB-Speicher,
+um Benutzer und Gruppen abzulegen.
+    </para>
+</refsect1>

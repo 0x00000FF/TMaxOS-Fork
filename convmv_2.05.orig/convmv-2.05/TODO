@@ -1,0 +1,13 @@
+Does this make sense? :
+
+- logfile option
+- convert names in uni_xlate (man 8 mount, vfat ...)
+- --exclude option
+- verbose mode printing actual scanned files
+- --null option for "find -print0 | xargs convmv --null" usage
+- map "most" strange chracters to ASCII equivalences
+- keep/restore old ctime - difficult to do! No Perl module, not
+  even a ctime option in standard "touch" command :-|
+
+
+any other suggestions?

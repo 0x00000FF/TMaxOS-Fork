@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Páginas de manual de SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd</refname>
+        <refpurpose>System Security Services Daemon</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sssd</command> <arg choice='opt'>
+<replaceable>options</replaceable> </arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPCION</title>
+        <para>
+            <command>SSSD</command> suministra un conjunto de demonios para gestionar el
+acceso a directorios remotos y mecanismos de autenticación. Suministra una
+interfaz NSS y PAM hacia el sistema y un sistema de parte trasera conectable
+para conectar múltiples fuentes de cuentas diferentes así como interfaz
+D-Bus. Es también la base para suministrar servicios de auditoría y política
+a los clientes para proyectos como FreeIPA. Suministra una base de datos más
+robusta para almacenar los usuarios locales así como datos de usuario
+extendidos.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPCIONES</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-d</option>,<option>--debug-level</option>
+<replaceable>NIVEL</replaceable>
+                </term>
+                <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/debug_levels.xml" />
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--debug-timestamps=</option><replaceable>mode</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        <emphasis>1</emphasis>: Agregar marca de tiempo a mensajes de depuración 
+                    </para>
+                    <para>
+                        <emphasis>0</emphasis>: Desactiva marca de tiempo en mensajes de depuración
+                    </para>
+                    <para>
+                        Predeterminado: 1
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--debug-microseconds=</option><replaceable>mode</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        <emphasis>1</emphasis>: Agregar microsegundos a la marca de tiempo en
+mensajes de depuración
+                    </para>
+                    <para>
+                        <emphasis>0</emphasis>: Desactiva microsegundos en marcas de tiempo
+                    </para>
+                    <para>
+                        Predeterminado: 0
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-f</option>,<option>--debug-to-files</option>
+                </term>
+                <listitem>
+                    <para>
+                        Envía la salida de depuración a ficheros en lugar de a stderr. Por defecto,
+los ficheros de registro se almacenan en <filename>/var/log/sssd</filename>
+y hay ficheros de registro separados para cada servicio y dominio SSSD.
+                    </para>
+                    <para>
+                        This option is deprecated. It is replaced by
+<option>--logger=files</option>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--logger=</option><replaceable>value</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Location where SSSD will send log messages. This option overrides the value
+of the deprecated option <option>--debug-to-files</option>. The deprecated
+option will still work if the <option>--logger</option> is not used.
+                    </para>
+                    <para>
+                        <emphasis>stderr</emphasis>: Redirect debug messages to standard error
+output.
+                    </para>
+                    <para>
+                        <emphasis>files</emphasis>: Redirect debug messages to the log files. By
+default, the log files are stored in <filename>/var/log/sssd</filename> and
+there are separate log files for every SSSD service and domain.
+                    </para>
+                    <para>
+                        <emphasis>journald</emphasis>: Redirect debug messages to systemd-journald
+                    </para>
+                    <para>
+                        Predeterminado: no definido
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-D</option>,<option>--daemon</option>
+                </term>
+                <listitem>
+                    <para>
+                        Convertido en un demonio después de la puesta en marcha.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-i</option>,<option>--interactive</option>
+                </term>
+                <listitem>
+                    <para>
+                        Ejecutar en primer plano, no convertirse en un demonio.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-c</option>,<option>--config</option>
+                </term>
+                <listitem>
+                    <para>
+                        Especifica un fichero de configuración distinto al de por defecto. El por
+defecto es <filename>/etc/sssd/sssd.conf</filename>. Para referencia sobre
+las opciones y sintaxis del fichero de configuración, consulta la página de
+manual <citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+            <varlistentry>
+                <term>
+                    <option>--version</option>
+                </term>
+                <listitem>
+                    <para>
+                        Imprimir número de versión y salir.
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <refsect1>
+        <title>Señales</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>SIGTERM/SIGINT</term>
+                <listitem>
+                    <para>
+                        Informa a SSSD para terminar graciosamente todos sus procesos hijos y
+después para el monitor.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>SIGHUP</term>
+                <listitem>
+                    <para>
+                        Le dice a SSSD que pare de escribir en su fichero descriptor de depuración
+actual y cerrar y reabrirlo. Esto significa facilitar la circulación de
+registro con programas como logrotate.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>SIGUSR1</term>
+                <listitem>
+                    <para>
+                        Tells the SSSD to simulate offline operation for the duration of the
+<quote>offline_timeout</quote> parameter. This is useful for testing. The
+signal can be sent to either the sssd process or any sssd_be process
+directly.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>SIGUSR2</term>
+                <listitem>
+                    <para>
+                        Tells the SSSD to go online immediately. This is useful for testing. The
+signal can be sent to either the sssd process or any sssd_be process
+directly.
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>NOTAS</title>
+        <para>
+            If the environment variable SSS_NSS_USE_MEMCACHE is set to "NO", client
+applications will not use the fast in memory cache.
+        </para>
+    </refsect1>
+
+	<xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

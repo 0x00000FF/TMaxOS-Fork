@@ -1,0 +1,6 @@
+<para>
+    Por favor advierta que el automontador sólo lee el mapa maestro en el
+arranque, se modo que si se hace cualquier cambio relacionado con autofs al
+sssd.conf, usted normalmente también necesitará reiniciar el demonio
+automontador después de reiniciar el SSSD.
+</para>

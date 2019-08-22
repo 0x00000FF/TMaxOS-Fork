@@ -1,0 +1,65 @@
+#
+# update-java-alternatives(8) completion
+#
+
+#
+# List the available alternatives
+#
+_update-java-alternatives_list()
+{
+    shopt -s dotglob
+
+    top=/usr/lib/jvm
+    for i in ${jinfo:-$top/*.jinfo}; do
+        alias=$(basename ${i%.jinfo})
+        alias=${alias#.}
+        echo $alias
+    done
+}
+
+_update-java-alternatives()
+{
+    local cur prev options
+
+    cur=`_get_cword`
+    prev=${COMP_WORDS[COMP_CWORD-1]}
+
+    options=()
+
+    # complete but doesn't display the short options
+    if [[ $cur == "-s" || $cur == "-l" || $cur == "-a" || $cur == "-h" || $cur == "-v" ]] ; then
+        COMPREPLY=( $( compgen -W '$cur' -- $cur ) )
+        return 0
+    fi
+
+    # suggest an action if none was specified yet
+    if [[ ! "${COMP_WORDS[@]}" =~ " --set " ]]  && [[ ! "${COMP_WORDS[@]}" =~ " -s " ]] && [[
+          ! "${COMP_WORDS[@]}" =~ " --list " ]] && [[ ! "${COMP_WORDS[@]}" =~ " -l " ]] && [[
+          ! "${COMP_WORDS[@]}" =~ " --auto " ]] && [[ ! "${COMP_WORDS[@]}" =~ " -a " ]] && [[
+          ! "${COMP_WORDS[@]}" =~ " --help " ]] && [[ ! "${COMP_WORDS[@]}" =~ " -h " ]]; then
+        options+=( --help --list --auto --set )
+    fi
+
+    # add the --set sub options
+    if [[ " ${COMP_WORDS[@]} " =~ " --set " ]] || [[ " ${COMP_WORDS[@]} " =~ " -s " ]]; then
+        if [[ ! "${COMP_WORDS[@]}" =~ " --verbose " ]] && [[ ! " ${COMP_WORDS[@]} " =~ " -v " ]]; then options+=("--verbose"); fi
+        if [[ ! "${COMP_WORDS[@]}" =~ " --plugin " ]]; then options+=("--plugin"); fi
+        if [[ ! "${COMP_WORDS[@]}" =~ " --jre " ]]; then options+=("--jre"); fi
+        if [[ ! "${COMP_WORDS[@]}" =~ " --jre-headless " ]]; then options+=("--jre-headless"); fi
+    fi
+
+    case "$prev" in
+        -s|--set|-l|--list)
+            COMPREPLY=( $( compgen -W '$(_update-java-alternatives_list)' -- $cur ) )
+            ;;
+        -h|--help)
+            COMPREPLY=( )
+            ;;
+        *)
+            COMPREPLY=( $( compgen -W '${options[@]}' -- $cur ) )
+            ;;
+    esac
+
+    return 0
+} &&
+complete -F _update-java-alternatives update-java-alternatives

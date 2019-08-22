@@ -1,0 +1,18 @@
+<varlistentry>
+    <term>homedir_substring (Zeichenkette)</term>
+    <listitem>
+        <para>
+            Der Wert dieser Option wird als Auflösung der Option
+<emphasis>override_homedir</emphasis> verwendet, falls die Vorlage die
+Formatzeichenkette <emphasis>%H</emphasis> enthält. Ein
+LDAP-Verzeichniseintrag kann diese Schablone direkt enthalten, so dass diese
+Option zum Auflösen des Pfades zum Home-Verzeichnis für jeden Client-Rechner
+(oder Betriebssystem) verwendet werden kann. Sie kann pro-Domain oder global
+im Abschnitt [nss] gesetzt werden. Ein im Domain-Abschnitt angegebener Wert
+setzt jenen im [nss]-Abschnitt außer Kraft.
+        </para>
+        <para>
+            Voreinstellung: /home
+        </para>
+    </listitem>
+</varlistentry>

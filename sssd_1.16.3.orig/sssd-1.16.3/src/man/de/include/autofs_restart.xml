@@ -1,0 +1,6 @@
+<para>
+    Bitte beachten Sie, dass der Automounter beim Start nur die Master-Abbildung
+liest. Daher müssen Sie normalerweise, falls irgendwelche zu Autofs
+gehörigen Änderungen in der »sssd.conf« vorgenommen wurden, den
+Automounter-Daemon nach dem SSSD-Neustart ebenfalls neu starten.
+</para>

@@ -1,0 +1,33 @@
+<listitem>
+    <para>
+        Un DN de base facultatif, une étendue de recherche et un filtre LDAP afin de
+restreindre les recherches LDAP pour ce type d'attribut.
+    </para>
+    <para>
+        syntaxe : <programlisting>
+search_base[?scope?[filter][?search_base?scope?[filter]]*]
+</programlisting>
+    </para>
+    <para>
+        La portée peut être l'une des « base »,  « onelevel » ou « subtree ». Les
+fonctions de portée sont spécifiées dans la section 4.5.1.2 de
+http://tools.ietf.org/html/rfc4511
+    </para>
+    <para>
+        Le filtre doit être un filtre de recherche LDAP valide tel que spécifié par
+http://www.ietf.org/rfc/rfc2254.txt
+    </para>
+    <para>
+        Pour obtenir des exemples de cette syntaxe, reportez-vous à la section
+d'exemples <quote>ldap_search_base</quote>.
+    </para>
+    <para>
+        Par défaut : la valeur de <emphasis>ldap_search_base</emphasis>
+    </para>
+    <para>
+        Noter que la spécification de portée ou de filtre n'est pas prise en charge
+pour les recherches sur un serveur Active Directory qui serait susceptible
+de produire un grand nombre de résultats et de déclencher l'extension Range
+Retrieval dans sa réponse.
+    </para>
+</listitem>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pages de manuel de SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_usermod</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_usermod</refname>
+        <refpurpose>modifier un compte utilisateur</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_usermod</command> <arg choice='opt'>
+<replaceable>options</replaceable> </arg> <arg
+choice='plain'><replaceable>LOGIN</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPTION</title>
+        <para>
+            <command>sss_usermod</command> modifie le compte défini par
+<replaceable>LOGIN</replaceable> pour refléter les modifications fournies en
+ligne de commande.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPTIONS</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-c</option>,<option>--gecos</option>
+<replaceable>COMMENTAIRE</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Toute chaîne de caractère décrivant l'utilisateur. Souvent utilisé comme
+champ pour le nom entier de l'utilisateur.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-h</option>,<option>--home</option>
+<replaceable>HOME_DIR</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Le répertoire personnel du compte utilisateur.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--shell</option>
+<replaceable>SHELL</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        L'interpréteur de commandes de l'utilisateur.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-a</option>,<option>--append-group</option>
+<replaceable>GROUPS</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Ajouter cet utilisateur aux groupes spécifiés par le paramètre
+<replaceable>GROUPS</replaceable>.  Le paramètre
+<replaceable>GROUPS</replaceable> est une liste séparée par des virgules de
+noms de groupes.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-r</option>,<option>--remove-group</option>
+<replaceable>GROUPS</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Retirer cet utilisateur de groupes spécifiés par le paramètre
+<replaceable>GROUPS</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-l</option>,<option>--lock</option>
+                </term>
+                <listitem>
+                    <para>
+                        Verrouiller le compte utilisateur. Il ne pourra plus se connecter.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-u</option>,<option>--unlock</option>
+                </term>
+                <listitem>
+                    <para>
+                        Déverrouiller le compte utilisateur.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-Z</option>,<option>--selinux-user</option>
+<replaceable>UTILISATEUR_SELINUX</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        L'utilisateur SELinux pour l'identifiant de connexion de l'utilisateur.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--addattr</option> <replaceable>ATTR_NAME_VAL</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Ajouter une paire attribut/valeur. Le format est nom_attribut=valeur.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--setattr</option> <replaceable>ATTR_NAME_VAL</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Définir une paire attribut/valeur. Le format est nom_attribut=valeur. Pour
+les attributs multi-valués, la commande remplace les valeurs déjà présentes.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--delattr</option> <replaceable>ATTR_NAME_VAL</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Supprimer une paire attribut/valeur. Le format est nom_attribut=valeur.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/local.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

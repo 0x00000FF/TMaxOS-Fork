@@ -1,0 +1,1011 @@
+# Norwegian Bokmal translation for ufw
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the ufw package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ufw\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-02-20 14:16-0600\n"
+"PO-Revision-Date: 2009-08-26 19:23+0000\n"
+"Last-Translator: Jamie Strandboge <jamie@ubuntu.com>\n"
+"Language-Team: Norwegian Bokmal <nb@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2015-01-26 20:08+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
+
+#: src/ufw:56
+msgid ": Need at least python 2.6)\n"
+msgstr ": dette krever python 2.6 eller nyere)\n"
+
+#: src/ufw:109 src/frontend.py:596 src/frontend.py:898
+msgid "Aborted"
+msgstr "Avbrutt"
+
+#: src/applications.py:36
+msgid "Profiles directory does not exist"
+msgstr "Profilmappe finnes ikke"
+
+#: src/applications.py:68
+#, python-format
+msgid "Skipping '%s': couldn't stat"
+msgstr "Hopper over «%s». Klarte ikke å samle inn informasjon."
+
+#: src/applications.py:73
+#, python-format
+msgid "Skipping '%s': too big"
+msgstr "Hopper over «%s». Fila er for stor."
+
+#: src/applications.py:78
+#, python-format
+msgid "Skipping '%s': too many files read already"
+msgstr "Hopper over «%s». Programmet leser allerede for mange filer."
+
+#: src/applications.py:92
+#, python-format
+msgid "Skipping '%s': couldn't process"
+msgstr "Hopper over «%s». Behandling mislyktes."
+
+#: src/applications.py:99
+#, python-format
+msgid "Skipping '%s': name too long"
+msgstr "Hopper over «%s». Navnet er for langt."
+
+#: src/applications.py:104
+#, python-format
+msgid "Skipping '%s': invalid name"
+msgstr "Hopper over «%s». Ugyldig navn."
+
+#: src/applications.py:110
+#, python-format
+msgid "Skipping '%s': also in /etc/services"
+msgstr "Hopper over «%s». Dette finnes også i /etc/services"
+
+#: src/applications.py:119
+#, python-format
+msgid "Skipping '%s': field too long"
+msgstr "Hopper over «%s». Feltet er for langt."
+
+#: src/applications.py:124
+#, python-format
+msgid "Skipping '%(value)s': value too long for '%(field)s'"
+msgstr "Hopper over «%(value)s». Verdien er for lang for «%(field)s»"
+
+#: src/applications.py:134
+#, python-format
+msgid "Duplicate profile '%s', using last found"
+msgstr "Profilen «%s» er en duplikat. Bruker profilen som ble funnet sist."
+
+#: src/applications.py:171
+#, python-format
+msgid "Profile '%(fn)s' missing required field '%(f)s'"
+msgstr "Profil «%(fn)s» mangler obligatorisk felt «%(f)s»"
+
+#: src/applications.py:176
+#, python-format
+msgid "Profile '%(fn)s' has empty required field '%(f)s'"
+msgstr "Profil «%(fn)s» har tomt obligatorisk felt «%(f)s»"
+
+#: src/applications.py:182
+#, python-format
+msgid "No ports found in profile '%s'"
+msgstr "Fant ingen porter i profilen «%s»"
+
+#: src/applications.py:195
+#, python-format
+msgid "Invalid ports in profile '%s'"
+msgstr "Ugyldige porter i profilen «%s»"
+
+#: src/backend_iptables.py:77
+msgid "New profiles:"
+msgstr "Nye profiler:"
+
+#: src/backend_iptables.py:93 src/backend.py:351
+#, python-format
+msgid "Unsupported policy '%s'"
+msgstr "Regelsettet «%s» støttes ikke"
+
+#: src/backend_iptables.py:98
+#, python-format
+msgid "Unsupported policy for direction '%s'"
+msgstr "Regelsett for retning «%s» støttes ikke"
+
+#: src/backend_iptables.py:158
+#, python-format
+msgid "Default %(direction)s policy changed to '%(policy)s'\n"
+msgstr "Standard regler for %(direction)s er endret til «%(policy)s»\n"
+
+#: src/backend_iptables.py:160
+msgid "(be sure to update your rules accordingly)"
+msgstr "(pass på å oppdatere alle regler deretter)"
+
+#: src/backend_iptables.py:167
+msgid "Checking raw iptables\n"
+msgstr "Kontrollerer iptables\n"
+
+#: src/backend_iptables.py:168
+msgid "Checking raw ip6tables\n"
+msgstr "Kontrollerer ip6tables\n"
+
+#: src/backend_iptables.py:261
+msgid "Checking iptables\n"
+msgstr "Kontrollerer iptables\n"
+
+#: src/backend_iptables.py:263
+msgid "Checking ip6tables\n"
+msgstr "Kontrollerer ip6tables\n"
+
+#: src/backend_iptables.py:266 src/backend_iptables.py:541
+msgid "problem running"
+msgstr "det oppstod et problem under kjøring"
+
+#: src/backend_iptables.py:272
+msgid "Status: inactive"
+msgstr "Status: inaktiv"
+
+#: src/backend_iptables.py:432
+msgid "To"
+msgstr "Til"
+
+#: src/backend_iptables.py:433
+msgid "From"
+msgstr "Fra"
+
+#: src/backend_iptables.py:434
+msgid "Action"
+msgstr "Handling"
+
+#: src/backend_iptables.py:450 src/backend_iptables.py:454
+msgid "\n"
+msgstr "\n"
+
+#: src/backend_iptables.py:462
+#, python-format
+msgid "Default: %(in)s (incoming), %(out)s (outgoing), %(routed)s (routed)"
+msgstr "Standard: %(in)s (inngående), %(out)s (utgående), %(routed)s (rutet)"
+
+#: src/backend_iptables.py:470
+#, python-format
+msgid ""
+"Status: active\n"
+"%(log)s\n"
+"%(pol)s\n"
+"%(app)s%(status)s"
+msgstr ""
+"Status: aktiv\n"
+"%(log)s\n"
+"%(pol)s\n"
+"%(app)s%(status)s"
+
+#: src/backend_iptables.py:474
+#, python-format
+msgid "Status: active%s"
+msgstr "Status: aktiv%s"
+
+#: src/backend_iptables.py:479 src/backend_iptables.py:489
+msgid "running ufw-init"
+msgstr "kjører ufw-init"
+
+#: src/backend_iptables.py:483 src/backend_iptables.py:493
+#, python-format
+msgid ""
+"problem running ufw-init\n"
+"%s"
+msgstr ""
+"det oppstod et problem under kjøring av ufw-init\n"
+"%s"
+
+#: src/backend_iptables.py:502
+msgid "Could not set LOGLEVEL"
+msgstr "Klarte ikke å velge terskel for loggføring (LOGLEVEL)"
+
+#: src/backend_iptables.py:508
+msgid "Could not load logging rules"
+msgstr "Klarte ikke å laste inn loggføringsregler"
+
+#: src/backend_iptables.py:663 src/backend.py:273
+#, python-format
+msgid "Couldn't open '%s' for reading"
+msgstr "Klarte ikke å åpne «%s» for lesing"
+
+#: src/backend_iptables.py:674
+#, python-format
+msgid "Skipping malformed tuple (bad length): %s"
+msgstr "Hopper over feilformatert tuppel (feil lengde): %s"
+
+#: src/backend_iptables.py:685
+#, python-format
+msgid "Skipping malformed tuple (iface): %s"
+msgstr "Hopper over feilformatert tuppel (iface): %s"
+
+#: src/backend_iptables.py:731
+#, python-format
+msgid "Skipping malformed tuple: %s"
+msgstr "Hopper over feilformatert tuppel: %s"
+
+#: src/backend_iptables.py:753 src/backend.py:304
+#, python-format
+msgid "'%s' is not writable"
+msgstr "«%s» kan ikke overskrives"
+
+#: src/backend_iptables.py:925
+msgid "Adding IPv6 rule failed: IPv6 not enabled"
+msgstr "Registrering av IPv6-regel mislyktes. IPv6 er ikke i bruk"
+
+#: src/backend_iptables.py:929
+#, python-format
+msgid "Skipping unsupported IPv6 '%s' rule"
+msgstr "Hopper over ustøttet IPv6-regel «%s»"
+
+#: src/backend_iptables.py:933
+#, python-format
+msgid "Skipping unsupported IPv4 '%s' rule"
+msgstr "Hopper over ustøttet IPv4-regel «%s»"
+
+#: src/backend_iptables.py:936
+msgid "Must specify 'tcp' or 'udp' with multiple ports"
+msgstr ""
+"Du må velge «tcp» eller «udp» når regler skal gjelde et spenn av flere porter"
+
+#: src/backend_iptables.py:948
+msgid "Skipping IPv6 application rule. Need at least iptables 1.4"
+msgstr ""
+"Hopper over IPv6-regel. Du må ha iptables versjon 1.4 eller nyere for at "
+"dette skal fungere"
+
+#: src/backend_iptables.py:953
+#, python-format
+msgid "Invalid position '%d'"
+msgstr "«%d» er en ugyldig posisjon"
+
+#: src/backend_iptables.py:957
+msgid "Cannot specify insert and delete"
+msgstr "Du kan ikke sette inn og slette en regel samtidig"
+
+#: src/backend_iptables.py:960
+#, python-format
+msgid "Cannot insert rule at position '%d'"
+msgstr "Klarte ikke å sette inn regel i posisjon «%d»"
+
+#: src/backend_iptables.py:1018
+msgid "Skipping inserting existing rule"
+msgstr "Lar være å sette inn regel som finnes allerede"
+
+#: src/backend_iptables.py:1029 src/frontend.py:403
+msgid "Could not delete non-existent rule"
+msgstr "Regelen finnes ikke, og kan derfor ikke slettes"
+
+#: src/backend_iptables.py:1034
+msgid "Skipping adding existing rule"
+msgstr "Lar være å legge til regel som finnes allerede"
+
+#: src/backend_iptables.py:1050
+msgid "Couldn't update rules file"
+msgstr "Klarte ikke å oppdatere regelfil"
+
+#: src/backend_iptables.py:1055
+msgid "Rules updated"
+msgstr "Regler er oppdatert"
+
+#: src/backend_iptables.py:1057
+msgid "Rules updated (v6)"
+msgstr "Regler (IPv6) er oppdatert"
+
+#: src/backend_iptables.py:1065
+msgid "Rule inserted"
+msgstr "Regel satt inn"
+
+#: src/backend_iptables.py:1067
+msgid "Rule updated"
+msgstr "Regel oppdatert"
+
+#: src/backend_iptables.py:1077
+msgid " (skipped reloading firewall)"
+msgstr " (lot være å laste inn brannmur på nytt)"
+
+#: src/backend_iptables.py:1080
+msgid "Rule deleted"
+msgstr "Regel slettet"
+
+#: src/backend_iptables.py:1083
+msgid "Rule added"
+msgstr "Regel lagt til"
+
+#: src/backend_iptables.py:1100 src/backend_iptables.py:1191
+msgid "Could not update running firewall"
+msgstr "Klarte ikke å oppdatere kjørende brannmur"
+
+#: src/backend_iptables.py:1155
+#, python-format
+msgid "Could not perform '%s'"
+msgstr "Klarte ikke å  utføre «%s»"
+
+#: src/backend_iptables.py:1182
+msgid "Couldn't update rules file for logging"
+msgstr "Klarte ikke å oppdatere regelfil for loggføring"
+
+#: src/backend_iptables.py:1240 src/backend.py:591
+#, python-format
+msgid "Invalid log level '%s'"
+msgstr "«%s» er et ugyldig loggføringsnivå"
+
+#: src/backend_iptables.py:1337
+#, python-format
+msgid "Could not find '%s'. Aborting"
+msgstr "Fant ikke «%s». Avbryter"
+
+#: src/backend_iptables.py:1349
+#, python-format
+msgid "'%s' already exists. Aborting"
+msgstr "«%s» finnes allerede. Avbryter"
+
+#: src/backend_iptables.py:1355
+#, python-format
+msgid "Backing up '%(old)s' to '%(new)s'\n"
+msgstr "Sikkerhetskopierer «%(old)s» til «%(new)s»\n"
+
+#: src/backend_iptables.py:1371 src/backend.py:229
+#, python-format
+msgid "Couldn't stat '%s'"
+msgstr "Klarte ikke å hente informasjon om «%s»"
+
+#: src/backend_iptables.py:1376
+#, python-format
+msgid "WARN: '%s' is world writable"
+msgstr "ADVARSEL: «%s» kan overskrives av alle"
+
+#: src/backend_iptables.py:1378
+#, python-format
+msgid "WARN: '%s' is world readable"
+msgstr "ADVARSEL: «%s» kan leses av alle"
+
+#: src/backend.py:69
+msgid "Couldn't determine iptables version"
+msgstr "Klarte ikke å finne ut hvilken iptables-versjon som er installert"
+
+#: src/backend.py:143
+msgid "problem running sysctl"
+msgstr "det oppstod et problem under kjøring av sysctl"
+
+#: src/backend.py:182
+msgid "Checks disabled"
+msgstr "Kontroller er slått av"
+
+#: src/backend.py:188
+msgid "ERROR: this script should not be SUID"
+msgstr "FEIL: dette skriptet skal ikke være SUID"
+
+#: src/backend.py:191
+msgid "ERROR: this script should not be SGID"
+msgstr "FEIL: dette skriptet skal ikke være SGID"
+
+#: src/backend.py:196
+msgid "You need to be root to run this script"
+msgstr "Du må være rotbruker for å kjøre dette skriptet"
+
+#: src/backend.py:206
+#, python-format
+msgid "'%s' does not exist"
+msgstr "«%s» finnes ikke"
+
+#: src/backend.py:235
+#, python-format
+msgid "uid is %(uid)s but '%(path)s' is owned by %(st_uid)s"
+msgstr "uid er %(uid)s, men «%(path)s» eies av %(st_uid)s"
+
+#: src/backend.py:242
+#, python-format
+msgid "%s is world writable!"
+msgstr "%s kan overskrives av hvem som helst!"
+
+#: src/backend.py:246
+#, python-format
+msgid "%s is group writable!"
+msgstr "%s kan overskrives av tilhørende brukergruppe!"
+
+#: src/backend.py:262
+#, python-format
+msgid "'%(f)s' file '%(name)s' does not exist"
+msgstr "«%(f)s»-fil «%(name)s» finnes ikke"
+
+#: src/backend.py:287
+#, python-format
+msgid "Missing policy for '%s'"
+msgstr "Mangler regelsett for «%s»"
+
+#: src/backend.py:291
+#, python-format
+msgid "Invalid policy '%(policy)s' for '%(chain)s'"
+msgstr "«%(policy)s» er en ugyldig regel for «%(chain)s»"
+
+#: src/backend.py:298
+msgid "Invalid option"
+msgstr "Ugyldig valg"
+
+#: src/backend.py:354
+#, python-format
+msgid "Default application policy changed to '%s'"
+msgstr "Standard programregelsett er endret til «%s»"
+
+#: src/backend.py:421
+msgid "No rules found for application profile"
+msgstr "Fant ingen regler for programprofil"
+
+#: src/backend.py:477
+#, python-format
+msgid "Rules updated for profile '%s'"
+msgstr "Regler for profilen «%s» er oppdatert"
+
+#: src/backend.py:483
+msgid "Couldn't update application rules"
+msgstr "Klarte ikke å oppdatere programregler"
+
+#: src/backend.py:505
+#, python-format
+msgid "Found multiple matches for '%s'. Please use exact profile name"
+msgstr "«%s» ga flere treff. Bruk nøyaktig profilnavn"
+
+#: src/backend.py:508
+#, python-format
+msgid "Could not find a profile matching '%s'"
+msgstr "Fant ingen profil som samsvarer med «%s»"
+
+#: src/backend.py:575
+msgid "Logging: "
+msgstr "Loggføring: "
+
+#: src/backend.py:579
+msgid "unknown"
+msgstr "ukjent"
+
+#: src/backend.py:606
+msgid "Logging disabled"
+msgstr "Loggføring slått av"
+
+#: src/backend.py:608
+msgid "Logging enabled"
+msgstr "Loggføring slått på"
+
+#: src/common.py:191
+#, python-format
+msgid "Bad port '%s'"
+msgstr "«%s» er en ugyldig port"
+
+#: src/common.py:252
+#, python-format
+msgid "Unsupported protocol '%s'"
+msgstr "Protokollen «%s» støttes ikke"
+
+#: src/common.py:280
+msgid "Bad source address"
+msgstr "Ugyldig kildeadresse"
+
+#: src/common.py:290
+msgid "Bad destination address"
+msgstr "Ugyldig måladresse"
+
+#: src/common.py:298
+msgid "Bad interface type"
+msgstr "Ugyldig grensesnitt-type"
+
+#: src/common.py:302
+msgid "Bad interface name: reserved character: '!'"
+msgstr "Ugyldig grensesnitt-navn. Tegnet «!» er reservert"
+
+#: src/common.py:306
+msgid "Bad interface name"
+msgstr "Ugyldig grensesnittnavn"
+
+#: src/common.py:310
+msgid "Bad interface name: can't use interface aliases"
+msgstr "Ugyldig grensesnittnavn. Du kan ikke bruke alias for grensesnitt her"
+
+#: src/common.py:321
+#, python-format
+msgid "Insert position '%s' is not a valid position"
+msgstr "«%s» er en ugyldig posisjon"
+
+#: src/common.py:331
+#, python-format
+msgid "Invalid log type '%s'"
+msgstr "«%s» er en ugyldig loggtype"
+
+#: src/common.py:339
+#, python-format
+msgid "Unsupported direction '%s'"
+msgstr "«%s» er en ugyldig retning"
+
+#: src/common.py:350
+msgid "Could not normalize source address"
+msgstr "Klarte ikke å normalisere kildeadresse"
+
+#: src/common.py:361
+msgid "Could not normalize destination address"
+msgstr "Klarte ikke å normalisere måladresse"
+
+#: src/common.py:425
+msgid "Found exact match"
+msgstr "Fant nøyaktig treff"
+
+#: src/common.py:429
+#, python-format
+msgid "Found non-action/non-logtype match (%(xa)s/%(ya)s %(xl)s/%(yl)s)"
+msgstr ""
+"Fant søketreff som ikke er handling/loggtype: (%(xa)s/%(ya)s %(xl)s/%(yl)s)"
+
+#: src/frontend.py:90
+#, python-format
+msgid ""
+"\n"
+"Usage: %(progname)s %(command)s\n"
+"\n"
+"%(commands)s:\n"
+" %(enable)-31s enables the firewall\n"
+" %(disable)-31s disables the firewall\n"
+" %(default)-31s set default policy\n"
+" %(logging)-31s set logging to %(level)s\n"
+" %(allow)-31s add allow %(rule)s\n"
+" %(deny)-31s add deny %(rule)s\n"
+" %(reject)-31s add reject %(rule)s\n"
+" %(limit)-31s add limit %(rule)s\n"
+" %(delete)-31s delete %(urule)s\n"
+" %(insert)-31s insert %(urule)s at %(number)s\n"
+" %(reload)-31s reload firewall\n"
+" %(reset)-31s reset firewall\n"
+" %(status)-31s show firewall status\n"
+" %(statusnum)-31s show firewall status as numbered list of %(rules)s\n"
+" %(statusverbose)-31s show verbose firewall status\n"
+" %(show)-31s show firewall report\n"
+" %(version)-31s display version information\n"
+"\n"
+"%(appcommands)s:\n"
+" %(applist)-31s list application profiles\n"
+" %(appinfo)-31s show information on %(profile)s\n"
+" %(appupdate)-31s update %(profile)s\n"
+" %(appdefault)-31s set default application policy\n"
+msgstr ""
+"\n"
+"Bruk: %(progname)s %(command)s\n"
+"\n"
+"%(commands)s:\n"
+" %(enable)-31s slå på brannmur\n"
+" %(disable)-31s slå av brannmur\n"
+" %(default)-31s velg standard regelsett\n"
+" %(logging)-31s velg %(level)s som loggføringsnivå\n"
+" %(allow)-31s legg til %(rule)s for tillatt tilkobling\n"
+" %(deny)-31s legg til %(rule)s for nektet tilkobling\n"
+" %(reject)-31s legg til %(rule)s for avvisning av tilkobling\n"
+" %(limit)-31s legg til %(rule)s for begrensning av tilkobling\n"
+" %(delete)-31s slett %(urule)s\n"
+" %(insert)-31s sett inn %(urule)s ved %(number)s\n"
+" %(reload)-31s last inn brannmur på nytt\n"
+" %(reset)-31s tilbakestill brannmur\n"
+" %(status)-31s viss brannmur-status\n"
+" %(statusnum)-31s vis brannmur-status i form av nummerert liste over "
+"%(rules)s\n"
+" %(statusverbose)-31s vis detaljert brannmur-status\n"
+" %(show)-31s vis brannmur-rapport\n"
+" %(version)-31s vis versjonsinformasjon\n"
+"\n"
+"%(appcommands)s:\n"
+" %(applist)-31s vis programprofiler\n"
+" %(appinfo)-31s vis informasjon om %(profile)s\n"
+" %(appupdate)-31s oppdater %(profile)s\n"
+" %(appdefault)-31s velg standard regelsett for programmer\n"
+
+#: src/frontend.py:164
+msgid "n"
+msgstr "n"
+
+#: src/frontend.py:165
+msgid "y"
+msgstr "j"
+
+#: src/frontend.py:166
+msgid "yes"
+msgstr "ja"
+
+#: src/frontend.py:211
+msgid "Firewall is active and enabled on system startup"
+msgstr "Brannmuren er nå i bruk, og slås på automatisk ved systemoppstart"
+
+#: src/frontend.py:218
+msgid "Firewall stopped and disabled on system startup"
+msgstr ""
+"Brannmuren er nå slått av, og slås ikke på automatisk ved systemoppstart"
+
+#: src/frontend.py:270
+msgid "Could not get listening status"
+msgstr "Klarte ikke å hente lyttestatus"
+
+#: src/frontend.py:339
+msgid "Added user rules (see 'ufw status' for running firewall):"
+msgstr "Lagt til brukerregler (se «ufw status» for kjørende brannmur):"
+
+#: src/frontend.py:342
+msgid ""
+"\n"
+"(None)"
+msgstr ""
+"\n"
+"(Ingen)"
+
+#: src/frontend.py:398 src/frontend.py:496 src/frontend.py:506
+#, python-format
+msgid "Invalid IP version '%s'"
+msgstr "«%s» er en ugyldig IP-versjon"
+
+#: src/frontend.py:429
+msgid "Invalid position '"
+msgstr "' er en ugyldig posisjon"
+
+#: src/frontend.py:503
+msgid "IPv6 support not enabled"
+msgstr "IPv6-støtte er slått av"
+
+#: src/frontend.py:514
+msgid "Rule changed after normalization"
+msgstr "Regel endret etter normalisering"
+
+#: src/frontend.py:538
+#, python-format
+msgid "Could not back out rule '%s'"
+msgstr "Klarte ikke å ta ut regelen «%s»"
+
+#: src/frontend.py:542
+msgid ""
+"\n"
+"Error applying application rules."
+msgstr ""
+"\n"
+"Det oppstod en feil da programregler skulle tas i bruk."
+
+#: src/frontend.py:544
+msgid " Some rules could not be unapplied."
+msgstr " Noen regler ble ikke tatt bort."
+
+#: src/frontend.py:546
+msgid " Attempted rules successfully unapplied."
+msgstr " Reglene ble tatt bort."
+
+#: src/frontend.py:557
+#, python-format
+msgid "Could not find rule '%s'"
+msgstr "Fant ikke regelen «%s»"
+
+#: src/frontend.py:562 src/frontend.py:567
+#, python-format
+msgid "Could not find rule '%d'"
+msgstr "Fant ikke regelen «%d»"
+
+#: src/frontend.py:583
+#, python-format
+msgid ""
+"Deleting:\n"
+" %(rule)s\n"
+"Proceed with operation (%(yes)s|%(no)s)? "
+msgstr ""
+"Sletter:\n"
+" %(rule)s\n"
+"Vil du fortsette (%(yes)s|%(no)s)? "
+
+#: src/frontend.py:614
+msgid "Unsupported default policy"
+msgstr "Standard regelsett støttes ikke"
+
+#: src/frontend.py:643 src/frontend.py:788
+msgid "Firewall reloaded"
+msgstr "Brannmuren er lastet inn på nytt"
+
+#: src/frontend.py:645
+msgid "Firewall not enabled (skipping reload)"
+msgstr "Brannmuren er ikke slått på (lar være å laste inn på nytt)"
+
+#: src/frontend.py:662 src/frontend.py:676 src/frontend.py:713
+msgid "Invalid profile name"
+msgstr "Ugyldig profilnavn"
+
+#: src/frontend.py:681 src/frontend.py:863
+#, python-format
+msgid "Unsupported action '%s'"
+msgstr "Handlinga «%s» støttes ikke"
+
+#: src/frontend.py:700
+msgid "Available applications:"
+msgstr "Tilgjengelige programmer:"
+
+#: src/frontend.py:721
+#, python-format
+msgid "Could not find profile '%s'"
+msgstr "Fant ikke profilen «%s»"
+
+#: src/frontend.py:726
+msgid "Invalid profile"
+msgstr "Ugyldig profil"
+
+#: src/frontend.py:729
+#, python-format
+msgid "Profile: %s\n"
+msgstr "Profil: %s\n"
+
+#: src/frontend.py:730
+#, python-format
+msgid "Title: %s\n"
+msgstr "Tittel: %s\n"
+
+#: src/frontend.py:733
+#, python-format
+msgid ""
+"Description: %s\n"
+"\n"
+msgstr ""
+"Beskrivelse: %s\n"
+"\n"
+
+#: src/frontend.py:739
+msgid "Ports:"
+msgstr "Porter:"
+
+#: src/frontend.py:741
+msgid "Port:"
+msgstr "Port:"
+
+#: src/frontend.py:790
+msgid "Skipped reloading firewall"
+msgstr "Lot være å laste inn brannmur på nytt"
+
+#: src/frontend.py:800
+msgid "Cannot specify 'all' with '--add-new'"
+msgstr "Du kan ikke velge både «all» og «--add-new» samtidig"
+
+#: src/frontend.py:815
+#, python-format
+msgid "Unknown policy '%s'"
+msgstr "«%s» er et ukjent regelsett"
+
+#: src/frontend.py:872
+#, python-format
+msgid ""
+"Command may disrupt existing ssh connections. Proceed with operation "
+"(%(yes)s|%(no)s)? "
+msgstr ""
+"Denne kommandoen kan forstyrre pågående ssh-tilkoblinger. Vil du fortsette "
+"(%(yes)s|%(no)s)? "
+
+#: src/frontend.py:885
+#, python-format
+msgid ""
+"Resetting all rules to installed defaults. Proceed with operation "
+"(%(yes)s|%(no)s)? "
+msgstr ""
+"Tilbakestiller alle regler til installerte standardverdier. Vil du fortsette "
+"(%(yes)s|%(no)s)? "
+
+#: src/frontend.py:889
+#, python-format
+msgid ""
+"Resetting all rules to installed defaults. This may disrupt existing ssh "
+"connections. Proceed with operation (%(yes)s|%(no)s)? "
+msgstr ""
+"Tilbakestiller alle regler til installerte standardverdier. Dette kan "
+"forstyrre pågående ssh-tilkoblinger. Vil du fortsette (%(yes)s|%(no)s)? "
+
+#: src/parser.py:108
+#, python-format
+msgid "Cannot insert rule at position '%s'"
+msgstr "Klarte ikke å sette inn regel i posisjon «%s»"
+
+#: src/parser.py:142
+msgid "Invalid interface clause"
+msgstr "Ugyldig grensesnitt-klausul"
+
+#: src/parser.py:168
+msgid "Option 'log' not allowed here"
+msgstr "Valget «log» tillates ikke her"
+
+#: src/parser.py:172
+msgid "Option 'log-all' not allowed here"
+msgstr "Valget «log-all» tillates ikke her"
+
+#: src/parser.py:205 src/parser.py:219
+msgid "Bad port"
+msgstr "Ugyldig port"
+
+#: src/parser.py:210 src/parser.py:342
+msgid "Port ranges must be numeric"
+msgstr "Portrekkevidde må angis i tallformat"
+
+#: src/parser.py:224 src/parser.py:441
+#, python-format
+msgid "Invalid port with protocol '%s'"
+msgstr "«%s» er en ugyldig port/protokoll"
+
+#: src/parser.py:228
+msgid "Wrong number of arguments"
+msgstr "Feil antall argumenter"
+
+#: src/parser.py:232
+msgid "Need 'to' or 'from' clause"
+msgstr "«til»- eller «fra»-klausul mangler"
+
+#: src/parser.py:247
+msgid "Improper rule syntax"
+msgstr "Feilaktig regelsyntaks"
+
+#: src/parser.py:254
+#, python-format
+msgid "Invalid token '%s'"
+msgstr "«%s» er et ugyldig symbol"
+
+#: src/parser.py:266
+msgid "Invalid 'proto' clause"
+msgstr "Ugyldig «proto»-klausul"
+
+#: src/parser.py:281
+#, python-format
+msgid "Invalid '%s' clause"
+msgstr "Ugyldig «%s»-klausul"
+
+#: src/parser.py:303
+msgid "Invalid 'from' clause"
+msgstr "InUgyldig «fra»-klausul"
+
+#: src/parser.py:325
+msgid "Invalid 'to' clause"
+msgstr "Ugyldig «til»-klausul"
+
+#: src/parser.py:330
+#, python-format
+msgid "Need 'from' or 'to' with '%s'"
+msgstr "Du må angi «fra» eller «til»-klausul med «%s»"
+
+#: src/parser.py:357
+msgid "Invalid 'port' clause"
+msgstr "Ugyldig «port»-klausul"
+
+#: src/parser.py:366
+msgid "Mixed IP versions for 'from' and 'to'"
+msgstr "Du må holde deg til én IP-versjon i både «fra»- og «til»-klausul"
+
+#: src/parser.py:383 src/parser.py:393 src/parser.py:402
+msgid "Could not find protocol"
+msgstr "Fant ikke protokoll"
+
+#: src/parser.py:409
+msgid "Protocol mismatch (from/to)"
+msgstr "Protokollene (fra/til) stemmer ikke overens"
+
+#: src/parser.py:416
+#, python-format
+msgid "Protocol mismatch with specified protocol %s"
+msgstr "Protokoll stemmer ikke med spesifikk protokoll %s"
+
+#: src/parser.py:423
+#, python-format
+msgid "Improper rule syntax ('%s' specified with app rule)"
+msgstr "Feilaktig regelsyntaks (brukt «%s» med programregel)"
+
+#: src/parser.py:430
+#, python-format
+msgid "Invalid IPv6 address with protocol '%s'"
+msgstr "Ugyldig IPv6-adresse med protokoll «%s»"
+
+#: src/parser.py:563
+msgid "Invalid interface clause for route rule"
+msgstr "Ugyldig grensesnitt-klausul for rute-regel"
+
+#: src/parser.py:849
+#, python-format
+msgid "Command '%s' already exists"
+msgstr "Kommandoen «%s» finnes allerede"
+
+#: src/util.py:434
+msgid "Couldn't find pid (is /proc mounted?)"
+msgstr "Fant ikke PID (kontroller at «/proc» er montert)"
+
+#: src/util.py:438
+#, python-format
+msgid "Couldn't find parent pid for '%s'"
+msgstr "Fant ikke forelder-PID for «%s»"
+
+#: src/util.py:448
+#, python-format
+msgid "Couldn't find '%s'"
+msgstr "Fant ikke «%s»"
+
+#: src/util.py:454
+#, python-format
+msgid "Could not find executable for '%s'"
+msgstr "Fant ingen kjørbar fil for «%s»"
+
+#: src/util.py:1006
+#, python-format
+msgid "Could not get statistics for '%s'"
+msgstr "Klarte ikke å hente statistikk for «%s»"
+
+#~ msgid "----"
+#~ msgstr "----"
+
+#~ msgid "--"
+#~ msgstr "--"
+
+#~ msgid "------"
+#~ msgstr "------"
+
+#~ msgid "'%s' file '%s' does not exist"
+#~ msgstr "'%s' fil '%s' eksisterer ikke"
+
+#~ msgid "No match"
+#~ msgstr "Ingen treff"
+
+#~ msgid ""
+#~ "\n"
+#~ "Usage: "
+#~ msgstr ""
+#~ "\n"
+#~ "Anvendelse: "
+
+#~ msgid ": Need at least python 2.5)\n"
+#~ msgstr ": Trenger i det minste python 2.5)\n"
+
+#~ msgid "uid is %s but '%s' is owned by %s"
+#~ msgstr "uid er %s men '%s' er eiet av %s"
+
+#, python-format
+#~ msgid "Default policy changed to '%s'\n"
+#~ msgstr "Standard policy byttet til '%s'\n"
+
+#, python-format
+#~ msgid "Default: %s"
+#~ msgstr "Standard: %s"
+
+#~ msgid "Status: active"
+#~ msgstr "Status: aktiv"
+
+#~ msgid ""
+#~ " COMMAND\n"
+#~ "\n"
+#~ "Commands:\n"
+#~ " enable\t\t\t\tenables the firewall\n"
+#~ " disable\t\t\tdisables the firewall\n"
+#~ " default ARG\t\t\tset default policy to ALLOW, DENY or REJECT\n"
+#~ " logging ARG\t\t\tset logging to OFF, ON or LEVEL\n"
+#~ " allow|deny|reject ARG\t\tadd allow, deny or reject RULE\n"
+#~ " delete RULE\t\t \tdelete the RULE\n"
+#~ " insert NUM RULE\t \tinsert RULE at NUM\n"
+#~ " status \t\t\tshow firewall status\n"
+#~ " status numbered\t\tshow firewall status as numbered list of RULES\n"
+#~ " show ARG\t\t\tshow firewall report\n"
+#~ " version\t\t\tdisplay version information\n"
+#~ "\n"
+#~ "Application profile commands:\n"
+#~ " app list\t\t\tlist application profiles\n"
+#~ " app info PROFILE\t\tshow information on PROFILE\n"
+#~ " app update PROFILE\t\tupdate PROFILE\n"
+#~ " app default ARG\t\tset profile policy to ALLOW, DENY, REJECT or\n"
+#~ "\t\t\t\tSKIP\n"
+#~ msgstr ""
+#~ " KOMMANDO\n"
+#~ "\n"
+#~ "Kommandoer:\n"
+#~ " aktiver\t\t\t\taktiverer brannmuren\n"
+#~ " deaktiver\t\t\tdeaktiverer brannmuren\n"
+#~ " standard ARG\t\t\tsett standard policy til TILLATT, NEKTE or AVVISE\n"
+#~ " logging ARG\t\t\tselisttt logging til AV, PÅ eller NIVÅ\n"
+#~ " tillatt|nekt|avvis ARG\t\tlegg til tillatt, nekt eller avvis REGEL\n"
+#~ " slett REGEL\t\t \tslett REGELEN\n"
+#~ " sett-inn NUM REGEL\t \tsett inn REGEL til NUM\n"
+#~ " status \t\t\tvis brannmur status\n"
+#~ " status nummerert\t\tvis brannmur status som nummererte lister av REGLER\n"
+#~ " show ARG\t\t\tvis brannmur repport\n"
+#~ " versjon\t\t\tvis versjon informasjon\n"
+#~ "\n"
+#~ "Applikasjon profilkommandoer :\n"
+#~ " app liste\t\t\tapplikasjons profiler liste\n"
+#~ " app info PROFILE\t\tvis informasjon om PROFIL\n"
+#~ " app oppdater PROFIL\t\toppdater PROFIL\n"
+#~ " app standard ARG\t\tsett profil policy til TILLATT, NEKT, AVVIS eller\n"
+#~ "\t\t\t\tHOPP OVER\n"

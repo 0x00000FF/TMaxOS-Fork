@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-session-recording</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Формати файлів та правила</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-session-recording</refname>
+        <refpurpose>Налаштовування записів сеансів за допомогою SSSD</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            На цій сторінці підручника описано налаштовування <citerefentry>
+<refentrytitle>sssd</refentrytitle> <manvolnum>8</manvolnum> </citerefentry>
+на роботу з <citerefentry> <refentrytitle>tlog-rec-session</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry>, частиною пакунка tlog, для
+реалізації записування сеансів користувачів у текстових
+терміналах. Докладний довідник щодо синтаксису налаштувань можна знайти у
+розділі <quote>ФОРМАТ ФАЙЛА</quote> сторінки підручника з <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+        </para>
+        <para>
+            SSSD можна налаштувати так, щоб уможливити запис усіх даних, які бачать або
+вводять протягом сеансу у текстових терміналах вказані
+користувачі. Наприклад, можна записувати дані щодо входу користувачів за
+допомогою консолі або SSH. Сама SSSD нічого не записує, а лише забезпечує
+запуск tlog-rec-session під час входу до системи користувача, щоб можна було
+здійснювати запис відповідно до налаштувань.
+        </para>
+        <para>
+            Для користувачів, для яких увімкнено запис сеансів, SSSD замінює командну
+оболонку користувача на tlog-rec-session у відповідях NSS і додає змінну,
+яка вказує на початкову командну оболонку до середовища користувача у
+налаштування сеансу PAM. Таким чином забезпечується запуск tlog-rec-session
+замість командної оболонки користувача і надання даних про те, яку командну
+оболонку слід запустити, щойно розпочнеться записування.
+        </para>
+    </refsect1>
+
+    <refsect1 id='configuration-options'>
+        <title>ПАРАМЕТРИ НАЛАШТУВАННЯ</title>
+            <para>
+                Цими параметрами можна скористатися для налаштовування запису сеансів.
+            </para>
+            <variablelist>
+                <varlistentry>
+                    <term>scope (рядок)</term>
+                    <listitem>
+                        <para>
+                            Один із вказаних нижче рядків, що визначають область запису сеансів:
+<variablelist>
+                                <varlistentry>
+                                    <term>"none"</term>
+                                    <listitem>
+                                        <para>
+                                            Користувачі не записуються.
+                                        </para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>"some"</term>
+                                    <listitem>
+                                        <para>
+                                            Запис вестиметься для користувачів і груп, вказаних параметрами
+<replaceable>користувачі</replaceable> і <replaceable>групи</replaceable>.
+                                        </para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>"all"</term>
+                                    <listitem>
+                                        <para>
+                                            Усі користувачі записуються.
+                                        </para>
+                                    </listitem>
+                                </varlistentry>
+                            </variablelist>
+                        </para>
+                        <para>
+                            Типове значення: none
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>users (рядок)</term>
+                    <listitem>
+                        <para>
+                            Список відокремлених комами записів користувачів, для яких увімкнено
+записування сеансів. Належність до списку визначатиметься за іменами,
+повернутими NSS, тобто після можливих замін пробілів, змін регістру символів
+тощо.
+                        </para>
+                        <para>
+                            Типове значення: порожнє. Не відповідає жодному користувачу.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>groups (рядок)</term>
+                    <listitem>
+                        <para>
+                            Список відокремлених комами записів груп, для користувачів яких буде
+увімкнено записування сеансів. Належність до списку визначатиметься за
+назвами, повернутими NSS, тобто після можливих замін пробілів, змін регістру
+символів тощо.
+                        </para>
+                        <para>
+                            Зауваження: використання цього параметра (встановлення для нього будь-якого
+значення) значно впливає на швидкодію, оскільки некешований запит щодо
+користувача потребує отримання і встановлення відповідності груп, до яких
+належить користувач.
+                        </para>
+                        <para>
+                            Типове значення: порожнє. Не відповідає жодній групі.
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+    </refsect1>
+
+    <refsect1 id='example'>
+        <title>ПРИКЛАД</title>
+        <para>
+            У наведеному нижче фрагменті файла sssd.conf увімкнено запис сеансів для
+користувачів contractor1 і contractor2» та групи students.
+        </para>
+        <para>
+<programlisting>
+[session_recording]
+scope = some
+users = contractor1, contractor2
+groups = students
+</programlisting>
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

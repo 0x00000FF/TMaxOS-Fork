@@ -1,0 +1,290 @@
+<refsect1 id='idmap'>
+    <title>ID-ABBILDUNG</title>
+    <para>
+        Die ID-Abbildungsfunktionalität ermöglicht es SSSD, als Client eines Active
+Directorys zu agieren, ohne dass Administratoren Benutzerattribute erweitern
+müssen, damit POSIX-Attribute für Benutzer- und Gruppenkennzeichner
+unterstützt werden.
+    </para>
+    <para>
+        HINWEIS: Wenn ID-Abbildung aktiviert ist, werden die Attribute »uidNumber«
+und »gidNumber« ignoriert. Dies geschieht, um mögliche Konflikte zwischen
+automatisch und manuell zugewiesenen Werten zu vermeiden. Falls Sie manuell
+zugewiesene Werte benutzen müssen, müssen Sie ALLE Werte manuell zuweisen.
+    </para>
+    <para>
+        Bitte beachten Sie, dass die Änderung der die ID-Abbildung betreffenden
+Konfigurationsoptionen auch die Änderung der Benutzer- und Gruppen-IDs nach
+sich zieht. Momentan unterstützt SSSD die Änderung der IDs nicht, daher muss
+die Datenbank entfernt werden. Da auch zwischengespeicherte Passwörter in
+der Datenbank enthalten sind, sollte diese nur entfernt werden, während die
+Authentifizierungsserver erreichbar sind, anderenfalls könnten Benutzer
+ausgesperrt werden. Um das Passwort zwischenzuspeichern, muss eine
+Authentifizierung ausgeführt werden. Es reicht nicht aus, <citerefentry>
+<refentrytitle>sss_cache</refentrytitle> <manvolnum>8</manvolnum>
+</citerefentry> zum Löschen der Datenbank auszuführen, vielmehr sind
+folgende Schritte erforderlich:
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        Stellen Sie sicher, dass entfernte Server erreichbar sind.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Stoppen Sie den SSSD-Dienst.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Entfernen Sie die Datenbank.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Starten Sie den SSSD-Dienst.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        Außerdem ist es ratsam, vorauszuplanen und die ID-Abbildung gründlich zu
+testen, da die Änderung der IDs Änderungen anderer Systemeigenschaften nach
+sich ziehen könnte, wie die Besitzverhältnisse von Dateien und
+Verzeichnissen.
+    </para>
+
+    <refsect2 id='idmap_algorithm'>
+        <title>Abbildungsalgorithmus</title>
+        <para>
+            Active Directory stellt für jedes Benutzer- und Gruppenobjekt im Verzeichnis
+eine »objectSID« bereit. Diese »objectSID« kann in Bestandteile zerlegt
+werden, die die Active-Directory-Domain-Identität und den relativen
+Bezeichner (RID) des Benutzer- oder Gruppenobjekts darstellen.
+        </para>
+        <para>
+            Der ID-Abbildungsalgorithmus von SSSD nimmt einen Bereich verfügbarer UIDs
+und teilt sie in gleich große Bestandteile, »Slices« genannt. Jeder Slice
+steht für den verfügbaren Speicher einer Active-Directory-Domain.
+        </para>
+        <para>
+            Wenn ein Benutzer- oder Gruppeneintrag für eine bestimmt Domain zum ersten
+Mal vorgefunden wird, reserviert der SSSD einen der verfügbaren Slices für
+diese Domain. Um eine Slice-Zuteilung auf verschiedenen Client-Maschinen
+wiederholbar zu machen, wählen wir den Slice, der auf dem folgenden
+Algorithmus basiert:
+        </para>
+        <para>
+            Die Zeichenkette durchläuft den Algorithmus Murmurhash3, um sie in einen
+32-Bit-Hash-Wert umzuwandeln. Dann wird der Betrag dieses Werts mit der
+Gesamtzahl verfügbarer Slices genommen, um den Slice auszusuchen.
+        </para>
+        <para>
+            HINWEIS: Es ist möglich, dass Kollisionen zwischen dem Hash und
+nachfolgenden Beträgen auftreten. In diesen Situationen werden wir den
+nächsten verfügbaren Slice auswählen, aber es ist wahrscheinlich nicht
+möglich, den genau gleichen Satz von Slices auf anderen Maschinen zu
+reproduzieren (da die Reihenfolge, in der sie vorgefunden werden, ihren
+Slice bestimmt). In dieser Situtation wird empfohlen, entweder auf die
+Verwendung expliziter POSIX-Attribute in Active Directory zu wechseln
+(ID-Abbildung deaktivieren) oder eine Standard-Domain zu konfigurieren, um
+sicherzustellen, dass wenigstens eine immer beständig ist. Einzelheiten
+finden Sie unter »Konfiguration«.
+        </para>
+    </refsect2>
+
+    <refsect2 id='idmap_config'>
+        <title>Konfiguration</title>
+        <para>
+            Minimalkonfiguration (im Abschnitt »[domain/DOMAINNAME]«):
+        </para>
+        <para>
+<programlisting>
+ldap_id_mapping = True
+ldap_schema = ad
+</programlisting>
+        </para>
+        <para>
+            The default configuration results in configuring 10,000 slices, each capable
+of holding up to 200,000 IDs, starting from 200,000 and going up to
+2,000,200,000. This should be sufficient for most deployments.
+        </para>
+        <refsect3 id='idmap_advanced_config'>
+            <title>Fortgeschrittene Konfiguration</title>
+            <variablelist>
+                <varlistentry>
+                    <term>ldap_idmap_range_min (Ganzzahl)</term>
+                    <listitem>
+                        <para>
+                            gibt die Untergrenze des Bereichs von POSIX-IDs an, der zum Abbilden von
+Active-Directory-Benutzern und Gruppen-SIDs benutzt wird.
+                        </para>
+                        <para>
+                            HINWEIS: Diese Option unterscheidet sich von »min_id«, wobei »min_id« als
+Filter für die Ausgabe von Anfragen an diese Domain agiert, wohingegen diese
+Option den Bereich der ID-Zuweisung steuert. Dies ist ein feiner
+Unterschied, aber es wäre ein allgemein guter Ratschlag, dass »min_id«
+kleiner oder gleich »ldap_idmap_range_min« sein sollte.
+                        </para>
+                        <para>
+                            Voreinstellung: 200000
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_range_max (Ganzzahl)</term>
+                    <listitem>
+                        <para>
+                            gibt die Obergrenze des Bereichs von POSIX-IDs an, der zum Abbilden von
+Active-Directory-Benutzern und Gruppen-SIDs benutzt wird.
+                        </para>
+                        <para>
+                            HINWEIS: Diese Option unterscheidet sich von »max_id« wobei »max_id« als
+Filter für die Ausgabe von Anfragen an diese Domain agiert, wohingegen diese
+Option den Bereich der ID-Zuweisung steuert. Dies ist ein feiner
+Unterschied, aber es wäre ein allgemein guter Ratschlag, dass »max_id«
+größer oder gleich »ldap_idmap_range_max« sein sollte.
+                        </para>
+                        <para>
+                            Voreinstellung: 2000200000
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_range_size (Ganzzahl)</term>
+                    <listitem>
+                        <para>
+                            gibt die Anzahl der für jeden Slice verfügbaren IDs an. Falls sich die
+Bereichsgröße nicht gleichmäßig in die minimalen und maximalen Werte teilen
+lässt, werden so viele komplette Slices wie möglich erstellt.
+                        </para>
+                        <para>
+                            HINWEIS: Der Wert dieser Option muss mindestens so groß sein wie die größte
+Benutzer-RID, die jemals auf dem Active-Directory-Server verwendet werden
+soll. Das Nachschlagen und Anmelden von Benutzern wird scheitern, wenn deren
+RIDs größer sind als dieser Wert.
+                        </para>
+                        <para>
+                            For example, if your most recently-added Active Directory user has
+objectSid=S-1-5-21-2153326666-2176343378-3404031434-1107,
+<quote>ldap_idmap_range_size</quote> must be at least 1108 as range size is
+equal to maximal SID minus minimal SID plus one (e.g. 1108 = 1107 - 0 + 1).
+                        </para>
+                        <para>
+                            Es ist wichtig, für spätere Erweiterungen vorauszuplanen, da die Änderung
+dieses Wertes zur Änderung aller ID-Abbildungen des Systems führt. Dadurch
+können Benutzer andere lokale IDs als vorher haben.
+                        </para>
+                        <para>
+                            Voreinstellung: 200000
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_default_domain_sid (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            gibt die Domain-SID der Standard-Domain an. Dies wird sicherstellen, dass
+diese Domain immer dem Slice null im ID-Abbild zugeordnet wird. Dabei wird
+der oben beschriebene Murmurhash-Algorithmus umgangen.
+                        </para>
+                        <para>
+                            Voreinstellung: nicht gesetzt
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_default_domain (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            gibt den Namen der Standard-Domain an.
+                        </para>
+                        <para>
+                            Voreinstellung: nicht gesetzt
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_autorid_compat (Boolesch)</term>
+                    <listitem>
+                        <para>
+                            ändert das Verhalten des ID-Abbildungsalgorithmus so, dass es dem
+Algorithmus »idmap_autorid« von Winbind ähnlicher ist.
+                        </para>
+                        <para>
+                            Wenn diese Option konfiguriert wurde, werden Domains beginnend bei Slice
+null reserviert und gleichmäßig mit jeder zusätzlichen Domain vergrößert.
+                        </para>
+                        <para>
+                            HINWEIS: Der Algorithmus ist nicht deterministisch (er hängt von der
+Reihenfolge ab, in der Benutzer und Gruppen abgefragt werden). Falls dieser
+Modus aus Kompatibilitätsgründen mit Maschinen, die Winbind ausführen,
+erforderlich ist, wird empfohlen, auch die Option
+»ldap_idmap_default_domain_sid« zu verwenden. Dies soll sicherstellen, dass
+mindestens eine Domain beständig für den Slice null reserviert ist.
+                        </para>
+                        <para>
+                            Voreinstellung: False
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_helper_table_size (integer)</term>
+                    <listitem>
+                        <para>
+                          Maximal number of secondary slices that is tried when performing mapping
+from UNIX id to SID.
+                        </para>
+                        <para>
+                          Note: Additional secondary slices might be generated when SID is being
+mapped to UNIX id and RID part of SID is out of range for secondary slices
+generated so far. If value of ldap_idmap_helper_table_size is equal to 0
+then no additional secondary slices are generated.
+                        </para>
+                        <para>
+                            Voreinstellung: 10
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </refsect3>
+    </refsect2>
+
+    <refsect2 id='well_known_sids'>
+        <title>Bekannte Sicherheits-IDs</title>
+        <para>
+            SSSD unterstützt das Nachschlagen der Namen sogenannter bekannter
+Sicherheits-IDs, die eine spezielle unveränderliche Bedeutung haben. Da
+generische Benutzer und Gruppen, die sich auf diese bekannten SIDs beziehen,
+keine Entsprechung in einer Linux/UNIX-Umgebung haben, sind für diese
+Objekte keine POSIX-IDs verfügbar.
+        </para>
+        <para>
+            Der SID-Namensraum ist in Autoritäten organisiert, die als unterschiedliche
+Domains betrachtet werden können. Die Autoritäten für die bekannten SIDs
+sind
+            <itemizedlist>
+                <listitem><para>Null-Autorität (Null Authority)</para></listitem>
+                <listitem><para>Weltweit anerkannte Autorität (World Authority)</para></listitem>
+                <listitem><para>Lokale Autorität (Local Authority)</para></listitem>
+                <listitem><para>Ersteller-Autorität (Creator Authority)</para></listitem>
+                <listitem><para>NT-Autorität (NT Authority)</para></listitem>
+                <listitem><para>Eingebaut</para></listitem>
+            </itemizedlist>
+            Die mit großem Anfangsbuchstaben geschriebenen Versionen dieser Namen werden
+als Domainnamen verwendet, wenn der voll qualifizierte Name einer bekannten
+Sicherheits-ID zurückgegeben wird.
+        </para>
+        <para>
+            Da einige Dienstprogramme die Änderung der Sicherheits-ID-basierten
+Zugriffskontrollinformationen mit Hilfe des Namens ermöglichen, anstelle die
+Sicherheits-ID direkt zu verwenden, unterstützt SSSD die Suche nach der SID
+anhand des Namens ebenfalls. Um Überschneidungen zu vermeiden, können nur
+voll qualifizierte Namen bei der Suche nach bekannten Sicherheit-IDs
+verwendet werden. Daher sollten die Domainnamen <quote>NULL
+AUTHORITY</quote>, <quote>WORLD AUTHORITY</quote>, <quote> LOCAL
+AUTHORITY</quote>, <quote>CREATOR AUTHORITY</quote>, <quote>NT
+AUTHORITY</quote> und <quote>BUILTIN</quote> nicht als Domainnamen in
+<filename>sssd.conf</filename> verwendet werden.
+        </para>
+    </refsect2>
+
+</refsect1>

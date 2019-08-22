@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pages de manuel de SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_useradd</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_useradd</refname>
+        <refpurpose>créer un utilisateur</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_useradd</command> <arg choice='opt'>
+<replaceable>options</replaceable> </arg> <arg
+choice='plain'><replaceable>UTILISATEUR</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPTION</title>
+        <para>
+            <command>sss_useradd</command> crée un nouveau compte utilisateur en
+utilisant les valeurs spécifiées en ligne de commande auquelles sont
+ajoutées les valeurs par défaut du système.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPTIONS</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-u</option>,<option>--uid</option> <replaceable>UID</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Définit l'UID de l'utilisateur à la valeur
+<replaceable>UID</replaceable>. Si non précisé, il est choisit
+automatiquement.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-c</option>,<option>--gecos</option>
+<replaceable>COMMENTAIRE</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Toute chaîne de caractère décrivant l'utilisateur. Souvent utilisé comme
+champ pour le nom entier de l'utilisateur.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-h</option>,<option>--home</option>
+<replaceable>HOME_DIR</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Le répertoire personnel du compte utilisateur. Par défaut, on ajoute
+<replaceable>LOGIN</replaceable> à <filename>/home</filename> et on utilise
+cela comme dossier personnel. La base précédent
+<replaceable>LOGIN</replaceable> est modifiable avec le paramètre
+<quote>user_defaults/baseDirectory</quote> de sssd.conf.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--shell</option>
+<replaceable>SHELL</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        L'interpréteur de commande de l'utilisateur. La valeur par défaut actuelle,
+<filename>/bin/bash</filename>, peut être modifiée avec le paramètre
+<quote>user_defaults/defaultShell</quote> dans sssd.conf.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-G</option>,<option>--groups</option>
+<replaceable>GROUPES</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Une liste de groupes existants dont l'utilisateur est aussi membre.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-m</option>,<option>--create-home</option>
+                </term>
+                <listitem>
+                    <para>
+                        Crée le répertoire personnel de l'utilisateur s'il n'existe pas. Les
+fichiers et répertoires inclus dans le répertoire squelette (pouvant être
+définis avec l'option -k ou dans le fichier de configuration) sont copiés
+dans le dossier personnel.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-M</option>,<option>--no-create-home</option>
+                </term>
+                <listitem>
+                    <para>
+                        Ne pas créer de dossier personnel pour l'utilisateur. Écrase les paramètres
+de configuration.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-k</option>,<option>--skel</option>
+<replaceable>SKELDIR</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Le répertoire squelette, contenant les fichiers et répertoires à copier dans
+le répertoire personnel de l'utilisateur, quand le répertoire personnel est
+créé par <command>sss_useradd</command>.
+                    </para>
+                    <para>
+                        Les fichiers spéciaux (périphériques blocs, caractères, tubes nommés et
+sockets unix) ne seront pas copiés.
+                    </para>
+                    <para>
+                        L'option n'est valide que si l'option <option>-m</option> (ou
+<option>--create-home</option>) est utilisée ou si la création de
+répertoires personnels est à TRUE dans la configuration.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-Z</option>,<option>--selinux-user</option>
+<replaceable>UTILISATEUR_SELINUX</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        L'utilisateur SELinux pour la connexion utilisateur. Si non spécifié, la
+valeur par défaut du système est utilisée.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/local.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD マニュアル ページ</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-krb5</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">ファイル形式および変換</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-krb5</refname>
+        <refpurpose>SSSD Kerberos provider</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>概要</title>
+        <para>
+            このマニュアルは <citerefentry> <refentrytitle>sssd</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry> に対する Kerberos 5
+認証バックエンドの設定を説明しています。詳細な構文の参考資料は、<citerefentry>
+<refentrytitle>sssd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> マニュアルページの <quote>ファイル形式</quote> セクションを参照してください。
+        </para>
+        <para>
+            Kerberos 5
+認証バックエンドは認証プロバイダーおよびパスワード変更プロバイダーを含みます。正しく機能するためには識別プロダイバーと組み合わせて使用する必要があります
+(たとえば、id_provider = ldap)。Kerberos 5 認証バックエンドにより必要とされるいくつかの情報は、ユーザーの
+Kerberos プリンシパル名 (UPN) のような、識別プロバイダーにより提供される必要があります。識別プロバイダーの設定は UPN
+を指定するためのエントリーがある必要があります。これを設定する方法に関する詳細は適用可能な識別プロバイダーのマニュアルページを参照してください。
+        </para>
+        <para>
+            このバックエンドは、ユーザーのホームディレクトリーにある .k5login ファイルに基づいたアクセス制御を提供します。詳細は
+<citerefentry>
+<refentrytitle>.k5login</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry> を参照してください。空の .k5login
+ファイルがあると、このユーザーに対するすべてのアクセスが拒否されます。この機能を有効にするには、SSSD 設定において 'access_provider
+= krb5' を使用します。
+        </para>
+        <para>
+            UPN が識別バックエンド <command>sssd</command> において利用できない場合は、形式
+<replaceable>username</replaceable>@<replaceable>krb5_realm</replaceable>
+を使用して UPN を構築します。
+        </para>
+
+    </refsect1>
+
+    <refsect1 id='configuration-options'>
+        <title>設定オプション</title>
+        <para>
+            認証モジュール krb5 が SSSD ドメインにおいて使用されていると、以下のオプションを使用する必要があります。 SSSD
+ドメインの設定における詳細は <citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> マニュアルページの <quote>ドメインセクション</quote>
+を参照してください。  <variablelist>
+                <varlistentry>
+                    <term>krb5_server, krb5_backup_server (文字列)</term>
+                    <listitem>
+                        <para>
+                            SSSD が接続したい AD サーバー（優先順）の IP
+アドレスまたはホスト名のカンマ区切り一覧を指定します。フェールオーバーおよびサーバー冗長化に関する詳細は <quote>FAILOVER</quote>
+セクションを参照してください。ポート番号（コロンの後ろ）をオプションとして、アドレスやホスト名の後ろに付けることもできます。これが無ければ、サービス探索が有効になっています。詳細は
+<quote>サービス探索</quote> のセクションを参照してください。
+                        </para>
+                        <para>
+                            KDC または kpasswd サーバーに対してサービス検索を使用するとき、SSSD はまずプロトコルとして _udp を指定する DNS
+エントリーを検索して、何も見つからなければ _tcp にフォールバックします。
+                        </para>
+                        <para>
+                            このオプションは以前の SSSD において <quote>krb5_kdcip</quote>
+という名前でした。古い名前がしばらく認められる間、ユーザーは代わりに <quote>krb5_server</quote>
+を使用するよう設定ファイルを移行することが推奨されます。
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_realm (文字列)</term>
+                    <listitem>
+                        <para>
+                            Kerberos レルムの名前です。このオプションは指定する必要があります。
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_kpasswd, krb5_backup_kpasswd (文字列)</term>
+                    <listitem>
+                        <para>
+                            パスワード変更サービスが KDC
+において実行されていなければ、代替サーバーがここで指定できます。オプションのポート番号が（コロンに続けて）アドレスまたはホスト名に追加できます。
+                        </para>
+                        <para>
+                            フェイルオーバーとサーバー冗長性に関する詳細は、<quote>フェイルオーバー</quote>のセクションを参照してください。注：KDC
+に対する認証がまだ可能であるならば、たとえすべての kpasswd
+サーバーがなかったとしても、バックエンドをオフラインに切り替えないことに注意してください。
+                        </para>
+                        <para>
+                            初期値: KDC を使用します
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_ccachedir (文字列)</term>
+                    <listitem>
+                        <para>
+                            Directory to store credential caches. All the substitution sequences of
+krb5_ccname_template can be used here, too, except %d and %P.  The directory
+is created as private and owned by the user, with permissions set to 0700.
+                        </para>
+                        <para>
+                            初期値: /tmp
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_ccname_template (文字列)</term>
+                    <listitem>
+                        <para>
+                            Location of the user's credential cache. Three credential cache types are
+currently supported: <quote>FILE</quote>, <quote>DIR</quote> and
+<quote>KEYRING:persistent</quote>. The cache can be specified either as
+<replaceable>TYPE:RESIDUAL</replaceable>, or as an absolute path, which
+implies the <quote>FILE</quote> type. In the template, the following
+sequences are substituted: <variablelist>
+                                <varlistentry>
+                                    <term>%u</term>
+                                    <listitem><para>ログイン名</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%U</term>
+                                    <listitem><para>ログイン UID</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%p</term>
+                                    <listitem><para>プリンシパル名</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%r</term>
+                                    <listitem><para>レルム名</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%h</term>
+                                    <listitem><para>ホームディレクトリー</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%d</term>
+                                    <listitem><para>value of krb5_ccachedir
+                                              </para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%P</term>
+                                    <listitem><para>SSSD クライアントのプロセス ID</para>
+                                    </listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>%%</term>
+                                    <listitem><para>文字 '%'</para>
+                                    </listitem>
+                                </varlistentry>
+                            </variablelist> If the
+template ends with 'XXXXXX' mkstemp(3) is used to create a unique filename
+in a safe way.
+                        </para>
+                        <para>
+                            When using KEYRING types, the only supported mechanism is
+<quote>KEYRING:persistent:%U</quote>, which uses the Linux kernel keyring to
+store credentials on a per-UID basis. This is also the recommended choice,
+as it is the most secure and predictable method.
+                        </para>
+                        <para>
+                            The default value for the credential cache name is sourced from the profile
+stored in the system wide krb5.conf configuration file in the [libdefaults]
+section. The option name is default_ccache_name.  See krb5.conf(5)'s
+PARAMETER EXPANSION paragraph for additional information on the expansion
+format defined by krb5.conf.
+                        </para>
+                        <para>
+                          NOTE: Please be aware that libkrb5 ccache expansion template from
+<citerefentry> <refentrytitle>krb5.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> uses different expansion sequences
+than SSSD.
+                        </para>
+                        <para>
+                            Default: (from libkrb5)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_auth_timeout (整数)</term>
+                    <listitem>
+                        <para>
+                            オンライン認証またはパスワード変更要求が中止された後の秒単位のタイムアウトです。可能ならば、認証要求がオフラインで継続されます。
+                        </para>
+                        <para>
+                            初期値: 6
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_validate (論理値)</term>
+                    <listitem>
+                        <para>
+                            Verify with the help of krb5_keytab that the TGT obtained has not been
+spoofed. The keytab is checked for entries sequentially, and the first entry
+with a matching realm is used for validation. If no entry matches the realm,
+the last entry in the keytab is used. This process can be used to validate
+environments using cross-realm trust by placing the appropriate keytab entry
+as the last entry or the only entry in the keytab file.
+                        </para>
+                        <para>
+                            初期値: false
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_keytab (文字列)</term>
+                    <listitem>
+                        <para>
+                            KDC から取得したクレディンシャルを検証するときに使用されるキーテーブルの場所です。
+                        </para>
+                        <para>
+                            初期値: /etc/krb5.keytab
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_store_password_if_offline (論理値)</term>
+                    <listitem>
+                        <para>
+                            Store the password of the user if the provider is offline and use it to
+request a TGT when the provider comes online again.
+                        </para>
+                        <para>
+                            NOTE: this feature is only available on Linux.  Passwords stored in this way
+are kept in plaintext in the kernel keyring and are potentially accessible
+by the root user (with difficulty).
+                        </para>
+                        <para>
+                            初期値: false
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_renewable_lifetime (文字列)</term>
+                    <listitem>
+                        <para>
+                            Request a renewable ticket with a total lifetime, given as an integer
+immediately followed by a time unit:
+                        </para>
+                        <para>
+                            秒は <emphasis>s</emphasis>
+                        </para>
+                        <para>
+                            分は <emphasis>m</emphasis>
+                        </para>
+                        <para>
+                            時間は <emphasis>h</emphasis>
+                        </para>
+                        <para>
+                            日は <emphasis>d</emphasis>
+                        </para>
+                        <para>
+                            単位が指定されていないと、<emphasis>s</emphasis> と仮定されます。
+                        </para>
+                        <para>
+                            注: 単位を混在できないことに注意してください。更新可能な生存期間を1時間30分に指定したい場合、'1h30m' の代わりに '90m' を使用します。
+                        </para>
+                        <para>
+                            初期値: 設定されません、つまり TGT は更新可能ではありません
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_lifetime (文字列)</term>
+                    <listitem>
+                        <para>
+                            Request ticket with a lifetime, given as an integer immediately followed by
+a time unit:
+                        </para>
+                        <para>
+                            秒は <emphasis>s</emphasis>
+                        </para>
+                        <para>
+                            分は <emphasis>m</emphasis>
+                        </para>
+                        <para>
+                            時間は <emphasis>h</emphasis>
+                        </para>
+                        <para>
+                            日は <emphasis>d</emphasis>
+                        </para>
+                        <para>
+                            単位が指定されていないと、<emphasis>s</emphasis> と仮定されます。
+                        </para>
+                        <para>
+                            注: 単位を混在できないことに注意してください。更新可能な生存期間を1時間30分に指定したい場合、'1h30m' の代わりに '90m'
+を使用してください。
+                        </para>
+                        <para>
+                            初期値: 設定されません、つまり KDC において設定されているチケット有効期間の初期値です。
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_renew_interval (文字列)</term>
+                    <listitem>
+                        <para>
+                            The time in seconds between two checks if the TGT should be renewed. TGTs
+are renewed if about half of their lifetime is exceeded, given as an integer
+immediately followed by a time unit:
+                        </para>
+                        <para>
+                            秒は <emphasis>s</emphasis>
+                        </para>
+                        <para>
+                            分は <emphasis>m</emphasis>
+                        </para>
+                        <para>
+                            時間は <emphasis>h</emphasis>
+                        </para>
+                        <para>
+                            日は <emphasis>d</emphasis>
+                        </para>
+                        <para>
+                            単位が指定されていないと、<emphasis>s</emphasis> と仮定されます。
+                        </para>
+                        <para>
+                            注: 単位を混在できないことに注意してください。更新可能な生存期間を1時間30分に指定したい場合、'1h30m' の代わりに '90m' を使用します。
+                        </para>
+                        <para>
+                             このオプションが設定されていない場合、または 0 に設定されている場合、自動更新は無効になります。
+                        </para>
+                        <para>
+                            初期値: 設定されません
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_use_fast (文字列)</term>
+                    <listitem>
+                        <para>
+                            Kerberos の事前認証のために flexible authentication secure tunneling (FAST)
+を有効化します。以下のオプションがサポートされます:
+                        </para>
+                        <para>
+                            <emphasis>never</emphasis> は FAST を使用します。このオプションを何も設定しないことと同等です。
+                        </para>
+                        <para>
+                            <emphasis>try</emphasis> は FAST を使用します。サーバーが FAST をサポートしていなければ、FAST
+を使用せずに認証を続行します。
+                        </para>
+                        <para>
+                            <emphasis>demand</emphasis> は FAST を使用します。サーバーが FAST を要求しなければ、認証が失敗します。
+                        </para>
+                        <para>
+                            初期値: 設定されません、つまり FAST が使用されません。
+                        </para>
+                        <para>
+                            注: キーテーブルは FAST を使用する必要があります。
+                        </para>
+                        <para>
+                            注: SSSD は MIT Kerberos バージョン 1.8 およびそれ以降のみで FAST をサポートします。SSSD が古いバージョンの MIT
+Kerberos を使用している場合、このオプションを使用すると設定エラーになります。
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_fast_principal (文字列)</term>
+                    <listitem>
+                        <para>
+                            FAST に対して使用するサーバープリンシパルを指定します。
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_canonicalize (論理値)</term>
+                    <listitem>
+                        <para>
+                            ホストとユーザーのプリンシパルが正規化されるかどうかを指定します。この機能は MIT Kerberos 1.7 およびそれ以降で利用可能です。
+                        </para>
+
+                        <para>
+                            初期値: false
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_use_kdcinfo (論理値)</term>
+                    <listitem>
+                        <para>
+                            Specifies if the SSSD should instruct the Kerberos libraries what realm and
+which KDCs to use. This option is on by default, if you disable it, you need
+to configure the Kerberos library using the <citerefentry>
+<refentrytitle>krb5.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> configuration file.
+                        </para>
+                        <para>
+                            位置情報プラグインの詳細は <citerefentry>
+<refentrytitle>sssd_krb5_locator_plugin</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry> マニュアルページを参照ください。
+                        </para>
+                        <para>
+                            初期値: true
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_use_enterprise_principal (論理値)</term>
+                    <listitem>
+                        <para>
+                            ユーザープリンシパルをエンタープライズプリンシパルとして取り扱うかどうかを指定します。エンタープライズプリンシパルの詳細は RFC 6806
+のセクション 5 を参照してください。
+                        </para>
+
+                        <para>
+                            Default: false (AD provider: true)
+                        </para>
+                        <para>
+                            The IPA provider will set to option to 'true' if it detects that the server
+is capable of handling enterprise principals and the option is not set
+explicitly in the config file.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>krb5_map_user (string)</term>
+                    <listitem>
+                        <para>
+                             The list of mappings is given as a comma-separated list of pairs
+<quote>username:primary</quote> where <quote>username</quote> is a UNIX user
+name and <quote>primary</quote> is a user part of a kerberos principal. This
+mapping is used when user is authenticating using <quote>auth_provider =
+krb5</quote>.
+                        </para>
+
+                        <para>
+                             例: <programlisting>
+krb5_realm = REALM
+krb5_map_user = joe:juser,dick:richard
+</programlisting>
+                        </para>
+                        <para>
+                             <quote>joe</quote> and <quote>dick</quote> are UNIX user names and
+<quote>juser</quote> and <quote>richard</quote> are primaries of kerberos
+principals. For user <quote>joe</quote> resp.  <quote>dick</quote> SSSD will
+try to kinit as <quote>juser@REALM</quote> resp.
+<quote>richard@REALM</quote>.
+                        </para>
+
+                        <para>
+                            初期値: 設定されません
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+            </variablelist>
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/failover.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/service_discovery.xml" />
+
+    <refsect1 id='example'>
+        <title>例</title>
+        <para>
+            以下の例は、SSSD が正しく設定され、FOO が <replaceable>[sssd]</replaceable> セクションにあるドメインの 1
+つであると仮定しています。この例は Kerberos 認証の設定のみを示し、識別プロバイダーを何も含みません。
+        </para>
+        <para>
+<programlisting>
+[domain/FOO]
+auth_provider = krb5
+krb5_server = 192.168.1.1
+krb5_realm = EXAMPLE.COM
+</programlisting>
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

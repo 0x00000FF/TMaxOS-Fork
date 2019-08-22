@@ -1,0 +1,43 @@
+<refsect1 id='service_discovery'>
+    <title>DIENSTSUCHE</title>
+    <para>
+        Die Dienstsuchfunktionalität ermöglicht es Backends, automatisch mit Hilfe
+einer speziellen DNS-Abfrage geeignete Server zu suchen, mit denen sie sich
+verbinden können. Diese Funktionalität wird nicht für Datensicherungs-Server
+unterstützt.
+    </para>
+    <refsect2 id='configuration'>
+        <title>Konfiguration</title>
+        <para>
+            Falls keine Server angegeben wurden, benutzt das Backend die Dienstsuche, um
+einen Server zu finden. Wahlweise kann der Benutzer sowohl feste
+Server-Adressen als auch die Dienstsuche durch Eingabe des speziellen
+Schlüsselworts »_srv_« in der Server-Liste auswählen. Die bevorzugte
+Reihenfolge wird verwaltet. Diese Funktionalität ist zum Beispiel nützlich,
+falls der Anwender es vorzieht, die Dienstsuche zu verwenden, wann immer
+dies möglich ist, und auf einen bestimmten Server zurückzugreifen, wenn
+mittels DNS keine Server gefunden werden.
+        </para>
+    </refsect2>
+    <refsect2 id='domain_name'>
+        <title>Der Domain-Name</title>
+        <para>
+            Weitere Einzelheiten finden Sie in der Handbuchseite <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> beim Parameter »dns_discovery_domain«.
+        </para>
+    </refsect2>
+    <refsect2 id='search_protocol'>
+        <title>Das Protokoll</title>
+        <para>
+            Die Abfragen geben als Protokoll üblicherweise »_tcp« an. Ausnahmen sind in
+der Beschreibung der entsprechenden Option dokumentiert.
+        </para>
+    </refsect2>
+    <refsect2 id='reference'>
+        <title>Siehe auch</title>
+        <para>
+            Weitere Informationen über den Dienstsuchmechanismus finden Sie in RFC 2782.
+        </para>
+    </refsect2>
+</refsect1>

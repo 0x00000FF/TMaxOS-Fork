@@ -1,0 +1,80 @@
+.TH "UFW ON SNAPPY" "8" "" "September 2015" "September 2015"
+
+.SH NAME
+ufw on snappy \- using ufw on Ubuntu Core
+.PP
+.SH DESCRIPTION
+This program is for managing a Linux firewall and aims to provide an easy to
+use interface for the admin user. This interface is targeted primarily towards
+administering a bastion firewall.
+
+\fBufw\fR packaged as a snap is very similar to \fBufw\fR packaged on a
+traditional Linux distribution.
+
+.SH COMMANDS
+.TP
+ufw.doc
+documentation for \fBufw\fR
+.TP
+ufw
+command line interface to \fBufw\fR
+.TP
+ufw.init
+lowlevel inititialization script
+.TP
+snap config ufw
+configuration directives exposed via \fBsnap config\fB
+
+.SH "GETTING STARTED"
+.PP
+When \fBufw\fR is installed it is disabled by default and not allowed to use
+the firewall-control interface. Before it can be enabled, you must first
+connect the firewall-control interface with:
+
+  $ sudo snap connect ufw:firewall-control ubuntu-core:firewall-control
+
+This will give ufw the necessary permissions to manipulate the firewall and
+ensure the proper modules are loaded into the kernel.
+
+Now you can use \fBufw\fR like normal. For example, to enable the firewall,
+allow ssh access, enable logging, and check the status of the firewall,
+perform:
+
+  $ sudo ufw allow ssh/tcp
+  $ sudo ufw logging low
+  $ sudo ufw enable
+  $ sudo ufw status verbose
+  Status: active
+  Logging: on (low)
+  Default: deny (incoming), allow (outgoing), disabled (routed)
+  New profiles: skip
+
+  To                         Action      From
+  --                         ------      ----
+  22/tcp                     ALLOW IN    Anywhere
+  22/tcp (v6)                ALLOW IN    Anywhere (v6)
+
+\fBufw\fR integrates into the boot sequence by providing the \fBufw.src\fR
+service. It simply calls \fBufw.init start\fR during boot. Service logs can be
+seen with:
+
+  $ sudo journalctl --unit snap.ufw.srv.service
+
+.SH UFW FRAMEWORK
+On a snappy\-based system apps have access to a read\-only area and a writable
+area. After initial install on service start, \fBufw\fR will copy the default
+configuration from the read\-only area in $SNAP_APP_PATH to the writable area
+in $SNAP_APP_DATA_PATH. If you need or want to modify the configuration files
+as described in the \fBufw\-framework\fB documentation, look for these files
+in $SNAP_APP_DATA_PATH. Upgrades are handled similarly to an traditional
+Ubuntu system, if the configuration files in $SNAP_APP_DATA_PATH match the
+previously shipped version, the files will be updated to the new version,
+otherwise the files that are different are logged to the service log (see
+above) so that the files may be merged manually.
+
+.SH AUTHOR
+.PP
+ufw is Copyright 2008-2016, Canonical Ltd.
+
+.PP
+ufw and this manual page was originally written by Jamie Strandboge <jamie@canonical\&.com>

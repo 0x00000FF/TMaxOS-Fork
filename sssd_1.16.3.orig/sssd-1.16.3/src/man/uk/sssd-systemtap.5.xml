@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-systemtap</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Формати файлів та правила</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-systemtap</refname>
+        <refpurpose>Дані systemtap SSSD</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            Цю сторінку підручника присвячено функціональним можливостям systemtap у
+<citerefentry> <refentrytitle>sssd</refentrytitle> <manvolnum>8</manvolnum>
+</citerefentry>.
+       </para>
+        <para>
+            Точки зондування SystemTap додано до різноманітних частин коду SSSD, щоб
+полегшити усування вад та аналіз пов'язаних зі швидкодією проблем.
+       </para>
+        <para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        Зразки скриптів SystemTap зберігаються у каталозі /usr/share/sssd/systemtap/
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Зонди і різноманітні функції визначено у
+/usr/share/systemtap/tapset/sssd.stp і
+/usr/share/systemtap/tapset/sssd_functions.stp, відповідно.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </para>
+    </refsect1>
+
+    <refsect1 id='probe-points'>
+        <title>ТОЧКИ ЗОНДУВАННЯ</title>
+        <para>
+            Дані у наведених нижче списках точок зондування та аргументів записано у
+такому форматі:
+        </para>
+            <variablelist>
+                <varlistentry>
+                    <term>зонд $назва</term>
+                    <listitem>
+                        <para>
+                            Опис точки зондування
+                        </para>
+                        <programlisting>
+змінна1:тип даних
+змінна2:тип даних
+змінна3:тип даних
+...
+                        </programlisting>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+
+        <refsect2 id='database-transaction-probes'>
+            <title>Зонди операцій із базою даних</title>
+            <para>
+              <variablelist>
+                <varlistentry>
+                    <term>зонд sssd_transaction_start</term>
+                    <listitem>
+                        <para>
+                            Розпочати операцію sysdb, зондує функцію sysdb_transaction_start().
+                        </para>
+                        <programlisting>
+nesting:ціле число
+probestr:рядок
+                        </programlisting>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>зонд sssd_transaction_cancel</term>
+                    <listitem>
+                        <para>
+                            Скасовування операції sysdb, зондує функцію sysdb_transaction_cancel() .
+                        </para>
+                        <programlisting>
+nesting:ціле число
+probestr:рядок
+                        </programlisting>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>зонд sssd_transaction_commit_before</term>
+                    <listitem>
+                        <para>
+                            Зондує функцію sysdb_transaction_commit_before().
+                        </para>
+                        <programlisting>
+nesting:ціле число
+probestr:рядок
+                        </programlisting>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>зонд sssd_transaction_commit_after</term>
+                    <listitem>
+                        <para>
+                            Зондує функцію sysdb_transaction_commit_after().
+                        </para>
+                        <programlisting>
+nesting:ціле число
+probestr:рядок
+                        </programlisting>
+                    </listitem>
+                </varlistentry>
+              </variablelist>
+            </para>
+        </refsect2>
+
+        <refsect2 id='ldap-search-probes'>
+            <title>Зонди пошуку у LDAP</title>
+            <para>
+              <variablelist>
+                <varlistentry>
+                    <term>зонд sdap_search_send</term>
+                    <listitem>
+                        <para>
+                            Зондує функцію sdap_get_generic_ext_send().
+                        </para>
+                        <programlisting>
+base:рядок
+scope:ціле число
+filter:рядок
+probestr:рядок
+                        </programlisting>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>зонд sdap_search_recv</term>
+                    <listitem>
+                        <para>
+                            Зондує функцію sdap_get_generic_ext_recv().
+                        </para>
+                        <programlisting>
+base:рядок
+scope:ціле число
+filter:рядок
+probestr:рядок
+                        </programlisting>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>зонд sdap_deref_send</term>
+                    <listitem>
+                        <para>
+                            Зондує функцію sdap_deref_search_send().
+                        </para>
+                        <programlisting>
+base_dn:рядок
+deref_attr:рядок
+probestr:рядок
+                        </programlisting>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>зонд sdap_deref_recv</term>
+                    <listitem>
+                        <para>
+                            Зондує функцію sdap_deref_search_recv().
+                        </para>
+                        <programlisting>
+base:рядок
+scope:ціле число
+filter:рядок
+probestr:рядок
+                        </programlisting>
+                    </listitem>
+                </varlistentry>
+              </variablelist>
+            </para>
+        </refsect2>
+
+       <refsect2 id='ldap-account-req-probes'>
+           <title>Зонди запитів щодо облікових записів у LDAP</title>
+           <para>
+             <variablelist>
+               <varlistentry>
+                   <term>зонд sdap_acct_req_send</term>
+                   <listitem>
+                       <para>
+                           Зондує функцію sdap_acct_req_send().
+                       </para>
+                       <programlisting>
+entry_type:ціле число
+filter_type:ціле число
+filter_value:рядок
+extra_value:рядок
+                       </programlisting>
+                   </listitem>
+               </varlistentry>
+               <varlistentry>
+                   <term>зонд sdap_acct_req_recv</term>
+                   <listitem>
+                       <para>
+                           Зондує функцію sdap_acct_req_recv().
+                       </para>
+                       <programlisting>
+entry_type:ціле число
+filter_type:ціле число
+filter_value:рядок
+extra_value:рядок
+                       </programlisting>
+                   </listitem>
+               </varlistentry>
+            </variablelist>
+        </para>
+        </refsect2>
+
+       <refsect2 id='ldap-user-search-probes'>
+           <title>Зонди пошуку користувачів у LDAP</title>
+           <para>
+             <variablelist>
+               <varlistentry>
+                   <term>зонд sdap_search_user_send</term>
+                   <listitem>
+                       <para>
+                           Зондує функцію sdap_search_user_send().
+                       </para>
+                       <programlisting>
+filter:рядок
+                       </programlisting>
+                   </listitem>
+               </varlistentry>
+               <varlistentry>
+                   <term>зонд sdap_search_user_recv</term>
+                   <listitem>
+                       <para>
+                           Зондує функцію sdap_search_user_recv().
+                       </para>
+                       <programlisting>
+filter:рядок
+                       </programlisting>
+                   </listitem>
+               </varlistentry>
+               <varlistentry>
+                   <term>зонд sdap_search_user_save_begin</term>
+                   <listitem>
+                       <para>
+                           Зондує функцію sdap_search_user_save_begin().
+                       </para>
+                       <programlisting>
+filter:рядок
+                       </programlisting>
+                   </listitem>
+               </varlistentry>
+               <varlistentry>
+                   <term>зонд sdap_search_user_save_end</term>
+                   <listitem>
+                       <para>
+                           Зондує функцію sdap_search_user_save_end().
+                       </para>
+                       <programlisting>
+filter:рядок
+                       </programlisting>
+                   </listitem>
+               </varlistentry>
+            </variablelist>
+        </para>
+        </refsect2>
+
+       <refsect2 id='data-provider-request-probes'>
+           <title>Зонди запитів до постачальника даних</title>
+           <para>
+             <variablelist>
+               <varlistentry>
+                   <term>зонд dp_req_send</term>
+                   <listitem>
+                       <para>
+                           Подано запит до постачальника даних.
+                       </para>
+                       <programlisting>
+dp_req_domain:рядок
+dp_req_name:рядок
+dp_req_target:ціле число
+dp_req_method:ціле число
+                       </programlisting>
+                   </listitem>
+               </varlistentry>
+               <varlistentry>
+                   <term>зонд dp_req_done</term>
+                   <listitem>
+                       <para>
+                           Завершено виконання запиту до постачальника даних.
+                       </para>
+                       <programlisting>
+dp_req_name:рядок
+dp_req_target:ціле число
+dp_req_method:ціле число
+dp_ret:ціле число
+dp_errorstr:рядок
+                       </programlisting>
+                   </listitem>
+               </varlistentry>
+            </variablelist>
+        </para>
+        </refsect2>
+
+    <refsect2 id='miscellaneous-functions'>
+        <title>РІЗНОМАНІТНІ ФУНКЦІЇ</title>
+        <para>
+            Дані у наведених нижче списках точок зондування та аргументів записано у
+такому форматі:
+        </para>
+            <variablelist>
+                <varlistentry>
+                    <term>функція acct_req_desc(entry_type)</term>
+                    <listitem>
+                        <para>
+                            Перетворення entry_type на рядок і повернення рядка
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>функція sssd_acct_req_probestr(fc_name, entry_type, filter_type,
+filter_value, extra_value)</term>
+                    <listitem>
+                        <para>
+                            Створення рядка зонду на основі типу фільтрування
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>функція dp_target_str(target)</term>
+                    <listitem>
+                        <para>
+                            Перетворення target на рядок і повернення рядка
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>функція dp_method_str(target)</term>
+                    <listitem>
+                        <para>
+                            Перетворення методу на рядок і повернення рядка
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+    </refsect2>
+
+    </refsect1>
+
+	<xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

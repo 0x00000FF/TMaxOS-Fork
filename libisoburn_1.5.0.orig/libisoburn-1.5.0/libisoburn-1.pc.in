@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: libisoburn
+Description: Multi-session filesystem extension to libisofs, libburn.
+Version: @VERSION@
+Requires: 
+Libs: -L${libdir} -lisoburn
+Cflags: -I${includedir}/libisoburn
+

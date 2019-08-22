@@ -1,0 +1,64 @@
+<varlistentry>
+<term>override_homedir (Zeichenkette)</term>
+<listitem>
+    <para>
+        setzt das Home-Verzeichnis des Benutzers außer Kraft. Sie können entweder
+einen absoluten Wert oder eine Schablone bereitstellen. In der Schablone
+werden die folgenden Sequenzen ersetzt: <variablelist>
+            <varlistentry>
+                <term>%u</term>
+                <listitem><para>Anmeldename</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%U</term>
+                <listitem><para>UID-Nummer</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%d</term>
+                <listitem><para>Domain-Name</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%f</term>
+                <listitem><para>voll qualifizierter Benutzername (Benutzer@Domain)</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%l</term>
+                <listitem><para>The first letter of the login name.</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%P</term>
+                <listitem><para>UPN - User Principal Name (name@REALM)</para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%o</term>
+                <listitem><para>
+                    das Original-Home-Verzeichnis, das vom Identitätsanbieter geholt wurde
+                    </para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%H</term>
+                <listitem><para>
+                    Der Wert der Konfigurationsoption <emphasis>homedir_substring</emphasis>.
+                    </para></listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>%%</term>
+                <listitem><para>ein buchstäbliches »%«</para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </para>
+    <para>
+        Diese Option kann auch pro Domain gesetzt werden.
+    </para>
+    <para>
+        Beispiel: <programlisting>
+override_homedir = /home/%u
+        </programlisting>
+    </para>
+    <para>
+        Voreinstellung: nicht gesetzt (SSSD wird den von LDAP geholten Wert
+benutzen)
+    </para>
+</listitem>
+</varlistentry>

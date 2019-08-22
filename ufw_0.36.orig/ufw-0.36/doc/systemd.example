@@ -1,0 +1,14 @@
+[Unit]
+Description=Uncomplicated firewall
+DefaultDependencies=no
+Wants=network-pre.target
+Before=network-pre.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/lib/ufw/ufw-init start quiet
+ExecStop=/lib/ufw/ufw-init stop
+
+[Install]
+WantedBy=multi-user.target

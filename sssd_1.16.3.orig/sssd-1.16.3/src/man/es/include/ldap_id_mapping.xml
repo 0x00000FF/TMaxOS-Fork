@@ -1,0 +1,284 @@
+<refsect1 id='idmap'>
+    <title>ASIGNACIÓN DE ID</title>
+    <para>
+        La función asignación de ID permite a SSSD actuar como un cliente de Active
+Directory sin requerir de administradores para extender los atributos de
+usuario para soportar atributos POSIX para los identificadores de usuario y
+grupo.
+    </para>
+    <para>
+        NOTA: Cuando asignación de ID está habilitado, los atributos uidNumber y
+gidNumber son ignorados. Esto es para evitar la posibilidad de conflictos
+entre los valores automáticamente asignados y los asignados manualmente. Si
+usted necesita usar los valore asignados manualmente, TODOS los valores
+deben ser asignados manualmente.
+    </para>
+    <para>
+        Please note that changing the ID mapping related configuration options will
+cause user and group IDs to change. At the moment, SSSD does not support
+changing IDs, so the SSSD database must be removed. Because cached passwords
+are also stored in the database, removing the database should only be
+performed while the authentication servers are reachable, otherwise users
+might get locked out. In order to cache the password, an authentication must
+be performed. It is not sufficient to use <citerefentry>
+<refentrytitle>sss_cache</refentrytitle> <manvolnum>8</manvolnum>
+</citerefentry> to remove the database, rather the process consists of:
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        Making sure the remote servers are reachable
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Stopping the SSSD service
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Removing the database
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Starting the SSSD service
+                    </para>
+                </listitem>
+            </itemizedlist>
+        Moreover, as the change of IDs might necessitate the adjustment of other
+system properties such as file and directory ownership, it's advisable to
+plan ahead and test the ID mapping configuration thoroughly.
+    </para>
+
+    <refsect2 id='idmap_algorithm'>
+        <title>Algoritmo de asignación</title>
+        <para>
+            Active Directory suministra un objectSID para cada objeto usuario y grupo en
+el directorio. El objectSID puede ser dividido en componente que representan
+la identidad del dominio Active Directory y le identificador relativo (RID)
+del objeto usuario y grupo.
+        </para>
+        <para>
+            El algoritmo de asignación de ID de SSSD tiene un rango de UIDs disponibles
+y lo divide en secciones componente de igual tamaño – llamadas “rebanadas”
+-. Cada rebanada representa el espacio disponible para un dominio Active
+Directory.
+        </para>
+        <para>
+            Cuando se encuentra por primera vez una entrada de usuario o grupo para un
+dominio concreto, SSSD asigna una de las rebanadas disponibles para ese
+dominio. Con el objetivo de hacer esta asignación de rebanadas repetible
+sobre diferentes máquinas clientes, seleccionamos la rebanada en base al
+siguiente algoritmo:
+        </para>
+        <para>
+            La cadena SID pasada a través del algoritmo murmurhash3 para convertirlo en
+un valor picado de 32 bit. Después tomamos los módulos de este valor con el
+número total de rebanadas disponibles para recoger la rebanada.
+        </para>
+        <para>
+            NOTA: Es posible encontrar colisiones en el picadillo y los módulos
+subsiguientes. En estas situaciones, seleccionaremos la siguiente rebanada
+disponible, pero puede no ser posible reproducir los mismos conjuntos
+exactos de rebanadas sobre otras máquinas (puesto que el orden en que se
+encuentren desterminará sus rebanadas). En esta situación, se recomienda o
+bien conmutar para usar los atributos explícitos POSIX en Active Directory
+(deshabilitando la asignación de ID) o configurar un dominio por defecto
+para garantizar que al menos uno sea siempre consistente. Vea
+<quote>Configuración</quote> para detalles.
+        </para>
+    </refsect2>
+
+    <refsect2 id='idmap_config'>
+        <title>Configuración</title>
+        <para>
+            Configuración mínima (en la sección <quote>[domain/DOMAINNAME]</quote>):
+        </para>
+        <para>
+<programlisting>
+ldap_id_mapping = True ldap_schema = ad 
+</programlisting>
+        </para>
+        <para>
+            The default configuration results in configuring 10,000 slices, each capable
+of holding up to 200,000 IDs, starting from 200,000 and going up to
+2,000,200,000. This should be sufficient for most deployments.
+        </para>
+        <refsect3 id='idmap_advanced_config'>
+            <title>Configuración Avanzada</title>
+            <variablelist>
+                <varlistentry>
+                    <term>ldap_idmap_range_min (entero)</term>
+                    <listitem>
+                        <para>
+                            Especifica el límite inferior del rango de IDs POXIS a usar para la
+asignación de SIDs de usuario y grupo de Active Directory.
+                        </para>
+                        <para>
+                            NOTA: Esta opción es diferente de <quote>min_id</quote> en esta
+<quote>min_id</quote> actúa para filtrar la salida de las peticiones a este
+dominio, mientras esta opción controla el rango de la asignación de ID. Esto
+es una sutil diferencia, pero el buen consejo general sería que
+<quote>min_id</quote> fuera menor o igual que
+<quote>ldap_idmap_range_min</quote>
+                        </para>
+                        <para>
+                            Por defecto: 200000
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_range_max (entero)</term>
+                    <listitem>
+                        <para>
+                            Especifica el límite superior del rango de IDs POXIS a usar para la
+asignación de SIDs de usuario y grupo por Active Directory.
+                        </para>
+                        <para>
+                            NOTA: Esta opción es diferente de <quote>max_id</quote> en esta
+<quote>max_id</quote> actúa para filtrar la salida de las peticiones a este
+dominio, mientras esta opción controla el rango de la asignación de ID. Esto
+es una sutil diferencia, pero el buen consejo general sería que
+<quote>max_id</quote> fuera menor o igual que
+<quote>ldap_idmap_range_max</quote>
+                        </para>
+                        <para>
+                            Por defecto: 2000200000
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_range_size (entero)</term>
+                    <listitem>
+                        <para>
+                            Especifica el número de IDs disponibles para cada rebanada. Si el rango no
+se divide de forma igual entre los valores mínimo y máximo, creará tantas
+rebanadas completas como sea posible.
+                        </para>
+                        <para>
+                            NOTE: The value of this option must be at least as large as the highest user
+RID planned for use on the Active Directory server. User lookups and login
+will fail for any user whose RID is greater than this value.
+                        </para>
+                        <para>
+                            For example, if your most recently-added Active Directory user has
+objectSid=S-1-5-21-2153326666-2176343378-3404031434-1107,
+<quote>ldap_idmap_range_size</quote> must be at least 1108 as range size is
+equal to maximal SID minus minimal SID plus one (e.g. 1108 = 1107 - 0 + 1).
+                        </para>
+                        <para>
+                            It is important to plan ahead for future expansion, as changing this value
+will result in changing all of the ID mappings on the system, leading to
+users with different local IDs than they previously had.
+                        </para>
+                        <para>
+                            Por defecto: 200000
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_default_domain_sid (cadena)</term>
+                    <listitem>
+                        <para>
+                            Especifica el SID de dominio del dominio por defecto. Esto garantizará que
+este dominio será asignado siempre a la rebanada cero en el mapa de ID,
+sobrepasando el algoritmo murmurhash descrito arriba.
+                        </para>
+                        <para>
+                            Predeterminado: no definido
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_default_domain (cadena)</term>
+                    <listitem>
+                        <para>
+                            Especifica el nombre del dominio por defecto.
+                        </para>
+                        <para>
+                            Predeterminado: no definido
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_autorid_compat (booleano)</term>
+                    <listitem>
+                        <para>
+                            Cambia el comportamiento del algoritmo de asignación de id para que se
+comporte de un modo más similar al algoritmo <quote>idmap_autorid</quote> de
+winbind.
+                        </para>
+                        <para>
+                            Cuando esta opción está configurada, los dominios serán asignados empezando
+con la rebanada cero e incrementándose de uno en uno con cada dominio
+adicional.
+                        </para>
+                        <para>
+                            NOTA: Este algoritmo no es determinista (depende del orden en que usuario y
+grupos son pedidos). Si se requiere este modo para compatibilidad con
+máquinas que ejecutan winbind, se recomienda que también use la opción
+<quote>ldap_idmap_default_domain_sid</quote> para garantizar que al menos un
+dominio está asignado consistentemente a la rebanada cero.
+                        </para>
+                        <para>
+                            Por defecto: False
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>ldap_idmap_helper_table_size (integer)</term>
+                    <listitem>
+                        <para>
+                          Maximal number of secondary slices that is tried when performing mapping
+from UNIX id to SID.
+                        </para>
+                        <para>
+                          Note: Additional secondary slices might be generated when SID is being
+mapped to UNIX id and RID part of SID is out of range for secondary slices
+generated so far. If value of ldap_idmap_helper_table_size is equal to 0
+then no additional secondary slices are generated.
+                        </para>
+                        <para>
+                            Predeterminado: 10
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </refsect3>
+    </refsect2>
+
+    <refsect2 id='well_known_sids'>
+        <title>Well-Known SIDs</title>
+        <para>
+            SSSD supports to look up the names of Well-Known SIDs, i.e. SIDs with a
+special hardcoded meaning. Since the generic users and groups related to
+those Well-Known SIDs have no equivalent in a Linux/UNIX environment no
+POSIX IDs are available for those objects.
+        </para>
+        <para>
+            The SID name space is organized in authorities which can be seen as
+different domains. The authorities for the Well-Known SIDs are
+            <itemizedlist>
+                <listitem><para>Null Authority</para></listitem>
+                <listitem><para>World Authority</para></listitem>
+                <listitem><para>Local Authority</para></listitem>
+                <listitem><para>Creator Authority</para></listitem>
+                <listitem><para>NT Authority</para></listitem>
+                <listitem><para>Built-in</para></listitem>
+            </itemizedlist>
+            The capitalized version of these names are used as domain names when
+returning the fully qualified name of a Well-Known SID.
+        </para>
+        <para>
+            Since some utilities allow to modify SID based access control information
+with the help of a name instead of using the SID directly SSSD supports to
+look up the SID by the name as well. To avoid collisions only the fully
+qualified names can be used to look up Well-Known SIDs. As a result the
+domain names <quote>NULL AUTHORITY</quote>, <quote>WORLD AUTHORITY</quote>,
+<quote> LOCAL AUTHORITY</quote>, <quote>CREATOR AUTHORITY</quote>, <quote>NT
+AUTHORITY</quote> and <quote>BUILTIN</quote> should not be used as domain
+names in <filename>sssd.conf</filename>.
+        </para>
+    </refsect2>
+
+</refsect1>

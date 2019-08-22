@@ -1,0 +1,89 @@
+<listitem>
+    <para>
+        SSSD supports two representations for specifying the debug level. The
+simplest is to specify a decimal value from 0-9, which represents enabling
+that level and all lower-level debug messages. The more comprehensive option
+is to specify a hexadecimal bitmask to enable or disable specific levels
+(such as if you wish to suppress a level).
+    </para>
+    <para>
+        Please note that each SSSD service logs into its own log file. Also please
+note that enabling <quote>debug_level</quote> in the <quote>[sssd]</quote>
+section only enables debugging just for the sssd process itself, not for the
+responder or provider processes. The <quote>debug_level</quote> parameter
+should be added to all sections that you wish to produce debug logs from.
+    </para>
+    <para>
+        In addition to changing the log level in the config file using the
+<quote>debug_level</quote> parameter, which is persistent, but requires SSSD
+restart, it is also possible to change the debug level on the fly using the
+<citerefentry> <refentrytitle>sss_debuglevel</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry> tool.
+    </para>
+    <para>
+        Niveaux de débogage actuellement pris en charge :
+    </para>
+    <para>
+         <emphasis>0</emphasis>, <emphasis>0x0010</emphasis> : défaillances
+fatales. Tout ce qui empêcherait SSSD de démarrer ou provoquerait son arrêt.
+    </para>
+    <para>
+         <emphasis>1</emphasis>, <emphasis>0x0020</emphasis>: Critical failures. An
+error that doesn't kill SSSD, but one that indicates that at least one major
+feature is not going to work properly.
+    </para>
+    <para>
+         <emphasis>2</emphasis>, <emphasis>0x0040</emphasis> : défaillances
+graves. Une erreur qui annonce qu'une requête particulière ou une opération
+a échoué.
+    </para>
+    <para>
+         <emphasis>3</emphasis>, <emphasis>0x0080</emphasis> : erreurs mineures. Ce
+sont les erreurs qui seraient susceptibles d'empirer pour provoquer l'erreur
+en 2.
+    </para>
+    <para>
+         <emphasis>4</emphasis>, <emphasis>0x0100</emphasis> : paramètres de
+configuration.
+    </para>
+    <para>
+         <emphasis>5</emphasis>, <emphasis>0x0200</emphasis> : données de
+fonctionnement.
+    </para>
+    <para>
+         <emphasis>6</emphasis>, <emphasis>0x0400</emphasis> : traçage des fonctions
+opérationnelles.
+    </para>
+    <para>
+         <emphasis>7</emphasis>, <emphasis>0x1000</emphasis> : traçage des fonctions
+de contrôles internes.
+    </para>
+    <para>
+         <emphasis>8</emphasis>, <emphasis>0x2000</emphasis> :  contenu des variables
+internes de fonctions pouvent être intéressantes.
+    </para>
+    <para>
+         <emphasis>9</emphasis>, <emphasis>0x4000</emphasis> : informations de
+traçage de bas niveau.
+    </para>
+    <para>
+        To log required bitmask debug levels, simply add their numbers together as
+shown in following examples:
+    </para>
+    <para>
+        <emphasis>Exemple</emphasis> : pour suivre erreurs fatales, critiques,
+graves et les données de fonction, utiliser 0x0270.
+    </para>
+    <para>
+        <emphasis>Exemple</emphasis> : pour consigner les erreurs fatales, les
+paramètres de configuration, les données de fonction, les messages de trace
+pour les fonctions de contrôle interne, utiliser 0x1310.
+    </para>
+    <para>
+        <emphasis>Note</emphasis> : le format des niveaux de débogage a été
+introduit dans la version 1.7.0.
+    </para>
+    <para>
+        <emphasis>Par défaut</emphasis> : 0
+    </para>
+</listitem>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-kcm</refentrytitle>
+        <manvolnum>8</manvolnum>
+        <refmiscinfo class="manual">Формати файлів та правила</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-kcm</refname>
+        <refpurpose>Керування кешем Kerberos SSSD</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            На цій сторінці підручника описано налаштування засобу керування кешем
+Kerberos SSSD (Kerberos Cache Manager або KCM). KCM є процесом, який
+зберігає, стежить і керує кешем реєстраційних даних Kerberos. Ідея створення
+засобу походить із проекту Heimdal Kerberos, хоча у бібліотеці Kerberos MIT
+також надається підтримка з боку клієнта для кешу реєстраційних даних KCM
+(докладніше про це нижче).
+        </para>
+        <para>
+            У конфігураціях, де кешем Kerberos керує KCM, бібліотека Kerberos (типово
+використовується за допомогою якоїсь програми, наприклад <citerefentry>
+<refentrytitle>kinit</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>) є <quote>клієнтом KCM</quote>, а фонова служба KCM
+вважається <quote>сервером KCM</quote>. Клієнт і сервер обмінюються даними
+за допомогою сокета UNIX.
+        </para>
+        <para>
+            Сервер KCM стежити за кожним власником кешу реєстраційних даних і виконує
+перевірку прав доступу на основі UID і GID клієнта KCM. Користувач root має
+доступ до усіх кешів реєстраційних даних.
+        </para>
+        <para>
+            Кеш реєстраційних даних KCM має декілька цікавих властивостей:
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        оскільки процес виконується у просторі користувача, він підлягає обмеженням
+за простором назв UID, на відміну від набору ключів ядра
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        на відміну від кешу на основі наборів ключів ядра, який є спільним для усіх
+контейнерів, сервер KCM є окремим процесом, чия точка входу є сокетом UNIX
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        реалізація у SSSD зберігає ccache-і у сховищі реєстраційних даних
+<citerefentry>
+<refentrytitle>sssd-secrets</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry> SSSD, що надає змогу ccache-ам переживати перезапуски
+сервера KCM та перезавантаження комп'ютера.
+                    </para>
+                </listitem>
+            </itemizedlist>
+            Це надає змогу системі використовувати кеш реєстраційних даних із
+врахуванням збірок, одночасно надаючи спільний доступ до кешу реєстраційних
+даних для декількох контейнерів або без контейнерів взагалі шляхом
+прив'язування-монтування сокета.
+        </para>
+    </refsect1>
+
+    <refsect1 id='usage'>
+        <title>КОРИСТУВАННЯ КЕШЕМ РЕЄСТРАЦІЙНИХ ДАНИХ KCM</title>
+        <para>
+            Для використання кешу реєстраційних даних KCM його слід вибрати стандартним
+типом реєстраційних даних у <citerefentry>
+<refentrytitle>krb5.conf</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>. Назвою кешу реєстраційних даних має бути лише
+<quote>KCM:</quote> без будь-яких розширень шаблонами. Приклад: <programlisting>
+[libdefaults]
+    default_ccache_name = KCM:
+            </programlisting>
+        </para>
+        <para>
+            Далі, слід визначити однаковий шлях до сокета UNIX для клієнтських бібліотек
+Kerberos і сервера KCM. Типово, у обох випадках використовується однаковий
+шлях <replaceable>/var/run/.heim_org.h5l.kcm-socket</replaceable>. Для
+налаштовування бібліотеки Kerberos змініть значення її параметра
+<quote>kcm_socket</quote>, як це описано на сторінці підручника
+<citerefentry>
+<refentrytitle>krb5.conf</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>.
+        </para>
+        <para>
+            Нарешті, переконайтеся, що з сервером KCM SSSD можна встановити
+зв'язок. Типово, служба KCM вмикається за допомогою сокета з <citerefentry>
+<refentrytitle>systemd</refentrytitle> <manvolnum>1</manvolnum>
+</citerefentry>. На відміну від інших служб SSSD, її не можна запустити
+додаванням рядка <quote>kcm</quote> до інструкції <quote>service</quote>.
+<programlisting>
+systemctl start sssd-kcm.socket
+systemctl enable sssd-kcm.socket
+            </programlisting> Будь ласка, зауважте, що
+відповідні налаштування модулів вже могло бути виконано засобами вашого
+дистрибутива.
+        </para>
+    </refsect1>
+
+    <refsect1 id='storage'>
+        <title>СХОВИЩЕ КЕШУ РЕЄСТРАЦІЙНИХ ДАНИХ</title>
+        <para>
+            Кеші реєстраційних даних зберігаються у сховищі служби реєстраційних даних
+SSSD (докладніший опис наведено на сторінці підручника <citerefentry>
+<refentrytitle>sssd-secrets</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>). Тому важливо, щоб було увімкнено службу sssd-secrets, а її
+сокет був доступним: <programlisting>
+systemctl start sssd-secrets.socket
+systemctl enable sssd-secrets.socket
+            </programlisting> Відповідні
+залежності між цими службами вже мало бути встановлено засобами вашого
+дистрибутива.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>ПАРАМЕТРИ НАЛАШТУВАННЯ</title>
+        <para>
+            Налаштовування служби KCM виконується за допомогою розділу
+<quote>kcm</quote> файла sssd.conf. Будь ласка, зауважте, що у поточній
+версії для застосування налаштувань перезапуску служби sssd-kcm недостатньо,
+оскільки обробка і читання налаштувань sssd до внутрішньої бази даних
+налаштувань виконується лише самою службою sssd. Тому вам слід перезапустити
+вашу службу sssd, якщо ви щось змінили у розділі <quote>kcm</quote> файла
+sssd.conf. Докладний опис синтаксису файла налаштувань наведено у розділі
+<quote>ФОРМАТ ФАЙЛА</quote> сторінки підручника <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+        </para>
+        <para>
+            Службі kcm можна передавати типові параметри служби SSSD, зокрема
+<quote>debug_level</quote> та <quote>fd_limit</quote> Із повним списком
+параметрів можна ознайомитися на сторінці підручника <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>. Крім того, передбачено декілька специфічних для KCM
+параметрів.
+        </para>
+        <variablelist>
+            <varlistentry>
+                <term>socket_path (рядок)</term>
+                <listitem>
+                    <para>
+                        Сокет, на якому очікуватиме на з'єднання служба KCM.
+                    </para>
+                    <para>
+                        Типове значення:
+<replaceable>/var/run/.heim_org.h5l.kcm-socket</replaceable>
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <refsect1 id='see_also'>
+        <title>ТАКОЖ ПЕРЕГЛЯНЬТЕ</title>
+        <para>
+            <citerefentry> <refentrytitle>sssd</refentrytitle><manvolnum>8</manvolnum>
+</citerefentry>, <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>,
+        </para>
+    </refsect1>
+</refentry>
+</reference>

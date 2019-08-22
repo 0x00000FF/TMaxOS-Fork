@@ -1,0 +1,102 @@
+<refsect1 id='failover'>
+    <title>AUSFALLSICHERUNG</title>
+    <para>
+        Die Ausfallsicherungsfunktionalität ermöglicht es, dass Backends automatisch
+auf einen anderen Server wechseln, falls der aktuelle versagt.
+    </para>
+    <refsect2 id='failover_syntax'>
+        <title>AUSFALLSICHERUNGSSYNTAX</title>
+        <para>
+            Die Server werden als durch Kommata getrennte Liste angegeben. Um das Komma
+herum ist eine beliebige Anzahl von Leerzeichen erlaubt. Die Server werden
+in Reihenfolge der Bevorzugung aufgeführt. Die Liste kann eine beliebige
+Anzahl von Servern enthalten.
+        </para>
+        <para>
+            Von jeder Konfigurationsoption mit aktivierter Ausfallsicherung existieren
+zwei Varianten: <emphasis>primary</emphasis> und
+<emphasis>backup</emphasis>. Die Idee dahinter ist, dass Server in der Liste
+»primary« bevorzugt werden und nur nach »backup«-Servern gesucht wird, falls
+kein »primary«-Server erreichbar ist. Falls ein »backup«-Server ausgewählt
+wird, wird eine Dauer von 31 Sekunden bis zur Zeitüberschreitung
+festgelegt. Nach dieser Zeit wird SSSD periodisch versuchen, sich mit einem
+der primären Server zu verbinden. Ist dies erfolgreich, wird es den derzeit
+aktiven (»backup«-)Server ersetzen.
+        </para>
+    </refsect2>
+    <refsect2 id='failover_mechanism'>
+        <title>Der Ausfallsicherungsmechanismus</title>
+        <para>
+            Der Ausfallsicherungsmechanismus unterscheidet zwischen einer Maschine und
+einem Dienst. Das Backend versucht zuerst, den Rechnernamen der angegebenen
+Maschine aufzulösen. Falls dieser Versuch scheitert, wird davon ausgegangen,
+dass die Maschine offline ist und sie auch für keinen anderen Dienst zur
+Verfügung steht. Kann der den Namen erfolgreich aufgelöst werden, versucht
+das Backend, sich mit einem Dienst auf dieser Maschine zu verbinden. Ist das
+nicht möglich, dann wird nur dieser bestimmte Dienst als offline angesehen
+und das Backend wechselt automatisch weiter zum nächsten. Die Maschine wird
+weiterhin als online betrachtet und kann immer noch für andere Dienste
+herangezogen werden.
+        </para>
+        <para>
+            Weitere Verbindungsversuche zu Maschinen oder Diensten, die als offline
+gekennzeichnet sind, werden erst nach einer angegebenen Zeitspanne
+unternommen. Diese ist derzeit hart auf 30 Sekunden codiert.
+        </para>
+        <para>
+            Falls es weitere Maschinen durchzuprobieren gibt, wechselt das Backend als
+Ganzes in den Offline-Modus und versucht dann alle 30 Sekunden, sich erneut
+zu verbinden.
+        </para>
+    </refsect2>
+    <refsect2 id='failover_tuning'>
+        <title>Failover time outs and tuning</title>
+        <para>
+            Resolving a server to connect to can be as simple as running a single DNS
+query or can involve several steps, such as finding the correct site or
+trying out multiple host names in case some of the configured servers are
+not reachable. The more complex scenarios can take some time and SSSD needs
+to balance between providing enough time to finish the resolution process
+but on the other hand, not trying for too long before falling back to
+offline mode. If the SSSD debug logs show that the server resolution is
+timing out before a live server is contacted, you can consider changing the
+time outs.
+        </para>
+        <para>
+            This section lists the available tunables. Please refer to their description
+in the <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>, manual page.  <variablelist>
+                <varlistentry>
+                    <term>
+                        dns_resolver_op_timeout
+                    </term>
+                    <listitem>
+                        <para>
+                            How long would SSSD talk to a single DNS server.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>
+                        dns_resolver_timeout
+                    </term>
+                    <listitem>
+                        <para>
+                            How long would SSSD try to resolve a failover service. This service
+resolution internally might include several steps, such as resolving DNS SRV
+queries or locating the site.
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+        <para>
+            For LDAP-based providers, the resolve operation is performed as part of an
+LDAP connection operation. Therefore, also the
+<quote>ldap_opt_timeout></quote> timeout should be set to a larger value
+than <quote>dns_resolver_timeout</quote> which in turn should be set to a
+larger value than <quote>dns_resolver_op_timeout</quote>.
+        </para>
+    </refsect2>
+</refsect1>

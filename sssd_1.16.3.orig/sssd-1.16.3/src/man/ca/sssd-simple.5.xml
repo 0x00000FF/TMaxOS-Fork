@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pàgines del manual de l'SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-simple</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Formats i convencions dels fitxers</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-simple</refname>
+        <refpurpose>el fitxer de configuració per al proveïdor de control d'accés 'simple' de
+l'SSSD</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPCIÓ</title>
+        <para>
+            En aquesta pàgina del manual es descriu la configuració del proveïdor de
+control d'accés simple per a <citerefentry>
+<refentrytitle>sssd</refentrytitle>
+<manvolnum>8</manvolnum></citerefentry>.  Per a una referència detallada de
+la sintaxi, aneu a la secció <quote>FORMAT DEL FITXER</quote> de la pàgina
+del manual <citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+        </para>
+        <para>
+            El proveïdor d'accés simple concedeix o denega l'accés basat en una llista
+d'accés o denegació dels noms dels usuaris o dels noms dels
+grups. S'apliquen les regles següents:
+            <itemizedlist>
+                <listitem>
+                    <para>Si totes les llistes estan buides, es concedeix l'accés</para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Si es proporciona alguna llista, l'ordre d'avaluació és permissió,
+denegació. Això vol dir que qualsevol coincidència amb la regla de denegació
+reemplaçarà qualsevol coincidència amb la regla de permissió.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Si es proporcionen una o ambdues llistes de "permissió", tots els usuaris
+són denegats excepte els que apareixen a la llista.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Si només es proporcionen llistes de "denegació", es concedeix l'accés a tots
+els usuaris excepte els que apareixen a la llista.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </para>
+    </refsect1>
+
+    <refsect1 id='configuration-options'>
+        <title>OPCIONS DE CONFIGURACIÓ</title>
+        <para>Per a més informació sobre la configuració d'un domini SSSD, consulteu la
+secció <quote>SECCIONS DELS DOMINIS</quote> de la pàgina del manual
+<citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>. <variablelist>
+                <varlistentry>
+                    <term>simple_allow_users (cadena)</term>
+                    <listitem>
+                        <para>
+                            Llista separada per comes dels usuaris a qui se'ls permet iniciar la sessió.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>simple_deny_users (cadena)</term>
+                    <listitem>
+                        <para>
+                            Llista separada per comes dels usuaris a qui se'ls denega explícitament
+l'accés.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>simple_allow_groups (cadena)</term>
+                    <listitem>
+                        <para>
+                            Llista separada per comes dels grups a qui se'ls permet iniciar la
+sessió. Això s'aplica únicament als grups dins d'aquest domini SSSD. No
+s'avaluen els grups locals.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>simple_deny_groups (cadena)</term>
+                    <listitem>
+                        <para>
+                            Llista separada per comes dels grups a qui se'ls denega explícitament
+l'accés. Això s'aplica únicament als grups dins d'aquest domini SSSD. No
+s'avaluen els grups locals.
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+        <para>
+            Specifying no values for any of the lists is equivalent to skipping it
+entirely. Beware of this while generating parameters for the simple provider
+using automated scripts.
+        </para>
+        <para>
+            Si us plau, tingueu en compte que és un error de configuració si es
+defineixen alhora simple_allow_users i simple_deny_users.
+        </para>
+    </refsect1>
+
+    <refsect1 id='example'>
+        <title>EXEMPLE</title>
+        <para>
+            En el següent exemple s'assumeix que l'SSD està configurat correctament i
+que exemple.com és un dels dominis de la secció
+<replaceable>[sssd]</replaceable>. En aquest exemple es mostren únicament
+les opcions específiques del proveïdor d'accés simple.
+        </para>
+        <para>
+<programlisting>
+[domini/exemple.com]
+access_provider = simple
+simple_allow_users = usuari1, usuari2
+</programlisting>
+        </para>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>NOTES</title>
+        <para>
+          La jerarquia completa de la pertinença a un grup es resol abans de la
+comprovació de l'accés, de manera que fins i tot els grups imbricats es
+poden incloure a les llistes d'accés. Si us plau, tingueu cura que l'opció
+<quote>ldap_group_nesting_level</quote> pot influir amb els resultats i s'ha
+d'establir amb un valor suficient. L'opció (<citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>).
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

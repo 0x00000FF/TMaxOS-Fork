@@ -1,0 +1,11 @@
+[Task] Figure out how to use "Requires" in pc.in (libisoburn and libisofs would benefit)
+[Task] Figure out the usage of Libs.private (used in libburn)
+[Task] Improve build system 
+[Task] Investigate build system, so other libburnia components can benefit
+[Task] Write Doxygen files
+[Task] Explain to Thomas & Vreixo about NEWS importance (all libburnia components
+       will benefit
+[Task] Write a document about ABI & API
+[Task] Create following targets for make: Src, Indent, Docs, Test, All [Any other suggestions?)
+
+All those tasks are currently assigned to Mario.

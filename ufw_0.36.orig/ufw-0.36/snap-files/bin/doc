@@ -1,0 +1,40 @@
+#!/bin/sh
+
+if [ -z "$SNAP" ]; then
+    echo "SNAP not set"
+    exit 1
+fi
+
+docdir="$SNAP/docs"
+
+usage() {
+    cat <<EOM
+Usage: ufw.doc <doc>
+
+Available docs are:
+ufw-on-snappy
+ufw
+ufw-framework
+iptables
+ip6tables
+iptables-restore
+ip6tables-restore
+
+Eg:
+$ ufw.doc ufw-on-snappy | less
+EOM
+}
+
+if [ -z "$1" ]; then
+    usage
+    exit 1
+fi
+
+doc="$docdir/$1"
+if [ ! -f "$doc" ]; then
+    echo "Could not find '$1'"
+    usage
+    exit 1
+fi
+
+cat "$doc"

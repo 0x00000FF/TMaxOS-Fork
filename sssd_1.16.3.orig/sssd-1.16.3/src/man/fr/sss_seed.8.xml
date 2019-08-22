@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pages de manuel de SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_seed</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_seed</refname>
+        <refpurpose>initialise le cache SSSD avec un utilisateur</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_seed</command> <arg choice='opt'>
+<replaceable>options</replaceable> </arg> <arg choice='plain'>-D
+<replaceable>DOMAIN</replaceable></arg> <arg choice='plain'>-n
+<replaceable>USER</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPTION</title>
+        <para>
+            <command>sss_seed</command> initialise le cache SSSD avec une entrée
+d'utilisateur et le mot de passe temporaire. Si une entrée d'utilisateur est
+déjà présente dans le cache de SSSD, l'entrée est mise à jour avec le mot de
+passe temporaire.
+        </para>
+        <para>
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPTIONS</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-D</option>,<option>--domain</option>
+<replaceable>DOMAIN</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Indique le nom de domaine duquel l'utilisateur est membre. Le domaine est
+également utilisé pour récupérer les informations sur l'utilisateur. Le
+domaine doit être configuré dans sssd.conf. L'option
+<replaceable>DOMAIN</replaceable> doit être fournie.  Les informations
+récupérées depuis le domaine prennent le pas sur ce qui est fourni dans les
+options.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-n</option>,<option>--username</option>
+<replaceable>USER</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Le nom d'utilisateur de l'entrée devant être créée ou modifiée dans le
+cache. L'option <replaceable>USER</replaceable> doit être fournie.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-u</option>,<option>--uid</option> <replaceable>UID</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Définit l'UID de l'utilisateur à <replaceable>UID</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-g</option>,<option>--gid</option> <replaceable>GID</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Définit le GID de l'utilisateur à <replaceable>GID</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-c</option>,<option>--gecos</option>
+<replaceable>COMMENTAIRE</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Toute chaîne de caractère décrivant l'utilisateur. Souvent utilisé comme
+champ pour le nom entier de l'utilisateur.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-h</option>,<option>--home</option>
+<replaceable>HOME_DIR</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Définit le répertoire de l'utilisateur à
+<replaceable>HOME_DIR</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--shell</option>
+<replaceable>SHELL</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Définit l'interpréteur de commande de l'utilisateur à
+<replaceable>SHELL</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-i</option>,<option>--interactive</option>
+                </term>
+                <listitem>
+                    <para>
+                        Mode interactif pour la saisie des informations de l'utilisateur. Cette
+option invite uniquement à la saisir des renseignements non fournis dans les
+options ou non récupérés à partir du domaine.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-p</option>,<option>--password-file</option>
+<replaceable>PASS_FILE</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Spécifie le fichier dans lequel lire le mot de passe de l'utilisateur. (si
+aucun mot de passe n'est spécifié, il sera demandé)
+                    </para>
+                </listitem>
+            </varlistentry>
+           <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>NOTES</title>
+        <para>
+            La taille du mot de passe (ou la taille du fichier spécifié avec l'option -p
+ou --password-file) doit être inférieure ou égale à PASS_MAX octets (64
+octets sur les systèmes sans valeur globale définie de PASS_MAX).
+        </para>
+        <para>
+        </para>
+    </refsect1>
+
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

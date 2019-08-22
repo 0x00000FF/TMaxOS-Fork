@@ -1,0 +1,6 @@
+<para>
+    Veuillez noter que l'automounter ne lit que la carte maîtresse au
+démarrage. Ainsi, si des modifications liées à autofs sont apportées à
+sssd.conf, vous devrez généralement redémarrer le démon automounter après le
+redémarrage de SSSD
+</para>

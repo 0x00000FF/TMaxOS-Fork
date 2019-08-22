@@ -1,0 +1,44 @@
+<refsect1 id='service_discovery'>
+    <title>DÉCOUVERTE DE SERVICE</title>
+    <para>
+        La fonctionnalité de découverte de services permet aux moteurs de trouver
+automatiquement les serveurs appropriés auxquels se connecter à l'aide d'une
+requête DNS spéciale. Cette fonctionnalité n'est pas pris en charge pour sur
+les serveurs secondaires.
+    </para>
+    <refsect2 id='configuration'>
+        <title>Configuration</title>
+        <para>
+            Si aucun serveur n'est spécifié, le moteur utilise automatiquement la
+découverte de services pour tenter de trouver un serveur. L'utilisateur peut
+aussi choisir d'utiliser des adresses de serveur et de découverte de
+services fixes en insérant un mot-clé spécial, <quote>_srv_</quote>, dans la
+liste des serveurs. L'ordre de préférence est maintenu. Cette fonctionnalité
+est utile si, par exemple, l'utilisateur préfère utiliser la découverte de
+services chaque fois que possible et se replier vers un serveur spécifique
+lorsqu'aucun serveur ne peut être découvert à l'aide du DNS.
+        </para>
+    </refsect2>
+    <refsect2 id='domain_name'>
+        <title>Le nom de domaine</title>
+        <para>
+            Se reporter au paramètre <quote>dns_discovery_domain</quote> dans la page de
+manuel <citerefentry><refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum></citerefentry> pour plus de détails.
+        </para>
+    </refsect2>
+    <refsect2 id='search_protocol'>
+        <title>Le protocole</title>
+        <para>
+            Les requêtes spécifient généralement _tcp comme protocole. Les exceptions
+sont documentées dans les descriptions respectives des options.
+        </para>
+    </refsect2>
+    <refsect2 id='reference'>
+        <title>Voir aussi</title>
+        <para>
+            Pour plus d'informations sur le mécanisme de découverte de services, se
+reporter à la RFC 2782.
+        </para>
+    </refsect2>
+</refsect1>

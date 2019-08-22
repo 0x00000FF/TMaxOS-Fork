@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD-Handbuchseiten</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-ifp</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Dateiformate und Konventionen</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-ifp</refname>
+        <refpurpose>SSSD InfoPipe-Responder</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>BESCHREIBUNG</title>
+        <para>
+            Diese Handbuchseite beschreibt die Konfiguration des InfoPipe-Responders für
+<citerefentry> <refentrytitle>sssd</refentrytitle> <manvolnum>8</manvolnum>
+</citerefentry>. Eine detaillierte Syntaxreferenz finden Sie im Abschnitt
+<quote>DATEIFORMAT</quote> in der Handbuchseite zu <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+        </para>
+        <para>
+            Der InfoPipe-Responder stellt eine öffentliche D-Bus-Schnittstelle bereit,
+auf die über den Systembus zugegriffen werden kann. Die Schnittstelle
+ermöglicht die Abfrage von Informationen zu entfernten Benutzern und Gruppen
+über den Systembus.
+        </para>
+    </refsect1>
+
+    <refsect1 id='configuration-options'>
+        <title>KONFIGURATIONSOPTIONEN</title>
+            <para>
+                Diese Optionen können zur Konfiguration des InfoPipe-Responders verwendet
+werden.
+            </para>
+            <variablelist>
+                <varlistentry>
+                    <term>allowed_uids (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            Gibt eine durch Kommata getrennte Liste der Benutzer-ID-Werte oder
+Benutzernamen an, denen der Zugriff auf den InfoPipe-Responder erlaubt
+ist. Benutzernamen werden beim Start in Benutzer-IDs aufgelöst.
+                        </para>
+                        <para>
+                            Voreinstellung: 0 (nur der Benutzer »root« darf auf den InfoPipe-Responder
+zugreifen)
+                        </para>
+                        <para>
+                            Beachten Sie, dass trotz der Verwendung der Benutzer-ID 0 als Voreinstellung
+diese durch die Option überschrieben wird. Falls Sie wollen, dass dem
+Root-Benutzer der Zugriff auf den InfoPipe-Responder gewährt werden soll,
+was der typische Fall ist, müssen Sie 0 ebenfalls zur Liste der erlaubten
+Benutzer-IDs hinzufügen.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>user_attributes (Zeichenkette)</term>
+                    <listitem>
+                        <para>
+                            Gibt eine durch Kommata getrennte Liste der auf die weiße (erlaubt)
+beziehungsweise schwarze Liste (blockiert) gesetzten Attribute an.
+                        </para>
+                        <para>
+                            In der Voreinstellung erlaubt der InfoPipe-Responder nur die Abfrage des
+Standardsatzes an POSIX-Attributen. Dieser Satz ist der gleiche, wie er von
+<citerefentry> <refentrytitle>getpwnam</refentrytitle>
+<manvolnum>3</manvolnum> </citerefentry> zurückgegeben wird und enthält
+Folgendes: <variablelist>
+                                <varlistentry>
+                                    <term>name</term>
+                                    <listitem><para>Anmeldename des Benutzers</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>uidNumber</term>
+                                    <listitem><para>Benutzer-ID</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>gidNumber</term>
+                                    <listitem><para>primäre Gruppen-ID</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>gecos</term>
+                                    <listitem><para>Benutzerinformation, typischerweise der vollständige Name</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>homeDirectory</term>
+                                    <listitem><para>Home-Verzeichnis</para></listitem>
+                                </varlistentry>
+                                <varlistentry>
+                                    <term>loginShell</term>
+                                    <listitem><para>Benutzershell</para></listitem>
+                                </varlistentry>
+                            </variablelist>
+                        </para>
+                        <para>
+                            Es ist möglich, ein weiteres Attribut zu diesem Satz hinzuzufügen, indem Sie
+<quote>+attr_name</quote> verwenden. Explizit entfernen lässt sich ein
+Attribut mit <quote>-attr_name</quote>. Um beispielsweise
+<quote>telephoneNumber</quote> zu erlauben, aber <quote>loginShell</quote>
+abzuweisen, können Sie folgende Konfiguration verwenden: <programlisting>
+user_attributes = +telephoneNumber, -loginShell
+                        </programlisting>
+                        </para>
+                        <para>
+                            Voreinstellung: Nicht gesetzt. Nur der Standardsatz an POSIX-Attributen ist
+erlaubt.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>wildcard_limit (integer)</term>
+                    <listitem>
+                        <para>
+                            Specifies an upper limit on the number of entries that are downloaded during
+a wildcard lookup that overrides caller-supplied limit.
+                        </para>
+                        <para>
+                            Default: 0 (let the caller set an upper limit)
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+            </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

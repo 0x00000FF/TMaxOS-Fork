@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD マニュアル ページ</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd</refname>
+        <refpurpose>System Security Services Daemon</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sssd</command> <arg choice='opt'>
+<replaceable>options</replaceable> </arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>概要</title>
+        <para>
+            <command>SSSD</command>
+はリモートディレクトリーへのアクセスと認証メカニズムを管理するための一組のデーモンを提供します。システムへの NSS と PAM
+インターフェースを提供します。また、D-Bus
+インターフェースのように複数の異なるアカウントソースに接続するための取り外し可能なバックエンドシステムを提供します。クライアント監査、およびFreeIPA
+のようなプロジェクトに対するポリシーサービスを提供する基礎となります。ローカルユーザーだけでなく拡張ユーザーデータを保存するためのより強靭なデータベースを提供します。
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>オプション</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-d</option>,<option>--debug-level</option>
+<replaceable>LEVEL</replaceable>
+                </term>
+                <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/debug_levels.xml" />
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--debug-timestamps=</option><replaceable>mode</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        <emphasis>1</emphasis>: デバッグメッセージに日時を追加します
+                    </para>
+                    <para>
+                        <emphasis>0</emphasis>: デバッグメッセージで日時を無効にします
+                    </para>
+                    <para>
+                        初期値: 1
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--debug-microseconds=</option><replaceable>mode</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        <emphasis>1</emphasis>: デバッグメッセージにミリ秒をタイムスタンプに追加します
+                    </para>
+                    <para>
+                        <emphasis>0</emphasis>: 日時でマイクロ秒を無効にします
+                    </para>
+                    <para>
+                        初期値: 0
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-f</option>,<option>--debug-to-files</option>
+                </term>
+                <listitem>
+                    <para>
+                        デバッグ出力を標準エラーの代わりにファイルに送信します。初期状態で、ログファイルは <filename>/var/log/sssd</filename>
+に保存され、すべての SSSD サービスとドメインに対して別々のログファイルがあります。
+                    </para>
+                    <para>
+                        This option is deprecated. It is replaced by
+<option>--logger=files</option>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--logger=</option><replaceable>value</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Location where SSSD will send log messages. This option overrides the value
+of the deprecated option <option>--debug-to-files</option>. The deprecated
+option will still work if the <option>--logger</option> is not used.
+                    </para>
+                    <para>
+                        <emphasis>stderr</emphasis>: Redirect debug messages to standard error
+output.
+                    </para>
+                    <para>
+                        <emphasis>files</emphasis>: Redirect debug messages to the log files. By
+default, the log files are stored in <filename>/var/log/sssd</filename> and
+there are separate log files for every SSSD service and domain.
+                    </para>
+                    <para>
+                        <emphasis>journald</emphasis>: Redirect debug messages to systemd-journald
+                    </para>
+                    <para>
+                        初期値: 設定されません
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-D</option>,<option>--daemon</option>
+                </term>
+                <listitem>
+                    <para>
+                        起動後にデーモンになります。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-i</option>,<option>--interactive</option>
+                </term>
+                <listitem>
+                    <para>
+                        フォアグラウンドで実行して、デーモンになりません。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-c</option>,<option>--config</option>
+                </term>
+                <listitem>
+                    <para>
+                        非標準の設定ファイルを指定します。初期値は <filename>/etc/sssd/sssd.conf</filename>
+です。設定ファイルの構文とオプションは <citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> マニュアルページを参照してください。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+            <varlistentry>
+                <term>
+                    <option>--version</option>
+                </term>
+                <listitem>
+                    <para>
+                        バージョン番号を表示して終了します。
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <refsect1>
+        <title>シグナル</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>SIGTERM/SIGINT</term>
+                <listitem>
+                    <para>
+                        SSSD にすべての子プロセスを穏やかに停止するよう通知して、モニターをシャットダウンします。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>SIGHUP</term>
+                <listitem>
+                    <para>
+                        SSSD が現在のデバッグファイルディスクリプターに書き込むことを止めて、それらを閉じてから開きなおすよう指示します。これは logrotate
+のようなプログラムを用いてログローテーションを促進することを意味します。
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>SIGUSR1</term>
+                <listitem>
+                    <para>
+                        Tells the SSSD to simulate offline operation for the duration of the
+<quote>offline_timeout</quote> parameter. This is useful for testing. The
+signal can be sent to either the sssd process or any sssd_be process
+directly.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>SIGUSR2</term>
+                <listitem>
+                    <para>
+                        Tells the SSSD to go online immediately. This is useful for testing. The
+signal can be sent to either the sssd process or any sssd_be process
+directly.
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>注記</title>
+        <para>
+            If the environment variable SSS_NSS_USE_MEMCACHE is set to "NO", client
+applications will not use the fast in memory cache.
+        </para>
+    </refsect1>
+
+	<xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

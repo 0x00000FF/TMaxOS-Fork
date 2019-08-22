@@ -1,0 +1,17 @@
+<refsect1 id='local'>
+    <title>EL DOMINIO LOCAL</title>
+    <para>
+        Con el objetivo de que funcione correctamente, se debe crear un dominio con
+<quote>id_provider=local</quote> y el SSSD debe estar corriendo.
+    </para>
+    <para>
+        El administrador puede desear usar los usuarios locales SSSD en lugar de los
+usuarios tradicionales UNIX en los casos donde los grupos anidados (vea
+<citerefentry> <refentrytitle>sss_groupadd</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry>) sean necesarios. Los usuarios
+locales son también útiles para la prueba y el desarrollo del SSSD sin tener
+que desplegar un servidor remoto completo. Las herramientas
+<command>sss_user*</command> y <command>sss_group*</command> usan un
+almacenamiento LDB local para almacenar usuarios y grupos.
+    </para>
+</refsect1>

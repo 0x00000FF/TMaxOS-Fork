@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-sudo</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Формати файлів та правила</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-sudo</refname>
+        <refpurpose>Налаштовування sudo за допомогою модуля SSSD</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            На цій сторінці підручника описано способи налаштовування <citerefentry>
+<refentrytitle>sudo</refentrytitle> <manvolnum>8</manvolnum> </citerefentry>
+на роботу у комплексі з <citerefentry> <refentrytitle>sssd</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry> та способи кешування правил sudo у
+SSSD.
+        </para>
+    </refsect1>
+
+    <refsect1 id='sudo'>
+        <title>Налаштовування sudo на співпрацю з SSSD</title>
+        <para>
+            Щоб увімкнути SSSD як джерело правил sudo, додайте <emphasis>sss</emphasis>
+до запису <emphasis>sudoers</emphasis> у файлі <citerefentry>
+<refentrytitle>nsswitch.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+        </para>
+        <para>
+            Наприклад, щоб налаштувати sudo на першочерговий пошук правил у стандартному
+файлі <citerefentry> <refentrytitle>sudoers</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> (цей файл має містити правила, що
+стосуються локальних користувачів), а потім у SSSD, у файлі nsswitch.conf
+слід вказати такий рядок:
+        </para>
+        <para>
+<programlisting>
+sudoers: files sss
+</programlisting>
+        </para>
+        <para>
+            Докладніші дані щодо налаштовування порядку пошуку у sudoers за допомогою
+файла nsswitch.conf, а також дані щодо бази даних LDAP, у якій зберігаються
+правила sudo каталогу, можна знайти на сторінці підручника <citerefentry>
+<refentrytitle>sudoers.ldap</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>.
+        </para>
+        <para>
+            <emphasis>Зауваження</emphasis>: щоб у правилах sudo можна було
+використовувати мережеві групи або групи вузлів IPA, вам слід належним чином
+налаштувати <citerefentry> <refentrytitle>nisdomainname</refentrytitle>
+<manvolnum>1</manvolnum> </citerefentry> на назву домену NIS (назва цього
+домену збігається з назвою домену IPA, якщо використовуються групи вузлів
+IPA).
+        </para>
+    </refsect1>
+
+    <refsect1 id='sssd'>
+        <title>Налаштовування SSSD на отримання правил sudo</title>
+        <para>
+            На боці SSSD достатньо розширити список <emphasis>служб</emphasis>
+дописуванням «sudo» до розділу [sssd] <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>. Щоб пришвидшити пошуку у LDAP, ви також можете налаштувати
+базу пошуку для правил sudo за допомогою параметра
+<emphasis>ldap_sudo_search_base</emphasis>.
+        </para>
+        <para>
+            У наведеному нижче прикладі показано, як налаштувати SSSD на отримання
+правил sudo з сервера LDAP.
+        </para>
+        <para>
+<programlisting>
+[sssd]
+config_file_version = 2
+services = nss, pam, sudo
+domains = EXAMPLE
+
+[domain/EXAMPLE]
+id_provider = ldap
+sudo_provider = ldap
+ldap_uri = ldap://example.com
+ldap_sudo_search_base = ou=sudoers,dc=example,dc=com
+</programlisting> <phrase
+condition="have_systemd"> Важливо зауважити, що на платформах, де
+передбачено підтримку systemd, немає потреби додавати засіб надання даних
+«sudo» до списку служб, оскільки він стає необов'язковим. Втім, замість
+нього слід увімкнути sssd-sudo.socket.</phrase>
+        </para>
+        <para>
+            Якщо SSSD налаштовано на використання IPA як засобу надання даних ID, засіб
+надання даних sudo буде увімкнено автоматично. Базу пошуку sudo буде
+налаштовано на використання природного для IPA дерева LDAP
+(cn=sudo,$SUFFIX). Якщо у sssd.conf буде визначено будь-яку іншу базу
+пошуку, використовуватиметься це значення. Для використання функціональних
+можливостей sudo у IPA потреби у дереві compat (ou=sudoers,$SUFFIX) більше
+немає.
+        </para>
+    </refsect1>
+
+    <refsect1 id='cache'>
+        <title>Механізм кешування правил SUDO</title>
+        <para>
+            Найбільшою складністю під час розробки підтримки sudo у SSSD було
+забезпечення роботи sudo з SSSD так, щоб для користувача джерело даних
+надавало дані у один спосіб та з тією самою швидкістю, що і sudo, надаючи
+при цьому  якомога свіжіший набір правил. Щоб виконати ці умови, SSSD
+використовує оновлення трьох типів. Будемо називати ці тип повним
+оновленням, інтелектуальним оновленням та оновленням правил.
+        </para>
+        <para>
+            Використання типу <emphasis>інтелектуального оновлення</emphasis> полягає у
+отриманні правил, які було додано або змінено з часу попереднього
+оновлення. Основним призначенням оновлення такого типу є підтримання
+актуального стану бази даних невеличкими порціями, які не спричиняють
+значного навантаження на мережу.
+        </para>
+        <para>
+            У разі використання <emphasis>повного оновлення</emphasis> всі правила sudo,
+що зберігаються у кеші, буде вилучено і замінено на всі правила, які
+зберігаються на сервері. Таким чином, кеш буде узгоджено шляхом вилучення
+всіх правил, які було вилучено на сервері. Втім, повне оновлення може значно
+навантажувати канал з’єднання, а отже його варто використовувати лише
+іноді. Проміжок між сеансами повного оновлення має залежати від розміру і
+стабільності правил sudo.
+        </para>
+        <para>
+            У разі використання типу <emphasis>оновлення правил</emphasis>
+забезпечується ненадання користувачам ширших дозволів, ніж це було визначено
+на сервері. Оновлення цього типу виконується під час кожного запуску
+користувачем sudo. Під час оновлення буде виявлено всі правила, які
+стосуються користувача, перевірено, чи не завершено строк дії цих правил, і
+повторно отримано правила, якщо строк дії правил завершено. Якщо якихось з
+правил не буде виявлено на сервері, SSSD виконає позачергове повне
+оновлення, оскільки може виявитися, що було вилучено набагато більше правил
+(які стосуються інших користувачів).
+        </para>
+        <para>
+            Якщо увімкнено, SSSD зберігатиме лише правила, які можна застосувати до
+цього комп’ютера. Це означає, що зберігатимуться правила, що містять у
+атрибуті <emphasis>sudoHost</emphasis> одне з таких значень:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    ключове слово ALL
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    шаблон заміни
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    мережеву групу (у форматі «+мережева група»)
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    назву вузла або повну назву у домені цього комп’ютера
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    одну з IP-адрес цього комп’ютера
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    одну з IP-адрес мережі (у форматі «адреса/маска»)
+                </para>
+            </listitem>
+        </itemizedlist>
+        <para>
+            Для точного налаштовування поведінки передбачено доволі багато параметрів
+Будь ласка, зверніться до розділу «ldap_sudo_*» у <citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry> та «sudo_*» у <citerefentry>
+<refentrytitle>sssd.conf</refentrytitle> <manvolnum>5</manvolnum>
+</citerefentry>, щоб ознайомитися з докладним описом.
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

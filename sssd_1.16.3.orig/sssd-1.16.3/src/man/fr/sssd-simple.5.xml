@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Pages de manuel de SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd-simple</refentrytitle>
+        <manvolnum>5</manvolnum>
+        <refmiscinfo class="manual">Formats de fichier et conventions</refmiscinfo>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd-simple</refname>
+        <refpurpose>le fichier de configuration pour le fournisseur de contrôle d'accès  «
+simple » de SSSD.</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>DESCRIPTION</title>
+        <para>
+            Cette page de manuel décrit la configuration du fournisseur de contrôle
+d'accès simple de <citerefentry> <refentrytitle>sssd</refentrytitle>
+<manvolnum>8</manvolnum> </citerefentry>. Pour plus de détails sur la
+syntaxe, cf. la section <quote>FORMAT DE FICHIER</quote> de la page de
+manuel <citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+        </para>
+        <para>
+            Le fournisseur d'accès simple autorise les accès à partir de listes
+d'autorisation ou de refus de noms d'utilisateurs ou de groupes. Les règles
+suivantes s'appliquent :
+            <itemizedlist>
+                <listitem>
+                    <para>Si toutes les listes sont vides, l'accès est autorisé</para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Si une liste est fournie, quelle qu'elle soit, l'ordre d'évaluation est
+allow,deny. Autrement dit une règle de refus écrasera une règle
+d'autorisation.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Si la ou les listes fournies sont seulement de type « allow », tous les
+utilisateurs sont refusés à moins qu'ils ne soient dans la liste.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Si seulement les listes « deny » sont utilisées, tous les utlisateurs sont
+autorisés à moins qu'ils ne soient dans la liste.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </para>
+    </refsect1>
+
+    <refsect1 id='configuration-options'>
+        <title>OPTIONS DE CONFIGURATION</title>
+        <para>Se référer à la section <quote>SECTIONS DE DOMAINE</quote> de la page de
+manuel <citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry> pour les détails sur la
+configuration d'un domaine SSSD. <variablelist>
+                <varlistentry>
+                    <term>simple_allow_users (chaîne)</term>
+                    <listitem>
+                        <para>
+                            Liste séparée par des virgules d'utilisateurs autorisés à se connecter.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>simple_deny_users (chaîne)</term>
+                    <listitem>
+                        <para>
+                            Liste séparée par des virgules d'utilisateurs dont l'accès sera refusé.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>simple_allow_groups (chaîne)</term>
+                    <listitem>
+                        <para>
+                            Liste séparée par des virgules de groupes autorisés à se connecter. Ceci ne
+s'applique qu'à des groupes dans un domaine SSSD. Les groupes locaux ne sont
+pas pris en compte.
+                        </para>
+                    </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                    <term>simple_deny_groups (chaîne)</term>
+                    <listitem>
+                        <para>
+                            Liste séparée par des virgules de groupes dont l'accès sera refusé. Ceci ne
+s'applique qu'à des groupes dans un domaine SSSD. Les groupes locaux ne sont
+pas pris en compte.
+                        </para>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </para>
+        <para>
+            Ne spécifier aucune valeur pour aucune des listes revient à l'ignorer
+complètement. Se méfier de ceci lors de la création des paramètres pour le
+fournisseur simple à l'aide automatique de scripts.
+        </para>
+        <para>
+            Veuillez noter que la configuration simultanée de simple_allow_users et
+simple_deny_users est une erreur.
+        </para>
+    </refsect1>
+
+    <refsect1 id='example'>
+        <title>EXEMPLE</title>
+        <para>
+            L'exemple suivant suppose que SSSD est correctement configuré et que
+example.com est un des domaines dans la section
+<replaceable>[sssd]</replaceable>. Ces exemples montrent seulement les
+options spécifiques du fournisseur d'accès simple.
+        </para>
+        <para>
+<programlisting>
+[domain/example.com]
+access_provider = simple
+simple_allow_users = user1, user2
+</programlisting>
+        </para>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>NOTES</title>
+        <para>
+          The complete group membership hierarchy is resolved before the access check,
+thus even nested groups can be included in the access lists.  Please be
+aware that the <quote>ldap_group_nesting_level</quote> option may impact the
+results and should be set to a sufficient value.  (<citerefentry>
+<refentrytitle>sssd-ldap</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>) option.
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

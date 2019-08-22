@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>SSSD-Handbuchseiten</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_useradd</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_useradd</refname>
+        <refpurpose>erstellt einen neuen Benutzer</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_useradd</command> <arg choice='opt'>
+<replaceable>Optionen</replaceable> </arg> <arg
+choice='plain'><replaceable>ANMELDUNG</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>BESCHREIBUNG</title>
+        <para>
+            <command>sss_useradd</command> erstellt mittels der auf der Befehlszeile
+angegebenen Werte sowie der Standardwerte des Systems ein neues
+Benutzerkonto.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>OPTIONEN</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-u</option>,<option>--uid</option> <replaceable>UID</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        setzt die UID des Benutzers auf den Wert von
+<replaceable>UID</replaceable>. Wurde der Wert nicht angegeben, wird er
+automatisch ausgewählt.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-c</option>,<option>--gecos</option>
+<replaceable>KOMMENTAR</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        irgendeine Zeichenkette, die den Benutzer beschreibt. Dieses Feld wird oft
+für den vollständigen Namen des Benutzers verwendet.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-h</option>,<option>--home</option>
+<replaceable>HOME_VERZ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        das Home-Verzeichnis des Benutzerkontos. Standardmäßig wird der Name für die
+<replaceable>ANMELDUNG</replaceable> an <filename>/home</filename> angehängt
+und dies dann als Home-Verzeichnis benutzt. Das Basisverzeichnis, das
+<replaceable>ANMELDUNG</replaceable> vorangestellt wird, ist über die
+Einstellung »user_defaults/baseDirectory« in der »sssd.conf« einstellbar.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-s</option>,<option>--shell</option>
+<replaceable>SHELL</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        die Anmelde-Shell des Benutzers. Voreinstellung ist derzeit
+<filename>/bin/bash</filename>. Die Voreinstellung kann über die Einstellung
+»user_defaults/defaultShell« in der »sssd.conf« geändert werden.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-G</option>,<option>--groups</option>
+<replaceable>GRUPPEN</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        eine Liste existierender Gruppen, denen dieser Benutzer auch angehört
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-m</option>,<option>--create-home</option>
+                </term>
+                <listitem>
+                    <para>
+                        erstellt das Home-Verzeichnis des Benutzers, falls es nicht existiert. Die
+Dateien und Verzeichnisse, die in der Verzeichnisvorlage (die mit der Option
+-k oder in der Konfigurationsdatei definiert werden kann) enthalten sind,
+werden in das Home-Verzeichnis kopiert.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-M</option>,<option>--no-create-home</option>
+                </term>
+                <listitem>
+                    <para>
+                        erstellt nicht das Home-Verzeichnis des Benutzers und setzt
+Konfigurationseinstellungen außer Kraft.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-k</option>,<option>--skel</option>
+<replaceable>SKEL-VERZ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        die Verzeichnisvorlage mit Dateien und Verzeichnissen, die in das durch
+<command>sss_useradd</command> neu erstellte Home-Verzeichnis des Benutzers
+kopiert werden.
+                    </para>
+                    <para>
+                        Spezialdateien (block- und zeichenorientierte Geräte, benannte Pipes und
+Unix-Sockets) werden nicht kopiert.
+                    </para>
+                    <para>
+                        Diese Option ist nur gültig, falls die Option <option>-m</option> (oder
+<option>--create-home</option>) angegeben wurde oder das Erstellen von
+Home-Verzeichnissen in der Konfiguration auf »TRUE« gesetzt ist.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-Z</option>,<option>--selinux-user</option>
+<replaceable>SELINUX_BENUTZER</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        der SELinux-Benutzer für die Anmeldung des Benutzers. Ist er nicht
+angegeben, wird die Voreinstellung des Systems benutzt.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/local.xml" />
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

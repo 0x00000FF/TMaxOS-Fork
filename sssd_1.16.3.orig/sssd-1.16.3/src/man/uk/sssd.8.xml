@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sssd</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sssd</refname>
+        <refpurpose>Фонова служба безпеки системи</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sssd</command> <arg choice='opt'>
+<replaceable>параметри</replaceable> </arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            У <command>SSSD</command> передбачено набір фонових служб для керування
+доступом до віддалених каталогів та механізмами
+розпізнавання. <command>SSSD</command> надає операційній системі інтерфейси
+NSS і PAM, а також систему придатних для під’єднання модулів для
+встановлення з’єднання з декількома різними джерелами даних щодо облікових
+записів та інтерфейс D-Bus. <command>SSSD</command> також є основою для
+систем перевірки клієнтських систем та служб обслуговування правил доступу
+для проектів, подібних до FreeIPA. <command>SSSD</command> надає стійкішу
+базу даних для збереження записів локальних користувачів, а також додаткових
+даних щодо користувачів.
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>ПАРАМЕТРИ</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-d</option>,<option>--debug-level</option>
+<replaceable>РІВЕНЬ</replaceable>
+                </term>
+                <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/debug_levels.xml" />
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--debug-timestamps=</option><replaceable>режим</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        <emphasis>1</emphasis>: додати часову позначку до діагностичних повідомлень.
+                    </para>
+                    <para>
+                        <emphasis>0</emphasis>: вимкнути часову позначку у діагностичних
+повідомленнях
+                    </para>
+                    <para>
+                        Типове значення: 1
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--debug-microseconds=</option><replaceable>режим</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        <emphasis>1</emphasis>: додати значення мікросекунд до часової позначки у
+діагностичних повідомленнях
+                    </para>
+                    <para>
+                        <emphasis>0</emphasis>: вимкнути додавання мікросекунд до часової позначки
+                    </para>
+                    <para>
+                        Типове значення: 0
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-f</option>,<option>--debug-to-files</option>
+                </term>
+                <listitem>
+                    <para>
+                        Надіслати діагностичні дані до файлів, а не до stderr. Типово файли журналів
+зберігаються у <filename>/var/log/sssd</filename>, передбачено також окремий
+журнал для кожної служби і домену SSSD.
+                    </para>
+                    <para>
+                        Цей параметр вважається застарілим. Його замінено параметром
+<option>--logger=files</option>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>--logger=</option><replaceable>значення</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Місце, куди SSSD надсилатиме повідомлення журналу. Значення цього параметра
+має вищий пріоритет за значення застарілого параметра
+<option>--debug-to-files</option>. Застарілий параметр працюватиме, якщо не
+використано параметр <option>--logger</option>.
+                    </para>
+                    <para>
+                        <emphasis>stderr</emphasis>: переспрямувати діагностичні повідомлення до
+стандартного виведення помилок.
+                    </para>
+                    <para>
+                        <emphasis>files</emphasis>: переспрямувати діагностичні повідомлення до
+файлів журналу. Типово файли журналів зберігаються у
+<filename>/var/log/sssd</filename>, передбачено також окремий журнал для
+кожної служби і домену SSSD.
+                    </para>
+                    <para>
+                        <emphasis>journald</emphasis>: переспрямувати діагностичні повідомлення до
+systemd-journald
+                    </para>
+                    <para>
+                        Типове значення: not set
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-D</option>,<option>--daemon</option>
+                </term>
+                <listitem>
+                    <para>
+                        Перейти у режим фонової служби після запуску.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-i</option>,<option>--interactive</option>
+                </term>
+                <listitem>
+                    <para>
+                        Запустити програму у звичайному режимі, не створювати фонової служби.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-c</option>,<option>--config</option>
+                </term>
+                <listitem>
+                    <para>
+                        Визначити нетиповий файл налаштувань. Типовим файлом налаштувань є
+<filename>/etc/sssd/sssd.conf</filename>. Довідку щодо синтаксису та
+параметрів файла налаштувань можна знайти на сторінці довідника (man)
+<citerefentry> <refentrytitle>sssd.conf</refentrytitle>
+<manvolnum>5</manvolnum> </citerefentry>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+            <varlistentry>
+                <term>
+                    <option>--version</option>
+                </term>
+                <listitem>
+                    <para>
+                        Вивести номер версії і завершити роботу.
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <refsect1>
+        <title>Сигнали</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>SIGTERM/SIGINT</term>
+                <listitem>
+                    <para>
+                        Повідомляє SSSD, що слід поступово завершити роботу всіх дочірніх процесів,
+а потім завершити роботу монітора.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>SIGHUP</term>
+                <listitem>
+                    <para>
+                        Повідомляє SSSD, що слід припинити запис до файлів діагностичних даних з
+поточними дескрипторами, закрити і повторно відкрити ці файли. Цей сигнал
+призначено для полегшення процедури архівування журналів за допомогою
+програм, подібних до logrotate.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>SIGUSR1</term>
+                <listitem>
+                    <para>
+                        Наказує SSSD імітувати автономну дію, тривалість якої визначається
+параметром «offline_timeout». Найкориснішим застосуванням є тестування
+служби. Сигнал може бути надіслано або процесу sssd, або процесу sssd_be
+безпосередньо.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>SIGUSR2</term>
+                <listitem>
+                    <para>
+                        Наказує SSSD перейти у режим роботи у мережі негайно. Найкориснішим
+застосуванням є тестування служби. Сигнал може бути надіслано або процесу
+sssd, або процесу sssd_be безпосередньо.
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <refsect1 id='notes'>
+        <title>ЗАУВАЖЕННЯ</title>
+        <para>
+            Якщо для змінної середовища SSS_NSS_USE_MEMCACHE встановлено значення «NO»,
+клієнтські програми не використовуватимуть fast у кеші у пам’яті.
+        </para>
+    </refsect1>
+
+	<xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

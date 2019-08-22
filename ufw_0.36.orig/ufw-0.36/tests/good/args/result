@@ -1,0 +1,254 @@
+TESTING ARGS (logging)
+0: --dry-run logging on
+WARN: Checks disabled
+Logging enabled
+
+
+1: --dry-run logging off
+WARN: Checks disabled
+Logging disabled
+
+
+2: --dry-run LOGGING ON
+WARN: Checks disabled
+Logging enabled
+
+
+3: --dry-run LOGGING OFF
+WARN: Checks disabled
+Logging disabled
+
+
+TESTING ARGS (enable/disable)
+4: --dry-run enable
+WARN: Checks disabled
+> running ufw-init
+Firewall is active and enabled on system startup
+
+
+5: --dry-run disable
+WARN: Checks disabled
+> running ufw-init
+Firewall stopped and disabled on system startup
+
+
+6: --dry-run ENABLE
+WARN: Checks disabled
+> running ufw-init
+Firewall is active and enabled on system startup
+
+
+7: --dry-run DISABLE
+WARN: Checks disabled
+> running ufw-init
+Firewall stopped and disabled on system startup
+
+
+TESTING ARGS (status)
+8: --dry-run status
+WARN: Checks disabled
+> Checking iptables
+
+
+
+9: --dry-run status verbose
+WARN: Checks disabled
+> Checking iptables
+
+
+
+10: --dry-run status numbered
+WARN: Checks disabled
+> Checking iptables
+
+
+
+Testing parser
+Basic
+11: --dry-run enable
+
+
+12: --dry-run disable
+
+
+13: --dry-run help
+
+
+14: --dry-run --help
+
+
+15: --dry-run version
+
+
+16: --dry-run --version
+
+
+17: --dry-run reload
+
+
+Application
+18: --dry-run app list
+
+
+19: --dry-run app info Apache
+
+
+20: --dry-run app update Apache
+
+
+21: --dry-run app update --add-new Apache
+
+
+22: --dry-run app default skip
+
+
+Logging
+23: --dry-run logging on
+
+
+24: --dry-run logging off
+
+
+25: --dry-run logging low
+
+
+26: --dry-run logging medium
+
+
+27: --dry-run logging high
+
+
+28: --dry-run logging full
+
+
+Default
+29: --dry-run default allow
+
+
+30: --dry-run default allow incoming
+
+
+31: --dry-run default allow outgoing
+
+
+32: --dry-run default allow routed
+
+
+33: --dry-run default deny
+
+
+34: --dry-run default deny incoming
+
+
+35: --dry-run default deny outgoing
+
+
+36: --dry-run default deny routed
+
+
+37: --dry-run default reject
+
+
+38: --dry-run default reject incoming
+
+
+39: --dry-run default reject outgoing
+
+
+40: --dry-run default reject routed
+
+
+Status
+41: --dry-run status
+
+
+42: --dry-run status verbose
+
+
+43: --dry-run status numbered
+
+
+Show
+44: --dry-run show raw
+
+
+45: --dry-run show builtins
+
+
+46: --dry-run show before-rules
+
+
+47: --dry-run show user-rules
+
+
+48: --dry-run show after-rules
+
+
+49: --dry-run show logging-rules
+
+
+Rules
+50: allow 80
+
+
+51: --dry-run insert 1 allow 53
+
+
+52: delete allow 80
+
+
+53: --dry-run allow in 53
+
+
+54: --dry-run allow log 53
+
+
+55: --dry-run allow in log 53
+
+
+56: deny to any port 80 from any proto tcp
+
+
+57: --dry-run insert 1 deny to any port 53 from any proto udp
+
+
+58: delete deny to any port 80 from any proto tcp
+
+
+59: --dry-run deny out to any port 53 from any proto udp
+
+
+60: --dry-run deny log-all to any port 53 from any proto udp
+
+
+61: --dry-run deny out log-all to any port 53 from any proto udp
+
+
+TESTING ARGS (--force enable)
+62: --dry-run --force enable
+WARN: Checks disabled
+> running ufw-init
+Firewall is active and enabled on system startup
+
+
+63: --dry-run -f enable
+WARN: Checks disabled
+> running ufw-init
+Firewall is active and enabled on system startup
+
+
+64: --dry-run --force ENABLE
+WARN: Checks disabled
+> running ufw-init
+Firewall is active and enabled on system startup
+
+
+65: --dry-run -f ENABLE
+WARN: Checks disabled
+> running ufw-init
+Firewall is active and enabled on system startup
+
+
+66: --dry-run disable
+
+

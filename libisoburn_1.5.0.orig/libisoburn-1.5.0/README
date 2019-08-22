@@ -1,0 +1,324 @@
+------------------------------------------------------------------------------
+                         http:libburnia-project.org
+------------------------------------------------------------------------------
+libisoburn and xorriso. By Vreixo Formoso <metalpain2002@yahoo.es> 
+                       and Thomas Schmitt <scdbackup@gmx.net>
+Integrated sub project of libburnia-project.org.
+http://files.libburnia-project.org/releases/libisoburn-1.5.0.tar.gz
+Copyright (C) 2006-2009 Vreixo Formoso,
+Copyright (C) 2006-2018 Thomas Schmitt.
+Provided under GPL version 2 or later.
+------------------------------------------------------------------------------
+
+libisoburn is a frontend for libraries libburn and libisofs which enables
+creation and expansion of ISO-9660 filesystems on all CD/DVD/BD media supported
+by libburn. This includes media like DVD+RW, which do not support multi-session
+management on media level and even plain disk files or block devices.
+
+The price for that is thorough specialization on data files in ISO-9660
+filesystem images. So libisoburn is not suitable for audio (CD-DA) or any
+other CD layout which does not entirely consist of ISO-9660 sessions.
+
+xorriso is an application of libisoburn, libisofs, and libburn, which reads
+commands from program arguments, files, stdin, or readline.
+Its features are also available via a C language API of libisoburn.
+
+Currently they are fully supported on Linux with kernels >= 2.4,
+on FreeBSD with ATAPI/CAM support enabled in the kernel, see atapicam(4),
+on OpenSolaris (tested with kernel 5.11),
+on NetBSD (tested with 6.1.2 and 6.1.3).
+On other X/Open compliant systems libburn will only offer POSIX i/o with disk
+file objects, but no direct MMC operation on CD/DVD/BD drives.
+
+By using this software you agree to the disclaimer at the end of this text:
+"... without even the implied warranty ..."
+
+
+                   Compilation, First Glimpse, Installation
+
+Dynamic library and compile time header requirements for libisoburn-1.5.0 :
+- libburn.so.4  , version libburn-1.5.0 or higher
+- libisofs.so.6 , version libisofs-1.5.0 or higher
+libisoburn and xorriso will not start with libraries which are older than their
+include headers seen at compile time.
+
+Obtain libisoburn-1.5.0.tar.gz, take it to a directory of your choice
+and do:
+
+    tar xzf libisoburn-1.5.0.tar.gz
+    cd libisoburn-1.5.0
+
+Within that directory execute:
+
+    ./configure --prefix=/usr
+    make
+
+Then become superuser and execute
+    make install
+which will make available libisoburn.so.1 and the program xorriso.
+
+On GNU/Linux it will try to run program ldconfig with the library installation
+directory as only argument. Failure to do so will not abort installation.
+One may disable ldconfig by ./configure option --disable-ldconfig-at-install .
+
+
+By use of a version script, the libisoburn.so library exposes no other function
+names but those of the API definitions in <libisoburn/libisoburn.h> and
+<libisoburn/xorriso.h>.
+If -Wl,--version-script=... makes problems with the local compiler, then
+disable this encapsulation feature by
+    ./configure --disable-versioned-libs
+    make clean ; make
+
+The ./configure script of libisoburn can check via pkg-config whether suitable
+libburn and libisoburn are installed. Regrettably this test failed on several
+systems due to local pkg-config problems. So it is disabled by default and may
+be enabled by:
+   ./configure --enable-pkg-check-modules
+In this case, ./configure fails if no suitable installations are found.
+
+
+                              xorriso
+
+libisoburn comes with a command line and dialog application named xorriso,
+which offers a substantial part of libisoburn features to shell scripts and
+users. Its file xorriso/README_gnu_xorriso describes the tarball of the
+derived package GNU xorriso as first preference for a statically linked
+xorriso installation.
+The libisoburn installation described above produces a dynamically linked
+xorriso binary depending on libburn.so, libisofs.so, libisoburn.so.
+
+After installation documentation is available via
+    man xorriso
+    man xorrisofs
+    man xorrecord
+
+Several alias links point to the xorriso binary:
+    xorrisofs  starts xorriso with -as mkisofs emulation already enabled
+    xorrecord  starts xorriso with -as cdrecord emulation already enabled
+    osirrox    starts with -osirrox image-to-disk copying already enabled
+
+By default libisoburn will depend on libreadline if the library and its
+development header files are present at compile time. If not, then it will
+try to depend on libedit and its header file.
+Both conditional dependencies can be avoided by running
+    ./configure --prefix=/usr --disable-libreadline
+    make clean ; make
+Never omit the "make clean" command after switching enabling of libreadline.
+Note that depending on libreadline-6 will cause libisoburn's license to
+become "GPL version 3 or later".
+If you want to explictely allow only the use of libedit, then do
+    ./configure --prefix=/usr --disable-libreadline --enable-libedit
+
+Other deliberate dependency reduction options of ./configure are:
+    --disable-libacl   avoid use of ACL functions like acl_to_text()
+    --disable-xattr    avoid use of xattr functions like listxattr() on Linux
+                       or extattr_list_file() on FreeBSD
+    --disable-zlib     avoid use of zlib functions like compress2()
+    --disable-libjte   avoid use of libjte for -jigdo command
+
+xorriso allows to use external processes as file content filters. This is
+a potential security risk which may be avoided by ./configure option
+    --disable-external-filters
+By default the filter feature is disabled if effective user id and real
+user id differ. This ban can be lifted by
+    --enable-external-filters-setuid
+
+In some situations Linux may deliver a better write performance to DVD drives 
+if 64 KB rather than 32 KB are transmitted in each write operation.
+64k can be made default at configure time by:
+    --enable-dvd-obs-64k
+
+
+          libisoburn, libisofs, and libburn C language API
+
+For the lower API concepts and calls see
+    ./libisoburn/libisoburn.h
+as well as
+    /usr/include/libisofs/libisofs.h
+    /usr/include/libburn/libburn.h
+
+
+                      xorriso C language API
+
+Actually the dynamically linked xorriso binary is only a small start program
+for the xorriso API that is implemented inside libisoburn.
+There are API calls for command readers and interpreters, and there are
+API calls for each single command of xorriso.
+
+Interested programmers should have a look into the API definition at
+  xorriso/xorriso.h
+and the start program
+  xorriso/xorriso_main.c
+
+The header file  xorriso.h  gets installed suitable for
+  #include <libisoburn/xorriso.h>
+
+So after installation of a binary libisoburn package you may find it e.g. as
+  /usr/include/libisoburn/xorriso.h
+
+
+             xorriso under control of a (GUI) frontend process
+
+The dialog mode allows frontend programs to connect via pipes to the standard
+input and output of xorriso. Several commands of xorriso help with receiving
+and parsing of reply messages.
+
+As a proof of concept, there is the Tcl/Tk script xorriso-tcltk which can
+be launched by this shell command:
+
+    xorriso-tcltk
+
+Or in the xorriso build directory, without installation of xorriso:
+
+    xorriso/xorriso -launch_frontend frontend/xorriso-tcltk --stdio --
+
+In the running GUI, click with the rightmost mouse button on any GUI element
+to get its particular help text. The "Help" button at the upper right corner
+gives a short introduction and instructions for some common use cases.
+See also file frontend/README-tcltk.
+See its Tcl code for getting an idea how this gets achieved.
+
+The script is part of the tarball and gets installed by make install. If a
+xorriso distro package does not install it, you may get it directly from
+  https://dev.lovelyhq.com/libburnia/libisoburn/blob/master/frontend/xorriso-tcltk
+
+Further there is the C program frontend/frontend_pipes_xorriso.c which
+forks a xorriso process and shows similar communication gestures as
+xorriso-tcltk.
+In particular it connects to xorriso via two pipes, sends commands, waits
+for all replies of a command, picks info out of the xorriso message sieve,
+and parses reply message lines into words.
+
+The bash script frontend/sh_on_named_pipes.sh forks a xorriso process
+connected to two pipes. It then runs a dialog loop, sends commands to xorriso,
+and displays the replies.
+
+The sh script frontend/xorriso_broker.sh is intended to execute xorriso
+commands on a permanently running xorriso process.
+It gets an id_string by which it looks for named pipes with a running xorriso
+process. If no such pipe is found, then it starts a xorriso connected to
+newly created pipes.
+After this is done, the optionally given xorriso arguments are written into
+the stdin pipe from where xorriso will read and execute them. The script will
+end but the xorriso process will go on and wait for more commands.
+
+
+                       Drives and Disk File Objects 
+
+The user of libisoburn applications needs operating system dependent
+permissions for the CD/DVD/BD drives which shall be used.
+On Linux, FreeBSD, NetBSD this means -rw-permissions, even if only reading is
+intended. On Solaris one needs privileges "basic,sys_devices" and r-permission,
+even if writing is intended.
+
+A list of rw-accessible drives can be obtained by
+    xorriso -devices
+or by xorriso API call
+    Xorriso_option_devices()
+or by libburn API call
+    burn_drive_scan()
+
+A possible source of problems are hald or other automounters. 
+If you can spot a process "hald-addon-storage" with the address of
+your desired drive, then consider to kill it.
+A similar process "udisks-daemon: polling ..." can be seen on newer Linuxes.
+
+On Debian GNU/Linux 6.0.2 amd64 there is
+  /lib/udev/rules.d/80-udisks.rules
+where one can remove all CD drives ("sr*") from the list of automountable
+devices:
+  KERNEL=="sd*|hd*|mmcblk*|mspblk*", ENV{UDISKS_PRESENTATION_NOPOLICY}="0"
+  # KERNEL=="sd*|hd*|sr*|mmcblk*|mspblk*", ENV{UDISKS_PRESENTATION_NOPOLICY}="0"
+Copying the recognition criterion from
+  /etc/udev/rules.d/70-persistent-cd.rules
+one can prevent automounting a single drive, too. E.g.:
+  SUBSYSTEM=="block", ENV{ID_CDROM}=="?*", ENV{ID_PATH}=="pci-0000:00:11.0-scsi-2:0:0:0", ENV{UDISKS_PRESENTATION_NOPOLICY}:="1"
+
+If you cannot get rid of the automounter, try whether it helps to always load
+the drive tray manually before starting a write run of xorriso. Wait until the
+drive light is off and the mounted media appears.
+Then try to unmount the mounted media before a write run.
+
+
+Besides true optical drives, libisoburn can also address disk files as input or
+output drives. The addresses of the disk files have to be preceded by "stdio:".
+Like:
+    "stdio:/tmp/pseudo_drive"
+
+Note: xorriso by default prefixes "stdio:" to addresses outside the /dev tree
+      if they do not lead to an optical drive device file.
+
+
+                              Testing
+
+For automated and manual tests of xorriso's functionality see file
+  releng/README.
+
+
+              Result comparison with self produced ISO images
+
+We are quite sure that libisofs produces accurate representations of the disk
+files. This opinion is founded on a lot of test burns and checks by a little
+test program which compares files from the mounted image with the orignals
+on disk. It uses the normal POSIX filesystem calls, i.e. no libburnia stuff.
+
+This program is not installed systemwide but stays in the installation
+directory of the libisoburn tarball as  test/compare_file . Usually it is
+run as -exec payload of a find command. It demands at least three arguments:
+The path of the file to compare, the prefix1 to be cut off from path
+and the prefix2 which gets prepended afterwards to obtain the path of the
+second file to compare.
+As further argument there can be -no_ctime which suppresses the comparison
+of ctime date stamps.
+The exit value is 0 if no difference was detected, non-0 else.
+
+Example: After
+   xorriso ... -pathspecs on -add /=/original/dir --
+   mount /media/dvd
+   cd test
+compare tree /media/dvd with tree /original/dir :
+   find /original/dir -exec ./compare_file '{}' /original/dir /media/dvd ';' \
+   | less
+and vice versa:
+   find /media/dvd -exec ./compare_file '{}' /media/dvd /original/dir ';' \
+   | less
+
+
+------------------------------------------------------------------------------
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 or later
+    as published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+------------------------------------------------------------------------------
+Based on and sub project of:
+libburnia-project.org
+By Mario Danic           <mario.danic@gmail.com>,
+   Vreixo Formoso        <metalpain2002@yahoo.es>
+   Thomas Schmitt        <scdbackup@gmx.net>
+Copyright (C) 2006-2018 Mario Danic, Vreixo Formoso, Thomas Schmitt.
+
+We will not raise any legal protest to dynamic linking of our libraries
+with applications that are not under GPL, as long as they fulfill
+the condition of offering the library source code used, whether
+altered or unaltered, under the GPLv2+, along with the application.
+Nevertheless, the safest legal position is not to link libburn with
+non-GPL compatible programs.
+
+libburnia-project.org is inspired by and in other components still containing
+parts of old
+Libburn. By Derek Foreman <derek@signalmarketing.com> and
+            Ben Jansens <xor@orodu.net>
+Copyright (C) 2002-2006  Derek Foreman and Ben Jansens
+libisoburn does not stem from their code.
+

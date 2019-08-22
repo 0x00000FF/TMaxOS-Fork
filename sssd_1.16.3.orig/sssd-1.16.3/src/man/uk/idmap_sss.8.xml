@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>idmap_sss</refentrytitle>
+        <manvolnum>8</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>idmap_sss</refname>
+        <refpurpose>Модуль idmap_sss SSSD для Winbind</refpurpose>
+    </refnamediv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            Модуль idmap_sss надає змогу викликати SSSD для прив'язки UID/GID і SID. У
+цьому випадку база даних не потрібна, оскільки прив'язка виконується
+засобами SSSD.
+        </para>
+    </refsect1>
+
+    <refsect1>
+        <title>ПАРАМЕТРИ IDMAP</title>
+
+        <variablelist>
+            <varlistentry>
+                <term>діапазон = нижче - вище</term>
+                <listitem><para>
+                  Визначає доступний для обробки модулем діапазон відповідності UID і GID.
+                </para></listitem>
+            </varlistentry>
+        </variablelist>
+    </refsect1>
+
+    <refsect1>
+        <title>ПРИКЛАДИ</title>
+        <para>
+            У цьому прикладі продемонстровано налаштовування idmap_sss як типового
+модуля прив'язки.
+        </para>
+
+        <programlisting format="linespecific">
+[global]
+security = domain
+workgroup = MAIN
+
+idmap config * : backend        = sss
+idmap config * : range          = 200000-2147483647
+        </programlisting>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

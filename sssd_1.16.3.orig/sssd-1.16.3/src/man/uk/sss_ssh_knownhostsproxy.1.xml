@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<reference>
+<title>Сторінки підручника SSSD</title>
+<refentry>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/upstream.xml" />
+
+    <refmeta>
+        <refentrytitle>sss_ssh_knownhostsproxy</refentrytitle>
+        <manvolnum>1</manvolnum>
+    </refmeta>
+
+    <refnamediv id='name'>
+        <refname>sss_ssh_knownhostsproxy</refname>
+        <refpurpose>отримати ключі вузла OpenSSH</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv id='synopsis'>
+        <cmdsynopsis>
+<command>sss_ssh_knownhostsproxy</command> <arg choice='opt'>
+<replaceable>параметри</replaceable> </arg> <arg
+choice='plain'><replaceable>ВУЗОЛ</replaceable></arg> <arg
+choice='opt'><replaceable>КОМАНДА_ПРОКСІ</replaceable></arg></cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id='description'>
+        <title>ОПИС</title>
+        <para>
+            <command>sss_ssh_knownhostsproxy</command> отримує відкриті ключі вузла SSH
+для вузла <replaceable>ВУЗОЛ</replaceable>, зберігає їх до нетипового файла
+OpenSSH known_hosts (щоб дізнатися більше, ознайомтеся з розділом
+<quote>ФОРМАТ ФАЙЛІВ SSH_KNOWN_HOSTS</quote> сторінки підручника (man)
+<citerefentry><refentrytitle>sshd</refentrytitle>
+<manvolnum>8</manvolnum></citerefentry>) за адресою
+<filename>/var/lib/sss/pubconf/known_hosts</filename> і встановлює з’єднання
+з вузлом.
+        </para>
+        <para>
+            Якщо вказано параметр <replaceable>КОМАНДА_ПРОКСІ</replaceable>, замість
+відкриття сокета для створення з’єднання буде використано відповідну
+команду.
+        </para>
+        <para>
+            <citerefentry><refentrytitle>ssh</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry> можна налаштувати на використання
+<command>sss_ssh_knownhostsproxy</command> для розпізнавання вузлів за
+ключами за допомогою таких інструкцій у налаштуваннях
+<citerefentry><refentrytitle>ssh</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry>: <programlisting>
+ProxyCommand /usr/bin/sss_ssh_knownhostsproxy -p %p %h
+GlobalKnownHostsFile /var/lib/sss/pubconf/known_hosts
+</programlisting>
+        </para>
+    </refsect1>
+
+    <refsect1 id='options'>
+        <title>ПАРАМЕТРИ</title>
+        <variablelist remap='IP'>
+            <varlistentry>
+                <term>
+                    <option>-p</option>,<option>--port</option> <replaceable>ПОРТ</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Використовувати для встановлення з’єднання з вузлом порт
+<replaceable>ПОРТ</replaceable>. Типовим портом є порт 22.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-d</option>,<option>--domain</option>
+<replaceable>ДОМЕН</replaceable>
+                </term>
+                <listitem>
+                    <para>
+                        Шукати відкриті ключі вузлів у домені SSSD <replaceable>ДОМЕН</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>
+                    <option>-k</option>,<option>--pubkeys</option>
+                </term>
+                <listitem>
+                    <para>
+                        Print the host ssh public keys for host <replaceable>HOST</replaceable>.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/param_help.xml" />
+        </variablelist>
+    </refsect1>
+
+    <refsect1 id='exit_status'>
+        <title>СТАН ВИХОДУ</title>
+        <para>
+            У випадку успіху значення стану виходу дорівнює 0. У всіх інших випадках
+програма повертає 1.
+        </para>
+    </refsect1>
+
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="include/seealso.xml" />
+
+</refentry>
+</reference>

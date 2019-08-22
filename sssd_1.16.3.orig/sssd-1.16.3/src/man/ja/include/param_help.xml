@@ -1,0 +1,10 @@
+<varlistentry>
+    <term>
+        <option>-?</option>,<option>--help</option>
+    </term>
+    <listitem>
+        <para>
+            ヘルプメッセージを表示して終了します。
+        </para>
+    </listitem>
+</varlistentry>
